@@ -23,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
         Button search_user_btn = findViewById(R.id.searchUsers_btn);
         Button barcode_btn = findViewById(R.id.scanBarcode_btn);
         Button view_profile_btn = findViewById(R.id.view_profile_btn);
-        username = (TextView) findViewById(R.id.username_textview);
+        username = findViewById(R.id.username_textview);
+
+        /* Set Username */
         username.setText(App.getUser().getUsername());
       
         search_exp_btn.setOnClickListener((View v) ->{
@@ -50,9 +52,8 @@ public class MainActivity extends AppCompatActivity {
         barcode_btn.setOnClickListener((View v) -> {
             scanBarcode();
         });
-
-
     }
+
     public void searchExperiments() {
         ///setContentView(R.layout...);
     }

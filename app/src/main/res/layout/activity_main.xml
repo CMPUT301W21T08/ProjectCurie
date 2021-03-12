@@ -60,86 +60,83 @@
         android:id="@+id/searchExperiments_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
         android:backgroundTint="#03A9F4"
         android:drawableLeft="@android:drawable/ic_search_category_default"
+        android:drawableTint="@color/white"
         android:text="Search Experiments"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.089"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.362" />
+        app:layout_constraintTop_toBottomOf="@+id/view_profile_btn" />
 
     <Button
         android:id="@+id/viewExperiments_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="#9F76E8"
         android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+        android:drawableTint="@color/white"
         android:text="View Experiments"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.37" />
+        app:layout_constraintTop_toBottomOf="@+id/view_profile_btn" />
 
     <Button
         android:id="@+id/scanBarcode_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="#FFB03C"
         android:drawableLeft="@android:drawable/ic_menu_camera"
+        android:drawableTint="@color/white"
         android:text="Scan Barcode"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/viewGeoLocations_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.578" />
+        app:layout_constraintTop_toBottomOf="@+id/viewExperiments_btn" />
 
     <Button
         android:id="@+id/addExperiment_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
         android:backgroundTint="#4CAF50"
         android:drawableLeft="@android:drawable/ic_menu_add"
+        android:drawableTint="@color/white"
         android:text="New Experiment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.089"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/searchUsers_btn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.578" />
+        app:layout_constraintTop_toBottomOf="@+id/searchExperiments_btn" />
 
     <Button
         android:id="@+id/searchUsers_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#F44336"
         android:drawableLeft="@android:drawable/ic_menu_myplaces"
+        android:drawableTint="@color/white"
         android:text="Search Users"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.086"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.793" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/viewGeoLocations_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#00BCD4"
         android:drawableLeft="@android:drawable/ic_menu_mapmode"
+        android:drawableTint="@color/white"
         android:text="View GeoLocations"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.793" />
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
