@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button14"
+        android:id="@+id/viewExperiments_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
         android:layout_marginTop="236dp"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button17"
+        android:id="@+id/searchExperiments_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
         android:layout_marginStart="16dp"
@@ -28,18 +28,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button16"
+        android:id="@+id/searchUsers_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="#E1D252"
-        android:text="Search For Person"
+        android:text="Search For User"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button15" />
+        app:layout_constraintTop_toBottomOf="@+id/addExperiment_btn" />
 
     <Button
-        android:id="@+id/button15"
+        android:id="@+id/addExperiment_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
         android:layout_marginStart="16dp"
@@ -47,10 +47,10 @@
         android:backgroundTint="#47D142"
         android:text="New Experiment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button17" />
+        app:layout_constraintTop_toBottomOf="@+id/searchExperiments_btn" />
 
     <Button
-        android:id="@+id/button19"
+        android:id="@+id/scanBarcode_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
         android:layout_marginTop="24dp"
@@ -58,10 +58,10 @@
         android:backgroundTint="#17B9CD"
         android:text="Scan for barcode"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button18" />
+        app:layout_constraintTop_toBottomOf="@+id/viewGeoLocations_btn" />
 
     <Button
-        android:id="@+id/button18"
+        android:id="@+id/viewGeoLocations_btn"
         android:layout_width="180dp"
         android:layout_height="110dp"
         android:layout_marginTop="24dp"
@@ -69,7 +69,7 @@
         android:backgroundTint="#D660C5"
         android:text="View Geolocations"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button14" />
+        app:layout_constraintTop_toBottomOf="@+id/viewExperiments_btn" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -100,7 +100,7 @@
         app:layout_constraintVertical_bias="0.125" />
 
     <Button
-        android:id="@+id/button20"
+        android:id="@+id/view_profile_btn"
         android:layout_width="105dp"
         android:layout_height="31dp"
         android:text="View Profile"

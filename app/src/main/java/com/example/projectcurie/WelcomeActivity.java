@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import android.view.View;
+import android.widget.Button;
 
 public class WelcomeActivity extends AppCompatActivity {
     private User user;
@@ -16,6 +18,9 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_activity);
+        Button start_btn = findViewById(R.id.start_button);
+
+        start_btn.setOnClickListener(view -> goMain());
 
         login();
     }
@@ -52,5 +57,9 @@ public class WelcomeActivity extends AppCompatActivity {
                         }
                     });
         }
+
+    }
+    public void goMain() {
+        setContentView(R.layout.activity_main);
     }
 }
