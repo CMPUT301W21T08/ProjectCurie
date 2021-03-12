@@ -1,7 +1,5 @@
 package com.example.projectcurie;
 
-import androidx.annotation.RecentlyNonNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
