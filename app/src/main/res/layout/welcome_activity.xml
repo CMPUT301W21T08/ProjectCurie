@@ -9,10 +9,11 @@
 
     <TextView
         android:id="@+id/welcome_sign"
-        android:layout_width="130dp"
-        android:layout_height="51dp"
+        android:layout_width="162dp"
+        android:layout_height="54dp"
         android:layout_marginBottom="340dp"
         android:text="Welcome"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -23,8 +24,9 @@
 
     <TextView
         android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_width="363dp"
+        android:layout_height="56dp"
+        android:textAlignment="center"
         android:textColor="#03A9F4"
         android:textSize="30sp"
         android:textStyle="bold|italic"
