@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         Button barcode_btn = findViewById(R.id.scanBarcode_btn);
         Button view_profile_btn = findViewById(R.id.view_profile_btn);
 
-//test
+//test1
         search_exp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
