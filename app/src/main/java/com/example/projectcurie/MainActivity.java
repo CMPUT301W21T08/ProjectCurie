@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         username = (TextView) findViewById(R.id.username_textview);
         ///username.setText((CharSequence) App.getUser());
         /// Not working correctly
-
+        ///
         search_exp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
