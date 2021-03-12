@@ -3,7 +3,7 @@ package com.example.projectcurie;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-
+///test
 public class HomeScreen extends AppCompatActivity {
 
     @Override
