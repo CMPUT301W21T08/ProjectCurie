@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="#972C2C">
+
+    <Button
+        android:id="@+id/view_exp_btn"
+        android:layout_width="182dp"
+        android:layout_height="115dp"
+        android:layout_marginTop="260dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#FFB13F"
+        android:text="View Experiments"
+        app:icon="@android:drawable/ic_menu_sort_by_size"
+        app:iconTint="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/view_map_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/search_exp_btn"
+        android:layout_width="182dp"
+        android:layout_height="115dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="260dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#03A9F4"
+        android:text="Search Experiments"
+        app:icon="@android:drawable/ic_menu_sort_by_size"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/view_map_btn"
+        app:layout_constraintEnd_toStartOf="@+id/view_exp_btn"
+        app:layout_constraintHorizontal_bias="0.347"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/scan_barcode_btn"
+        android:layout_width="180dp"
+        android:layout_height="115dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="#57BAAE"
+        android:text="Scan Barcode"
+        app:icon="@android:drawable/ic_menu_camera"
+        app:iconTint="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/search_person_btn"
+        android:layout_width="180dp"
+        android:layout_height="115dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="#D845C5"
+        android:text="Search for Person"
+        app:icon="@android:drawable/ic_menu_myplaces"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/scan_barcode_btn"
+        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/new_exp_btn"
+        android:layout_width="180dp"
+        android:layout_height="115dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#8BC34A"
+        android:text="New Experiment"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="#C5C5C5"
+        app:layout_constraintBottom_toTopOf="@+id/search_person_btn"
+        app:layout_constraintEnd_toStartOf="@+id/view_map_btn"
+        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/view_map_btn"
+        android:layout_width="180dp"
+        android:layout_height="115dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#9771DC"
+        android:text="View Geolocations"
+        android:textSize="12sp"
+        app:icon="@android:drawable/ic_menu_mapmode"
+        app:layout_constraintBottom_toTopOf="@+id/scan_barcode_btn"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/view_profile_btn"
+        android:layout_width="171dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="26dp"
+        android:backgroundTint="#FB5F5F"
+        android:text="View Profile"
+        android:textSize="11sp"
+        app:icon="@android:drawable/ic_menu_info_details"
+        app:iconTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_textview"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/username_textview"
+        android:layout_width="281dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="60dp"
+        android:text="UserNamePlaceHolder"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
