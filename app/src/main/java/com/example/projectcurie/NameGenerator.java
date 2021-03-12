@@ -13,13 +13,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class NameGenerator {
 
-    private static final String[] nouns = {"Wizard", "Rice", "Aubergine", "Quill", "Sponge",
-            "Potato", "Cheese", "Badger", "Omelette", "Umbrella", "Crow", "Ruby", "Bee",
-            "Soup", "Crayon", "Tomato", "Yogurt", "Giraffe", "Snake", "Quartz", "Oatmeal", "Yam",
+    private static final String[] nouns = {"Wizard", "Rice", "Aubergine", "Tortilla", "Sundae",
+            "Potato", "Cheese", "Badger", "Omelette", "Umbrella", "Licorice", "Ruby", "Cantaloupe",
+            "Soup", "Crayon", "Tomato", "Banana", "Giraffe", "Snake", "Wasabi", "Oatmeal", "Yam",
             "Pancake", "Sushi", "Wren", "Bear", "Fox"};
 
     private static final String[] adjectives = {"Runny", "Soggy", "Iced", "Cold", "Ingenious",
-            "Clever", "Observant", "Confused", "Excited", "Melodic", "Diligent", "Curvy", "Damp",
+            "Clever", "Observant", "Confused", "Excited", "Melodic", "Diligent", "Curious",
             "Lucky", "Dramatic", "Sassy", "Tangy", "Tasty", "Clumsy", "Inquisitive", "Quixotic",
             "Magical", "Exuberant", "Witty", "Vivacious", "Dazzling", "Prickly", "Slippery",
             "Strange", "Wise"};

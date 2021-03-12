@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         username = findViewById(R.id.username_textview);
 
         /* Set Username */
-        username.setText(App.getUser().getUsername());
+        username.setText(App.getUser());
       
         search_exp_btn.setOnClickListener((View v) ->{
             new SearchExperimentFragment().show(getSupportFragmentManager(), "SEARCH EXPERIMENT FRAGMENT");
