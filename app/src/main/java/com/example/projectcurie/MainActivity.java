@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView username;
         Button search_exp_btn = findViewById(R.id.searchExperiments_btn);
         Button view_exp_btn = findViewById(R.id.viewExperiments_btn);
         Button new_exp_btn = findViewById(R.id.addExperiment_btn);
@@ -21,10 +22,10 @@ public class MainActivity extends AppCompatActivity {
         Button search_user_btn = findViewById(R.id.searchUsers_btn);
         Button barcode_btn = findViewById(R.id.scanBarcode_btn);
         Button view_profile_btn = findViewById(R.id.view_profile_btn);
-        TextView userName = findViewById(R.id.username_textview);
-        ///view_profile_btn.setText(App.getUser());
+        username = (TextView) findViewById(R.id.username_textview);
+        ///username.setText((CharSequence) App.getUser());
+        /// Not working correctly
 
-//test1
         search_exp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
