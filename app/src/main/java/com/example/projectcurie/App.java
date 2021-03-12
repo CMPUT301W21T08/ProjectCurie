@@ -17,4 +17,8 @@ public class App extends Application {
     public static void setUser(User user) {
         App.user = user;
     }
+
+    public static User getUser() {
+        return user;
+    }
 }
