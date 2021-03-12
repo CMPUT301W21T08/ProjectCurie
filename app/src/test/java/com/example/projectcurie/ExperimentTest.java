@@ -27,6 +27,7 @@ public class ExperimentTest {
         Assert.assertTrue(tokens.contains("interested"));
         Assert.assertTrue(tokens.contains("crypto7843"));
         Assert.assertFalse(tokens.contains("."));
+        Assert.assertFalse(tokens.contains("we"));
 
 
         experiment.setOwner("MissPeach87");

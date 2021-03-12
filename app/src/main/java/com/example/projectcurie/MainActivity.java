@@ -2,6 +2,7 @@ package com.example.projectcurie;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,49 +22,31 @@ public class MainActivity extends AppCompatActivity {
         Button barcode_btn = findViewById(R.id.scanBarcode_btn);
         Button view_profile_btn = findViewById(R.id.view_profile_btn);
 
-//test1
-        search_exp_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchExperiments();
-            }
+        search_exp_btn.setOnClickListener((View v) ->{
+            searchExperiments();
         });
-        view_exp_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewExperiments();
-            }
+
+        view_exp_btn.setOnClickListener((View v) -> {
+            viewExperiments();
         });
-        new_exp_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addExperiment();
-            }
+
+        new_exp_btn.setOnClickListener((View v) -> {
+            Intent intent = new Intent(getApplicationContext(), NewExperimentActivity.class);
+            startActivity(intent);
         });
-        view_map_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewGeoLocations();
-            }
+
+        view_map_btn.setOnClickListener((View v) -> {
+            viewGeoLocations();
         });
-        search_user_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchUsers();
-            }
+
+        search_user_btn.setOnClickListener((View v) -> {
+            searchUsers();
         });
-        barcode_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanBarcode();
-            }
+
+        barcode_btn.setOnClickListener((View v) -> {
+            scanBarcode();
         });
-        barcode_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanBarcode();
-            }
-        });
+
 
     }
     public void searchExperiments() {
@@ -87,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     public void scanBarcode() {
         ///setContentView(R.layout...);
     }
+
     public void openSearchUserFragment() {
         ///setContentView(R.layout...);
     }
