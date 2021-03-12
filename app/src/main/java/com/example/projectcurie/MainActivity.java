@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView username;
         Button search_exp_btn = findViewById(R.id.searchExperiments_btn);
         Button view_exp_btn = findViewById(R.id.viewExperiments_btn);
         Button new_exp_btn = findViewById(R.id.addExperiment_btn);
@@ -21,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
         Button search_user_btn = findViewById(R.id.searchUsers_btn);
         Button barcode_btn = findViewById(R.id.scanBarcode_btn);
         Button view_profile_btn = findViewById(R.id.view_profile_btn);
-
+        username = (TextView) findViewById(R.id.username_textview);
+        username.setText(App.getUser().getUsername());
+      
         search_exp_btn.setOnClickListener((View v) ->{
             searchExperiments();
         });
