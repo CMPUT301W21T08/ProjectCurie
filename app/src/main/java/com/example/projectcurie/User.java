@@ -56,6 +56,7 @@ public class User {
     public ArrayList<String> getBlacklisted(){
         return blacklisted;
     }
+
     public void removeBlacklisted(String username) {
         this.blacklisted.remove(username);
     }
