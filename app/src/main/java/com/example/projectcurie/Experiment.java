@@ -20,23 +20,24 @@ enum ExperimentType {
  * @author Joshua BIllson
  */
 public class Experiment {
-    private Date startDate;
-    private Date endDate;
     private String title;
     private String description;
     private String region;
     private int minTrialNumber;
     private boolean geolocationRequired;
     private String owner;
-    private boolean locked;
     private ExperimentType type;
     private ArrayList<String> tokens;
+    private boolean locked = false;
 
     public Experiment() { }
 
-    public Experiment(Date startDate, Date endDate, String title, String description, String region, int minTrialNumber, boolean geolocationRequired, String owner, ExperimentType type) {
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public Experiment(String title, String description, String region, int minTrialNumber, boolean geolocationRequired, String owner, ExperimentType type) throws IllegalArgumentException {
+        /* Disallow Empty Fields For Title, Description, Region, & Owner */
+        if ((title.trim().isEmpty()) || (description.trim().isEmpty()) || (region.trim()).isEmpty() || (owner.trim().isEmpty())) {
+            throw new IllegalArgumentException();
+        }
+
         this.title = title;
         this.description = description;
         this.region = region;
@@ -45,14 +46,6 @@ public class Experiment {
         this.owner = owner;
         this.type = type;
         tokenize();
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
     }
 
     public String getTitle() {
@@ -89,14 +82,6 @@ public class Experiment {
 
     public ArrayList<String> getTokens() {
         return tokens;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public void setTitle(String title) {
@@ -147,7 +132,7 @@ public class Experiment {
         for (String field : searchableFields) {
             if (field != null) {
                 for (String token : field.split("\\W+")) {
-                    if (! tokens.contains(token.toLowerCase())) {
+                    if ((! tokens.contains(token.toLowerCase())) && (token.length() > 3)) {
                         tokens.add(token.toLowerCase());
                     }
                 }
