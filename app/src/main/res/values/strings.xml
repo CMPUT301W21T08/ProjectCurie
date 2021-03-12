@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ProjectCurie</string>
+
+    <string-array name="experiment_types">
+        <item>Integer Count</item>
+        <item>Measurement</item>
+        <item>Binomial</item>
+        <item>Count</item>
+    </string-array>
 </resources>
