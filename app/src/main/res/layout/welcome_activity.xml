@@ -8,61 +8,38 @@
 
 
     <TextView
-        android:id="@+id/projectcurie_text"
-        android:layout_width="223dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="168dp"
-        android:layout_marginEnd="36dp"
-        android:text="ProjectCurie."
-        android:textColor="#03A9F4"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="142dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="104dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_compass" />
-
-    <TextView
         android:id="@+id/welcome_sign"
         android:layout_width="130dp"
         android:layout_height="51dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginBottom="340dp"
         android:text="Welcome"
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/projectcurie_text" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/username"
-        android:layout_width="231dp"
-        android:layout_height="38dp"
+        android:layout_width="226dp"
+        android:layout_height="48dp"
         android:text="Curious0225199"
         android:textColor="#03A9F4"
         android:textSize="30sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/start_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome_sign"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.327" />
 
     <Button
         android:id="@+id/start_button"
         android:layout_width="350dp"
         android:layout_height="56dp"
-        android:layout_marginTop="254dp"
         android:layout_marginBottom="204dp"
         android:background="#03A9F4"
         android:text="Start"
@@ -72,7 +49,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="361dp"
+        android:layout_height="136dp"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_sign"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/projectcurie_text" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.56"
+        app:srcCompat="@drawable/greenlogowtext" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
