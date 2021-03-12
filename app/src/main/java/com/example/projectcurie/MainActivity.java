@@ -4,11 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchExperimentFragment.SearchExperimentFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
         username = findViewById(R.id.username_textview);
 
         /* Set Username */
-        username.setText(App.getUser().getUsername());
+        username.setText(App.getUser());
       
         search_exp_btn.setOnClickListener((View v) ->{
-            searchExperiments();
+            new SearchExperimentFragment().show(getSupportFragmentManager(), "SEARCH EXPERIMENT FRAGMENT");
         });
 
         view_exp_btn.setOnClickListener((View v) -> {
@@ -81,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
+    @Override
+    public void goSearchExperiment(String keyword) {
+        Log.i("Info", "Search Experiment");
+    }
 }

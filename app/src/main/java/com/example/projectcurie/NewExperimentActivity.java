@@ -75,16 +75,16 @@ public class NewExperimentActivity extends AppCompatActivity {
                 int minTrials = Integer.parseInt(minTrialsStr);
                 switch (experimentType) {
                     case "Integer Count":
-                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.INTEGER_COUNT);
+                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser(), ExperimentType.INTEGER_COUNT);
                         break;
                     case "Measurement":
-                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.MEASUREMENT);
+                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser(), ExperimentType.MEASUREMENT);
                         break;
                     case "Count":
-                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.COUNT);
+                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser(), ExperimentType.COUNT);
                         break;
                     default:
-                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.BINOMIAL);
+                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser(), ExperimentType.BINOMIAL);
                         break;
                 }
 

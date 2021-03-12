@@ -12,49 +12,51 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import android.widget.Button;
 
 public class WelcomeActivity extends AppCompatActivity {
-    private User user;
+    private String username = null;
+    Button start_btn;
+    TextView usernameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_activity);
-        Button start_btn = findViewById(R.id.start_button);
+        start_btn = findViewById(R.id.start_button);
+        usernameTextView = findViewById(R.id.username);
+
+
+        /* Wait For Login */
+        login();
 
         start_btn.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         });
-
-        login();
     }
 
     public void login() {
-        TextView usernameTextView = findViewById(R.id.username);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences sharedPreferences = this.getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE);
 
         /* Grab Username From Shared Preferences */
-        String username = sharedPreferences.getString("Username", null);
+        username = sharedPreferences.getString("Username", null);
 
         /* Handle The Case Where User Is Opening App For First Time */
         if (username == null) {
-            user = new User(NameGenerator.uniqueName());
-            usernameTextView.setText(user.getUsername());
-            db.collection("users").document(user.getUsername()).set(user);
-            sharedPreferences.edit().putString("Username", user.getUsername()).apply();
-            App.setUser(user);
+            username = NameGenerator.uniqueName();
+            usernameTextView.setText(username);
+            App.setUsername(username);
+            db.collection("users").document(username).set(new User(username));
+            sharedPreferences.edit().putString("Username", username).apply();
         }
 
         /* Handle The Case Where User Is Already Registered */
         else {
+            App.setUsername(username);
             usernameTextView.setText(username);
             db.collection("users").document(username)
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            user = documentSnapshot.toObject(User.class);
-                            App.setUser(user);
-                        } else {
+                        if (! documentSnapshot.exists()) {
                             sharedPreferences.edit().remove("Username").apply();
                             login();
                         }
@@ -62,4 +64,5 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
     }
+
 }

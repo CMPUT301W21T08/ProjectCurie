@@ -15,17 +15,17 @@ import androidx.fragment.app.DialogFragment;
 
 public class SearchExperimentFragment extends DialogFragment {
     private EditText search_keyword;
-    private OnFragmentInteractionListener listener;
+    private SearchExperimentFragmentInteractionListener listener;
 
-    public interface OnFragmentInteractionListener {
+    public interface SearchExperimentFragmentInteractionListener {
         void goSearchExperiment(String keyword);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener){
-            listener = (OnFragmentInteractionListener) context;
+        if (context instanceof SearchExperimentFragmentInteractionListener){
+            listener = (SearchExperimentFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
