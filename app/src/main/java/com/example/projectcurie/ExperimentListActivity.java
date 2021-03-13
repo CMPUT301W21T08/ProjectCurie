@@ -28,18 +28,37 @@ public class ExperimentListActivity extends AppCompatActivity {
         experimentListView.setAdapter(experimentArrayAdapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("experiments")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        experiments.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            experiments.add(document.toObject(Experiment.class));
+        ArrayList<String> keywords = getIntent().getStringArrayListExtra("keywords");
+
+        if (keywords == null) {
+            db.collection("experiments")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            experiments.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                experiments.add(document.toObject(Experiment.class));
+                            }
+                            experimentArrayAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.i("Info", "Error Fetching Experiments!");
                         }
-                        experimentArrayAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.i("Info", "Error Fetching Experiments!");
-                    }
-                });
+                    });
+        } else {
+            db.collection("experiments")
+                    .whereArrayContainsAny("tokens", keywords)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            experiments.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                experiments.add(document.toObject(Experiment.class));
+                            }
+                            experimentArrayAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.i("Info", "Error Fetching Experiments!");
+                        }
+                    });
+        }
     }
 }
