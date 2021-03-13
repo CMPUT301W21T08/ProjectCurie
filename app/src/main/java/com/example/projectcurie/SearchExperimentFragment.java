@@ -18,7 +18,7 @@ public class SearchExperimentFragment extends DialogFragment {
     private SearchExperimentFragmentInteractionListener listener;
 
     public interface SearchExperimentFragmentInteractionListener {
-        void goSearchExperiment(String keyword);
+        void goSearchExperiment(String keywords);
     }
 
     @Override
@@ -43,11 +43,9 @@ public class SearchExperimentFragment extends DialogFragment {
                 .setView(view)
                 .setTitle("Search Experiments")
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String keyword = search_keyword.getText().toString();
-                        listener.goSearchExperiment(keyword);
-                    }}).create();
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    String keyword = search_keyword.getText().toString().toLowerCase();
+                    listener.goSearchExperiment(keyword);
+                }).create();
     }
 }
