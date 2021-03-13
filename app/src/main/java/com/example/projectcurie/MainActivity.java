@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         });
 
         view_exp_btn.setOnClickListener((View v) -> {
-            viewExperiments();
+            Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
+            startActivity(intent);
         });
 
         new_exp_btn.setOnClickListener((View v) -> {
@@ -56,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
     }
 
     public void searchExperiments() {
-        ///setContentView(R.layout...);
-    }
-    public void viewExperiments() {
         ///setContentView(R.layout...);
     }
 
