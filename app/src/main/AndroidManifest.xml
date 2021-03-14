@@ -9,9 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".ExperimentOverviewActivity" />
-        <activity android:name=".ExperimentListActivity" />
-        <activity android:name=".NewExperimentActivity" />
+        <activity android:name=".UserProfileActivity"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".ExperimentOverviewActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".ExperimentListActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".NewExperimentActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".MainActivity" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
