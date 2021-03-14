@@ -8,18 +8,23 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.io.IOException;
+
 /**
  * This class implements a tabbed activity for viewing and commenting on an experiment.
+ * @author Joshua Billson
  */
 public class ExperimentOverviewActivity extends AppCompatActivity {
 
     private TabLayout tabs;
     private ViewPager2 viewPager;
+    private Experiment experiment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,18 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         new TabLayoutMediator(tabs, viewPager, (tab, position) -> {
             tab.setText(tabLabels[position]);
         }).attach();
+
+        /* Deserialize Experiment From Intent */
+        String serialString = getIntent().getStringExtra("experiment");
+        if (serialString != null) {
+            try {
+                this.experiment = (Experiment) ObjectSerializer.deserialize(serialString);
+            } catch (IOException e) {
+                Log.e("Error", "Error Deserializing Experiment!");
+            }
+        } else {
+            Log.i("Info", "Error Deserializing Experiment!");
+        }
     }
 
     /**
@@ -57,7 +74,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return new ExperimentOverviewFragment();
+                    return ExperimentOverviewFragment.newInstance(experiment);
                 case 1:
                     return new ExperimentDataFragment();
                 default:
