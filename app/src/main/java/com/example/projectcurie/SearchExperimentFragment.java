@@ -15,17 +15,17 @@ import androidx.fragment.app.DialogFragment;
 
 public class SearchExperimentFragment extends DialogFragment {
     private EditText search_keyword;
-    private OnFragmentInteractionListener listener;
+    private SearchExperimentFragmentInteractionListener listener;
 
-    public interface OnFragmentInteractionListener {
-        void goSearchExperiment(String keyword);
+    public interface SearchExperimentFragmentInteractionListener {
+        void goSearchExperiment(String keywords);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener){
-            listener = (OnFragmentInteractionListener) context;
+        if (context instanceof SearchExperimentFragmentInteractionListener){
+            listener = (SearchExperimentFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -43,11 +43,9 @@ public class SearchExperimentFragment extends DialogFragment {
                 .setView(view)
                 .setTitle("Search Experiments")
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String keyword = search_keyword.getText().toString();
-                        listener.goSearchExperiment(keyword);
-                    }}).create();
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    String keyword = search_keyword.getText().toString().toLowerCase();
+                    listener.goSearchExperiment(keyword);
+                }).create();
     }
 }

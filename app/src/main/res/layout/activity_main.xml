@@ -5,72 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/viewExperiments_btn"
-        android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="236dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#FF9800"
-        android:text="View Experiments"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/searchExperiments_btn"
-        android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="236dp"
-        android:backgroundTint="#03A9F4"
-        android:text="Search Experiments"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/searchUsers_btn"
-        android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#E1D252"
-        android:text="Search For User"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addExperiment_btn" />
-
-    <Button
-        android:id="@+id/addExperiment_btn"
-        android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#47D142"
-        android:text="New Experiment"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchExperiments_btn" />
-
-    <Button
-        android:id="@+id/scanBarcode_btn"
-        android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#17B9CD"
-        android:text="Scan for barcode"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewGeoLocations_btn" />
-
-    <Button
-        android:id="@+id/viewGeoLocations_btn"
-        android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#D660C5"
-        android:text="View Geolocations"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewExperiments_btn" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
@@ -86,7 +20,7 @@
         app:layout_constraintGuide_begin="20dp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/username_textview"
         android:layout_width="315dp"
         android:layout_height="44dp"
         android:text="UsernamePH"
@@ -122,4 +56,87 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.058" />
 
+    <Button
+        android:id="@+id/searchExperiments_btn"
+        android:layout_width="180dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
+        android:backgroundTint="#03A9F4"
+        android:drawableLeft="@android:drawable/ic_search_category_default"
+        android:drawableTint="@color/white"
+        android:text="Search Experiments"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_profile_btn" />
+
+    <Button
+        android:id="@+id/viewExperiments_btn"
+        android:layout_width="180dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#9F76E8"
+        android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+        android:drawableTint="@color/white"
+        android:text="View Experiments"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_profile_btn" />
+
+    <Button
+        android:id="@+id/scanBarcode_btn"
+        android:layout_width="180dp"
+        android:layout_height="110dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#FFB03C"
+        android:drawableLeft="@android:drawable/ic_menu_camera"
+        android:drawableTint="@color/white"
+        android:text="Scan Barcode"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/viewGeoLocations_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewExperiments_btn" />
+
+    <Button
+        android:id="@+id/addExperiment_btn"
+        android:layout_width="180dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="16dp"
+        android:backgroundTint="#4CAF50"
+        android:drawableLeft="@android:drawable/ic_menu_add"
+        android:drawableTint="@color/white"
+        android:text="New Experiment"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/searchUsers_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchExperiments_btn" />
+
+    <Button
+        android:id="@+id/searchUsers_btn"
+        android:layout_width="180dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#F44336"
+        android:drawableLeft="@android:drawable/ic_menu_myplaces"
+        android:drawableTint="@color/white"
+        android:text="Search Users"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/viewGeoLocations_btn"
+        android:layout_width="180dp"
+        android:layout_height="110dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#00BCD4"
+        android:drawableLeft="@android:drawable/ic_menu_mapmode"
+        android:drawableTint="@color/white"
+        android:text="View GeoLocations"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
