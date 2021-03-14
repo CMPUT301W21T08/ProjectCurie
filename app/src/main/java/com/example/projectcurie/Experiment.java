@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -19,7 +20,7 @@ enum ExperimentType {
  * Experiments are represented by this class.
  * @author Joshua BIllson
  */
-public class Experiment {
+public class Experiment implements Serializable {
     private String title;
     private String description;
     private String region;

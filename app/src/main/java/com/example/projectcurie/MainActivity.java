@@ -51,14 +51,14 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
             startActivity(intent);
         });
 
+        /* Create New Experiment On Click Listener */
         new_exp_btn.setOnClickListener((View v) -> {
             Intent intent = new Intent(getApplicationContext(), NewExperimentActivity.class);
             startActivity(intent);
         });
 
         view_map_btn.setOnClickListener((View v) -> {
-            Intent intent = new Intent(getApplicationContext(), ExperimentOverviewActivity.class);
-            startActivity(intent);
+
         });
 
         search_user_btn.setOnClickListener((View v) -> {
