@@ -11,6 +11,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * This class represents the homescreen where the user can select 7 different buttons, the each one having a different attribute
+ * @author Mitch Labrecque
+ */
 public class MainActivity extends AppCompatActivity implements SearchExperimentFragment.SearchExperimentFragmentInteractionListener {
 
     TextView username;
@@ -27,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //* Initializing buttons
         search_exp_btn = findViewById(R.id.searchExperiments_btn);
         view_exp_btn = findViewById(R.id.viewExperiments_btn);
         new_exp_btn = findViewById(R.id.addExperiment_btn);
