@@ -16,7 +16,7 @@ import java.util.Collections;
  * @author Mitch Labrecque
  */
 public class MainActivity extends AppCompatActivity implements SearchExperimentFragment.SearchExperimentFragmentInteractionListener {
-
+//.
     TextView username;
     Button search_exp_btn;
     Button view_exp_btn;
