@@ -16,7 +16,7 @@
 
     <style name="SwitchThemeOverlay" parent="">
         <!-- active thumb & track color (30% transparency) -->
-        <item name="colorControlActivated">"@color/pure_red"</item>
+        <item name="colorControlActivated">#FF0000</item>
 
         <!-- inactive thumb color -->
         <item name="colorSwitchThumbNormal">#00FF00</item>
@@ -34,4 +34,9 @@
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ThemeOverlay.ProjectCurie.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    </style>
 </resources>
