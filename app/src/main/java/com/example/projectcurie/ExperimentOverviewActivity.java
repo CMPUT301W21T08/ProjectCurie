@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This class implements a tabbed activity for viewing and commenting on an experiment.
@@ -25,6 +26,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
     private TabLayout tabs;
     private ViewPager2 viewPager;
     private Experiment experiment;
+    private ArrayList<Trial> trials;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,22 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         if (serialString != null) {
             try {
                 this.experiment = (Experiment) ObjectSerializer.deserialize(serialString);
+            } catch (IOException e) {
+                Log.e("Error", "Error Deserializing Experiment!");
+            }
+        } else {
+            Log.i("Info", "Error Deserializing Experiment!");
+        }
+
+
+        /* Deserialize Trials From Intent */
+        serialString = getIntent().getStringExtra("trials");
+        if (serialString != null) {
+            try {
+                this.trials = (ArrayList<Trial>) ObjectSerializer.deserialize(serialString);
+                for (Trial trial : this.trials) {
+                    Log.i("Trial Info:", trial.getExperiment() + "\t" + trial.getAuthor());
+                }
             } catch (IOException e) {
                 Log.e("Error", "Error Deserializing Experiment!");
             }

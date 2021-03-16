@@ -8,19 +8,19 @@ import android.widget.TextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class App extends Application {
-    private static String username;
+    private static User user;
 
     @Override
     public void onCreate() {
         super.onCreate();
     }
 
-    public static String getUser() {
-        return username;
+    public static User getUser() {
+        return user;
     }
 
-    public static void setUsername(String username) {
-        App.username = username;
+    public static void setUser(User user) {
+        App.user = user;
     }
 
 }
