@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,10 +8,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 /**
  * This class implements the experiment overview fragment for the overview tab of the Experiment
@@ -65,6 +70,18 @@ public class ExperimentOverviewFragment extends Fragment {
         experimentRegion.setText(Html.fromHtml("<b>Region: </b><span>" + experiment.getRegion() + "</span>"));
         experimentGeolocation.setText(Html.fromHtml("<b>Geolocation Required: </b><span>" + (this.experiment.isGeolocationRequired() ? "True" : "False") + "</span>"));
         experimentOwner.setText(Html.fromHtml("<b>Owner: </b><span>" + this.experiment.getOwner() + "</span>"));
+
+        /* Setup On Click Listener For Submitting Trials */
+        Button submitButton = view.findViewById(R.id.submitTrialButton);
+        submitButton.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
+                intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
+                startActivity(intent);
+            } catch (IOException e) {
+                Log.e("Error", "Error: Could Not Serialize Experiment!");
+            }
+        });
 
         return view;
     }

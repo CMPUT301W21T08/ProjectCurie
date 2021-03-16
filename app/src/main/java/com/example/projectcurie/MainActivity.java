@@ -4,10 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         username = findViewById(R.id.username_textview);
 
         /* Set Username */
-        username.setText(App.getUser());
+        username.setText(App.getUser().getUsername());
 
         /* Search Experiments On Click Listener */
         search_exp_btn.setOnClickListener((View v) ->{
@@ -46,9 +51,33 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
 
         /* View Experiments On Click Listener */
         view_exp_btn.setOnClickListener((View v) -> {
-            Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
-            intent.putStringArrayListExtra("keywords", null);
-            startActivity(intent);
+
+            /* Grab Experiment From Database. Open Experiment List View On Callback Return */
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            ArrayList<Experiment> experiments = new ArrayList<>();
+            db.collection("experiments")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+
+                            /* Iterate Over Experiments */
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                experiments.add(document.toObject(Experiment.class));
+                            }
+
+                            /* Start Experiment List Activity */
+                            try {
+                                Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
+                                intent.putExtra("experiments", ObjectSerializer.serialize(experiments));
+                                startActivity(intent);
+                            } catch (IOException e) {
+                                Log.e("Error", "Error Serializing Experiments!");
+                            }
+
+                        } else {
+                            Log.e("Error", "Error Fetching Experiments!");
+                        }
+                    });
         });
 
         /* Create New Experiment On Click Listener */
@@ -96,10 +125,37 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
 
     @Override
     public void goSearchExperiment(String keywords) {
-        Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
+        /* Tokenize Keywords */
         ArrayList<String> keywordsArrayList = new ArrayList<>();
         Collections.addAll(keywordsArrayList, keywords.split("\\W+"));
-        intent.putStringArrayListExtra("keywords", keywordsArrayList);
-        startActivity(intent);
+
+        /* Grab Experiments From Database */
+        ArrayList<Experiment> experiments = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("experiments")
+                .whereArrayContainsAny("tokens", keywordsArrayList)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        /* Iterate Over Experiments */
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            experiments.add(document.toObject(Experiment.class));
+                        }
+
+                        /* Start Experiment List Activity */
+                        try {
+                            Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
+                            intent.putExtra("experiments", ObjectSerializer.serialize(experiments));
+                            startActivity(intent);
+                        } catch (IOException e) {
+                            Log.e("Error", "Error Serializing Experiments!");
+                        }
+
+                    } else {
+                        Log.i("Info", "Error Fetching Experiments!");
+                    }
+                });
+
     }
 }

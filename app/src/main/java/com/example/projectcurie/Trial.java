@@ -1,6 +1,10 @@
 package com.example.projectcurie;
 
 import androidx.annotation.NonNull;
+
+import com.google.type.LatLng;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,7 +12,7 @@ import java.util.Date;
  * trials inherit.
  * @author Joshua Billson
  */
-public abstract class Trial {
+public class Trial implements Serializable {
     private Date timestamp;
     private double latitude;
     private double longitude;
@@ -33,18 +37,16 @@ public abstract class Trial {
 
     /**
      * Constructor for trials which require geolocation.
-     * @param latitude
-     *     The latitude of the user at the time the trial is submitted.
-     * @param longitude
-     *     The longitude of the user at the time the trial is submitted.
+     * @param location
+     *     The location of the user at the time the trial is submitted.
      * @param experiment
      *     The title of the experiment to which this trial belongs.
      * @param author
      *     The username of the user who submits this trial.
      */
-    public Trial(double latitude, double longitude, String experiment, String author) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public Trial(String experiment, String author, LatLng location) {
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
         this.experiment = experiment;
         this.author = author;
         this.timestamp = new Date();
@@ -89,7 +91,4 @@ public abstract class Trial {
     public void setAuthor(String author) {
         this.author = author;
     }
-
-    @NonNull
-    public abstract String toString();
 }
