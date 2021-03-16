@@ -1,7 +1,9 @@
 package com.example.projectcurie;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -31,57 +34,112 @@ public class ExperimentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment_list);
 
+        /* Grab Experiments From Intent */
+        try {
+            experiments = (ArrayList<Experiment>) ObjectSerializer.deserialize(getIntent().getStringExtra("experiments"));
+        } catch (IOException e) {
+            Log.e("Error", "Error: Could Not Deserialize Experiments!");
+        }
+
         /* Initialize list View */
         experimentListView = findViewById(R.id.experimentListView);
-        experiments = new ArrayList<>();
         experimentArrayAdapter = new ExperimentArrayAdapter(this, experiments);
         experimentListView.setAdapter(experimentArrayAdapter);
 
         /* Upon Clicking On An Experiment, Open The Experiment Overview Activity */
         experimentListView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            Experiment experiment = this.experiments.get(position);
+            StartActivityOnCallback startActivityOnCallback = new StartActivityOnCallback(experiment, getApplicationContext());
+            startActivityOnCallback.goToExperimentOverview();
+        });
+    }
+
+    /**
+     * This class is used for issuing multiple callbacks to the database and waiting to start the
+     * next activity until all such callbacks have been handled. This allows us to carry out multiple
+     * database queries before starting the Experiment Overview activity.
+     * @author Joshua Billson
+     */
+    private class StartActivityOnCallback implements Serializable {
+        private Intent intent;
+        private Experiment experiment;
+        private ArrayList<Trial> trials = null;
+
+        public StartActivityOnCallback(Experiment experiment, Context context) {
+            this.experiment = experiment;
+            this.intent = new Intent(context, ExperimentOverviewActivity.class);
+        }
+
+        public void goToExperimentOverview() {
+            grabTrials();
+        }
+
+        /* Grab All Trials Associated With The Given Experiment */
+        private void grabTrials() {
+            /* Query The Database For All Trials Related To this.experiment */
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("experiments")
+                    .document(this.experiment.getTitle())
+                    .collection("trials")
+                    .get()
+
+                    /* Query Completion Callback */
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            trials = new ArrayList<>();
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                trials.add(doc.toObject(Trial.class));
+                            }
+
+                            /* In The Event That All Callbacks Have Returned */
+                            if (experiment != null && trials != null) {
+                                startActivityHelper();
+                            }
+
+                            /* Handle The Case Where The Query Was Unsuccessful */
+                        } else {
+                            Log.e("Error", "Error Fetching From Database!");
+                        }
+                    });
+        }
+
+        /* Grab All Comments Associated With A Given Experiment */
+        private void grabComments() {
+            /* Query The Database For All Trials Related To this.experiment */
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("experiments")
+                    .document(this.experiment.getTitle())
+                    .collection("comments")
+                    .get()
+
+                    /* Query Completion Callback */
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            trials = new ArrayList<>();
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                trials.add(doc.toObject(Trial.class));
+                            }
+
+                            /* In The Event That All Callbacks Have Returned */
+                            if (experiment != null && trials != null) {
+                                startActivityHelper();
+                            }
+
+                            /* Handle The Case Where The Query Was Unsuccessful */
+                        } else {
+                            Log.e("Error", "Error Fetching From Database!");
+                        }
+                    });
+        }
+
+        private void startActivityHelper() {
             try {
-                Experiment experiment = this.experiments.get(position);
-                Intent intent = new Intent(getApplicationContext(), ExperimentOverviewActivity.class);
                 intent.putExtra("experiment", ObjectSerializer.serialize(experiment));
+                intent.putExtra("trials", ObjectSerializer.serialize(trials));
                 startActivity(intent);
             } catch (IOException e) {
                 Log.e("Error", "Error Serializing Experiment!");
             }
-        });
-
-
-        /* Grab Experiments From Database */
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        ArrayList<String> keywords = getIntent().getStringArrayListExtra("keywords");
-        if (keywords == null) {
-            db.collection("experiments")
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            experiments.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                experiments.add(document.toObject(Experiment.class));
-                            }
-                            experimentArrayAdapter.notifyDataSetChanged();
-                        } else {
-                            Log.i("Info", "Error Fetching Experiments!");
-                        }
-                    });
-        } else {
-            db.collection("experiments")
-                    .whereArrayContainsAny("tokens", keywords)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            experiments.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                experiments.add(document.toObject(Experiment.class));
-                            }
-                            experimentArrayAdapter.notifyDataSetChanged();
-                        } else {
-                            Log.i("Info", "Error Fetching Experiments!");
-                        }
-                    });
         }
     }
 }
