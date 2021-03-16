@@ -55,7 +55,7 @@ public class BinomialTrialFragment extends Fragment {
         submitButton = (Button) view.findViewById(R.id.binomialTrialSubmitButton);
         addBarcodeButton = (Button) view.findViewById(R.id.binomialTrialSubmitBarcodeButton);
         EditText barcodeInput = (EditText) view.findViewById(R.id.binomialTrialBarcodeEditText);
-        result = (TextView) view.findViewById(R.id.binomial_result);
+        result = (TextView) view.findViewById(R.id.binomialResult);
 
 
         binomialSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

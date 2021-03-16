@@ -18,7 +18,7 @@
         android:textOff="PASS"
         android:textOn="FAIL"
         android:theme="@style/SwitchThemeOverlay"
-        app:layout_constraintBottom_toTopOf="@+id/binomial_result"
+        app:layout_constraintBottom_toTopOf="@+id/binomialResult"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="parent"
