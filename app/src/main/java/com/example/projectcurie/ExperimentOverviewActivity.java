@@ -13,6 +13,7 @@ import android.util.Log;
 import com.google.android.material.tabs.TabLayout;
 
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,12 +22,19 @@ import java.util.ArrayList;
  * This class implements a tabbed activity for viewing and commenting on an experiment.
  * @author Joshua Billson
  */
-public class ExperimentOverviewActivity extends AppCompatActivity {
+public class ExperimentOverviewActivity extends AppCompatActivity implements AddCommentFragment.AddCommentDialogFragmentListener {
 
     private TabLayout tabs;
     private ViewPager2 viewPager;
     private Experiment experiment;
     private ArrayList<Trial> trials;
+    private ArrayList<Question> questions;
+    private StateAdapter stateAdapter;
+
+    /* Fragments */
+    ExperimentOverviewFragment overviewFragment;
+    ExperimentDataFragment dataFragment;
+    ExperimentCommentsFragment commentsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +45,14 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         /* Grab Data From Intent */
         grabExperiment();
         grabTrials();
+        grabQuestions();
 
         /* Grab Widgets */
         tabs = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.experimentOverviewViewPager);
 
         /* Initialize Fragment State Adapter */
-        StateAdapter stateAdapter = new StateAdapter(this);
+        stateAdapter = new StateAdapter(this);
         viewPager.setAdapter(stateAdapter);
 
         /* Attach Tabs To Fragment State Adapter */
@@ -73,9 +82,6 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         if (serialString != null) {
             try {
                 this.trials = (ArrayList<Trial>) ObjectSerializer.deserialize(serialString);
-                for (Trial trial : this.trials) {
-                    Log.i("Trial Info:", trial.getExperiment() + "\t" + trial.getAuthor());
-                }
             } catch (IOException e) {
                 Log.e("Error", "Error Deserializing Experiment!");
             }
@@ -83,6 +89,38 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
             Log.i("Info", "Error Deserializing Experiment!");
         }
     }
+
+    /* Deserialize Questions From Intent */
+    private void grabQuestions() {
+        String serialString = getIntent().getStringExtra("questions");
+        if (serialString != null) {
+            try {
+                this.questions = (ArrayList<Question>) ObjectSerializer.deserialize(serialString);
+            } catch (IOException e) {
+                Log.e("Error", "Error Deserializing Experiment!");
+            }
+        } else {
+            Log.i("Info", "Error Deserializing Experiment!");
+        }
+    }
+
+    @Override
+    public void addComment(String body) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Question question = new Question(body, App.getUser().getUsername());
+        db.collection("experiments")
+                .document(experiment.getTitle())
+                .collection("questions")
+                .add(question)
+                .addOnSuccessListener(documentReference -> {
+                    questions.add(question);
+                    commentsFragment.refreshList();
+                })
+                .addOnFailureListener(e -> Log.e("Error", "Error: Couldn't Add New Question!"));
+
+        Log.i("Info: The Comment To Be Posted:", body);
+    }
+
 
     /**
      * This class manages fragments for each tab in the activity. Each tab is associated with a
@@ -100,11 +138,14 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return ExperimentOverviewFragment.newInstance(experiment);
+                    overviewFragment = ExperimentOverviewFragment.newInstance(experiment);
+                    return overviewFragment;
                 case 1:
-                    return new ExperimentDataFragment();
+                    dataFragment = new ExperimentDataFragment();
+                    return dataFragment;
                 default:
-                    return ExperimentCommentsFragment.newInstance(experiment);
+                    commentsFragment = ExperimentCommentsFragment.newInstance(questions);
+                    return commentsFragment;
             }
         }
 

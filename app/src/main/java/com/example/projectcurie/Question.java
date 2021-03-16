@@ -4,6 +4,10 @@ package com.example.projectcurie;
  * @author Bo Cen
  */
 public class Question extends Comment{
+
+    /* Empty Constructor For FireStore */
+    public Question() { }
+
     public Question(String body, String poster) {
         super(body, poster);
     }
