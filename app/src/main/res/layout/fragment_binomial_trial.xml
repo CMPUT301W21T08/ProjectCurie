@@ -59,7 +59,6 @@
         android:layout_width="111dp"
         android:layout_height="40dp"
         android:layout_marginEnd="28dp"
-        android:background="#FFFFFF"
         android:text="Add Barcode"
         android:textAllCaps="false"
         android:textColor="#03A9F4"
