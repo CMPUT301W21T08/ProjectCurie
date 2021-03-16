@@ -9,7 +9,8 @@ import android.widget.FrameLayout;
 
 import java.io.IOException;
 
-public class SubmitTrialActivity extends AppCompatActivity {
+public class SubmitTrialActivity extends AppCompatActivity implements BinomialTrialFragment.BinomialTrialFragmentInteractionListener,
+                                                                        IntegerCountTrialFragment.IntegerCountTrialFragmentInteractionListener{
 
     FrameLayout fragmentLayout;
     Experiment experiment;
@@ -39,7 +40,31 @@ public class SubmitTrialActivity extends AppCompatActivity {
             case (2):
                 fragmentTransaction.replace(fragmentLayout.getId(), new MeasurementTrialFragment());
                 break;
+            case (3):
+                fragmentTransaction.replace(fragmentLayout.getId(), new BinomialTrialFragment());
+                break;
         }
         fragmentTransaction.commit();
     }
+
+    @Override
+    public void uploadBinomialTrial(String resultString) {
+
+    }
+
+    @Override
+    public void addBinomialBarcode(String barcodeString) {
+
+    }
+
+    @Override
+    public void uploadIntegerCountTrial(String resultString) {
+
+    }
+
+    @Override
+    public void addIntCountBarcode(String barcodeString) {
+
+    }
+
 }

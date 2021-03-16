@@ -1,7 +1,5 @@
 package com.example.projectcurie;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 public class BinomialTrialFragment extends Fragment {
     private EditText barcode;
@@ -28,8 +26,8 @@ public class BinomialTrialFragment extends Fragment {
     private BinomialTrialFragment.BinomialTrialFragmentInteractionListener listener;
 
     public interface BinomialTrialFragmentInteractionListener {
-        void uploadTrial(String resultString);
-        void addBarcode(String barcodeString);
+        void uploadBinomialTrial(String resultString);
+        void addBinomialBarcode(String barcodeString);
 
     }
 
@@ -53,10 +51,10 @@ public class BinomialTrialFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         binomialSwitch = (Switch) view.findViewById(R.id.binomial_switch);
-        generateQRButton = (Button) view.findViewById(R.id.generate_qr_button);
-        submitButton = (Button) view.findViewById(R.id.submit_button);
-        addBarcodeButton = (Button) view.findViewById(R.id.submit_button);
-        EditText barcodeInput = (EditText) view.findViewById(R.id.barcode_input_editText);
+        generateQRButton = (Button) view.findViewById(R.id.binomialTrialGenerateQRButton);
+        submitButton = (Button) view.findViewById(R.id.binomialTrialSubmitButton);
+        addBarcodeButton = (Button) view.findViewById(R.id.binomialTrialSubmitBarcodeButton);
+        EditText barcodeInput = (EditText) view.findViewById(R.id.binomialTrialBarcodeEditText);
         result = (TextView) view.findViewById(R.id.binomial_result);
 
 
@@ -79,7 +77,7 @@ public class BinomialTrialFragment extends Fragment {
                     binomialResult = binomialSwitch.getTextOff().toString(); // sets result to PASS
                 }
 
-                listener.uploadTrial(binomialResult);
+                listener.uploadBinomialTrial(binomialResult);
             }
         });
 
@@ -87,7 +85,7 @@ public class BinomialTrialFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String barcode = barcodeInput.toString();
-                listener.addBarcode(barcode);
+                listener.addBinomialBarcode(barcode);
             }
         });
 
