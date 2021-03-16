@@ -37,10 +37,22 @@ public class AddCommentFragment extends DialogFragment {
     private Button cancel_button;
     private String experimentTitle;
 
+    static AddCommentFragment newInstance(Experiment experiment){
+        Bundle args = new Bundle();
+        args.putSerializable("experiment", experiment);
+
+        AddCommentFragment fragment = new AddCommentFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            experimentTitle = getArguments().getString("experimentTitle");
+        }
         View view = inflater.inflate(R.layout.fragment_add_comment, container, false);
 
         submit_button = view.findViewById(R.id.post_btn);
@@ -56,13 +68,6 @@ public class AddCommentFragment extends DialogFragment {
         submit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*if (getArguments() != null) {
-                    Experiment bundle = (Experiment) getArguments().getSerializable("experiment");
-                    experimentTitle = bundle.getTitle();
-                } else {
-
-                }*/
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE);
                 String username = sharedPreferences.getString("Username", null);
                 String input = comment_body.getText().toString();
@@ -81,9 +86,11 @@ public class AddCommentFragment extends DialogFragment {
                 Question question;
                 question = new Question(input, username);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("experiments").document("Bitcoin Vendors").collection("comments")
+                db.collection("experiments").document(experimentTitle).collection("questions")
                         .add(question);
                 getDialog().dismiss();
+                Snackbar empty_input_warning = Snackbar.make(getActivity().findViewById(R.id.comments_fragment), "Post Successful!", Snackbar.LENGTH_LONG);
+                empty_input_warning.show();
             }
         });
         return view;

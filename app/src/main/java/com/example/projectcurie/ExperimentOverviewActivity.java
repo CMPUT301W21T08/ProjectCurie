@@ -78,7 +78,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
                 case 1:
                     return new ExperimentDataFragment();
                 default:
-                    return new ExperimentCommentsFragment();
+                    return ExperimentCommentsFragment.newInstance(experiment);
             }
         }
 
