@@ -33,6 +33,11 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment_overview);
 
+
+        /* Grab Data From Intent */
+        grabExperiment();
+        grabTrials();
+
         /* Grab Widgets */
         tabs = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.experimentOverviewViewPager);
@@ -46,8 +51,10 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         new TabLayoutMediator(tabs, viewPager, (tab, position) -> {
             tab.setText(tabLabels[position]);
         }).attach();
+    }
 
-        /* Deserialize Experiment From Intent */
+    /* Deserialize Experiment From Intent */
+    private void grabExperiment() {
         String serialString = getIntent().getStringExtra("experiment");
         if (serialString != null) {
             try {
@@ -58,10 +65,11 @@ public class ExperimentOverviewActivity extends AppCompatActivity {
         } else {
             Log.i("Info", "Error Deserializing Experiment!");
         }
+    }
 
-
-        /* Deserialize Trials From Intent */
-        serialString = getIntent().getStringExtra("trials");
+    /* Deserialize Trials From Intent */
+    private void grabTrials() {
+        String serialString = getIntent().getStringExtra("trials");
         if (serialString != null) {
             try {
                 this.trials = (ArrayList<Trial>) ObjectSerializer.deserialize(serialString);
