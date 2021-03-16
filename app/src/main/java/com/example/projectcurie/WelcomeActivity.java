@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,14 +24,14 @@ public class WelcomeActivity extends AppCompatActivity {
         start_btn = findViewById(R.id.start_button);
         usernameTextView = findViewById(R.id.username);
 
-
-        /* Wait For Login */
-        login();
-
+        start_btn.setVisibility(View.INVISIBLE);
         start_btn.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         });
+
+        /* Wait For Login */
+        login();
     }
 
     public void login() {
@@ -44,14 +45,14 @@ public class WelcomeActivity extends AppCompatActivity {
         if (username == null) {
             username = NameGenerator.uniqueName();
             usernameTextView.setText(username);
-            App.setUsername(username);
-            db.collection("users").document(username).set(new User(username));
+            App.setUser(new User(username));
+            db.collection("users").document(username).set(App.getUser());
             sharedPreferences.edit().putString("Username", username).apply();
+            start_btn.setVisibility(View.VISIBLE);
         }
 
         /* Handle The Case Where User Is Already Registered */
         else {
-            App.setUsername(username);
             usernameTextView.setText(username);
             db.collection("users").document(username)
                     .get()
@@ -59,6 +60,9 @@ public class WelcomeActivity extends AppCompatActivity {
                         if (! documentSnapshot.exists()) {
                             sharedPreferences.edit().remove("Username").apply();
                             login();
+                        } else {
+                            App.setUser(documentSnapshot.toObject(User.class));
+                            start_btn.setVisibility(View.VISIBLE);
                         }
                     });
         }

@@ -1,20 +1,30 @@
 package com.example.projectcurie;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class User {
+/**
+ * This class represents a user of the app.
+ * @author Paul Cleofas & Joshua Billson
+ */
+public class User implements Serializable {
     private String username;
     private String email;
     private String about;
     private Date dateJoined;
-    private ArrayList<Experiment> ownedExperiments;
+    private ArrayList<String> subscriptions;
     private ArrayList<String> blacklisted;
 
     public User(){}
 
     public User(String username) {
         this.username = username;
+        this.email = "";
+        this.about = "";
+        this.dateJoined = new Date();
+        this.subscriptions = new ArrayList<>();
+        this.blacklisted = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -49,8 +59,16 @@ public class User {
         this.dateJoined = dateJoined;
     }
 
-    public ArrayList<Experiment> getOwnedExperiments() {
-        return ownedExperiments;
+    public ArrayList<String> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(ArrayList<String> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    public void setBlacklisted(ArrayList<String> blacklisted) {
+        this.blacklisted = blacklisted;
     }
 
     public ArrayList<String> getBlacklisted(){
@@ -62,6 +80,18 @@ public class User {
     }
 
     public void addBlacklist(String username) {
-        this.blacklisted.add(username);
+        if (! this.blacklisted.contains(username)) {
+            this.blacklisted.add(username);
+        }
+    }
+
+    public void addSubscription(String experiment) {
+        if (! this.subscriptions.contains(experiment)) {
+            this.subscriptions.add(experiment);
+        }
+    }
+
+    public void removeSubscription(String experiment) {
+        this.subscriptions.remove(experiment);
     }
 }

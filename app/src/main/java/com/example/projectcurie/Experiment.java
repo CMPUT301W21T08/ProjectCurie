@@ -1,8 +1,11 @@
 package com.example.projectcurie;
 
+import android.widget.ArrayAdapter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -129,11 +132,27 @@ public class Experiment implements Serializable {
     private void tokenize() {
         ArrayList<String> searchableFields = new ArrayList<>(Arrays.asList(title, description, region, owner));
 
+        /*
+         * This List Of Stop Words Were Created By Sean Bleier (https://gist.github.com/sebleier).
+         * Source: GitHub https://gist.github.com/sebleier/554280
+         */
+        ArrayList<String> stopWords = new ArrayList<>(Arrays.asList("i", "me", "my", "myself", "we",
+                "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he",
+                "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they",
+                "them", "their", "theirs", "what", "which", "who", "whom", "this", "that", "these",
+                "those", "am", "is", "are", "was", "were", "be", "been", "being", "do", "does",
+                "did", "doing", "a", "an", "the", "and", "but", "if", "or", "as", "of", "at", "by",
+                "for", "with", "about", "into", "through", "to", "from", "up", "down", "in", "out",
+                "on", "off", "over", "under", "again", "then", "here", "there", "when", "where",
+                "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some",
+                "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s",
+                "t", "can", "will", "just", "don", "should", "now"));
+
         tokens = new ArrayList<String>();
         for (String field : searchableFields) {
             if (field != null) {
                 for (String token : field.split("\\W+")) {
-                    if ((! tokens.contains(token.toLowerCase())) && (token.length() > 3)) {
+                    if ((! tokens.contains(token.toLowerCase())) && (! stopWords.contains(token.toLowerCase()))) {
                         tokens.add(token.toLowerCase());
                     }
                 }
