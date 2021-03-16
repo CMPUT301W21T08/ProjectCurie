@@ -31,13 +31,13 @@ public class SubmitTrialActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (experiment.getType().ordinal()) {
             case (0):
-                fragmentTransaction.replace(R.id.trialFragmentLayout, new CountTrialFragment());
+                fragmentTransaction.replace(fragmentLayout.getId(), new CountTrialFragment());
                 break;
             case (1):
-                fragmentTransaction.replace(R.id.trialFragmentLayout, new IntegerCountTrialFragment());
+                fragmentTransaction.replace(fragmentLayout.getId(), new IntegerCountTrialFragment());
                 break;
             case (2):
-                fragmentTransaction.replace(R.id.trialFragmentLayout, new MeasurementTrialFragment());
+                fragmentTransaction.replace(fragmentLayout.getId(), new MeasurementTrialFragment());
                 break;
         }
         fragmentTransaction.commit();
