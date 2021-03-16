@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -65,6 +66,18 @@ public class AddCommentFragment extends DialogFragment {
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE);
                 String username = sharedPreferences.getString("Username", null);
                 String input = comment_body.getText().toString();
+                if (input.matches("")) {
+                    getDialog().dismiss();
+                    Snackbar empty_input_warning = Snackbar.make(getActivity().findViewById(R.id.comments_fragment), "Post Failed: Empty Question/Comment.", Snackbar.LENGTH_LONG);
+                    empty_input_warning.show();
+                    return;
+                }
+                if (username.matches("")) {
+                    getDialog().dismiss();
+                    Snackbar empty_input_warning = Snackbar.make(getActivity().findViewById(R.id.comments_fragment), "Post Failed: Unable to Fetch Username.", Snackbar.LENGTH_LONG);
+                    empty_input_warning.show();
+                    return;
+                }
                 Question question;
                 question = new Question(input, username);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
