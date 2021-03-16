@@ -1,6 +1,5 @@
 package com.example.projectcurie;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -49,8 +48,8 @@ public class ExperimentListActivity extends AppCompatActivity {
         /* Upon Clicking On An Experiment, Open The Experiment Overview Activity */
         experimentListView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             Experiment experiment = this.experiments.get(position);
-            StartActivityOnCallback startActivityOnCallback = new StartActivityOnCallback(experiment, getApplicationContext());
-            startActivityOnCallback.goToExperimentOverview();
+            StartActivityOnFinalCallback startActivityOnFinalCallback = new StartActivityOnFinalCallback(experiment, getApplicationContext());
+            startActivityOnFinalCallback.goToExperimentOverview();
         });
     }
 
@@ -60,18 +59,20 @@ public class ExperimentListActivity extends AppCompatActivity {
      * database queries before starting the Experiment Overview activity.
      * @author Joshua Billson
      */
-    private class StartActivityOnCallback implements Serializable {
+    private class StartActivityOnFinalCallback implements Serializable {
         private Intent intent;
         private Experiment experiment;
         private ArrayList<Trial> trials = null;
+        private ArrayList<Question> questions = null;
 
-        public StartActivityOnCallback(Experiment experiment, Context context) {
+        public StartActivityOnFinalCallback(Experiment experiment, Context context) {
             this.experiment = experiment;
             this.intent = new Intent(context, ExperimentOverviewActivity.class);
         }
 
         public void goToExperimentOverview() {
             grabTrials();
+            grabComments();
         }
 
         /* Grab All Trials Associated With The Given Experiment */
@@ -92,13 +93,13 @@ public class ExperimentListActivity extends AppCompatActivity {
                             }
 
                             /* In The Event That All Callbacks Have Returned */
-                            if (experiment != null && trials != null) {
+                            if (experiment != null && trials != null && questions != null) {
                                 startActivityHelper();
                             }
 
                             /* Handle The Case Where The Query Was Unsuccessful */
                         } else {
-                            Log.e("Error", "Error Fetching From Database!");
+                            Log.e("Error", "Error Fetching Trials From Database!");
                         }
                     });
         }
@@ -109,19 +110,19 @@ public class ExperimentListActivity extends AppCompatActivity {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("experiments")
                     .document(this.experiment.getTitle())
-                    .collection("comments")
+                    .collection("questions")
                     .get()
 
                     /* Query Completion Callback */
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            trials = new ArrayList<>();
+                            questions = new ArrayList<>();
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-                                trials.add(doc.toObject(Trial.class));
+                                questions.add(doc.toObject(Question.class));
                             }
 
                             /* In The Event That All Callbacks Have Returned */
-                            if (experiment != null && trials != null) {
+                            if (experiment != null && trials != null && questions != null) {
                                 startActivityHelper();
                             }
 
@@ -136,6 +137,7 @@ public class ExperimentListActivity extends AppCompatActivity {
             try {
                 intent.putExtra("experiment", ObjectSerializer.serialize(experiment));
                 intent.putExtra("trials", ObjectSerializer.serialize(trials));
+                intent.putExtra("questions", ObjectSerializer.serialize(questions));
                 startActivity(intent);
             } catch (IOException e) {
                 Log.e("Error", "Error Serializing Experiment!");
