@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView emailTextView;
     TextView informationTextView;
     TextView userDateJoin;
-    User user = new User();
+    User user = App.getUser();
     ListView experimentListView;
 
 
@@ -35,15 +36,17 @@ public class UserProfileActivity extends AppCompatActivity {
         userDateJoin = findViewById(R.id.user_join_date);
 
         /* Setups */
-        user.setEmail(App.getUser()+"@gmail.com");
+
+        user.setEmail(user.getUsername()+"@gmail.com");
         user.setAbout("Tell us something about yourself!");
+        user.setDateJoined(new Date(2021,01,25)); //User join date should be initialized in WelcomeActivity
 
 
 
 
 
         /* Showing the username */
-        usernameTextView.setText(App.getUser());
+        usernameTextView.setText(user.getUsername());
 
         /* Showing the user email */
         emailTextView.setText(user.getEmail());
@@ -52,7 +55,7 @@ public class UserProfileActivity extends AppCompatActivity {
         informationTextView.setText(user.getAbout());
 
         /* Showing the User join date */
-
+        userDateJoin.setText(user.getDateJoined().toString());
         /* Showing experiments by user */
 
 
