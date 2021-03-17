@@ -1,3 +1,4 @@
+
 package com.example.projectcurie;
 
 import android.app.AlertDialog;
@@ -107,7 +108,7 @@ public class ExperimentOverviewFragment extends Fragment {
             transaction.set(ref, experiment);
             return experiment;
 
-        /* On Transaction Success, Update Local Copy Of Experiment & Post Results To UI */
+            /* On Transaction Success, Update Local Copy Of Experiment & Post Results To UI */
         }).addOnSuccessListener(experiment -> {
             this.experiment = experiment;
             subscribeButton.setText(experiment.isSubscribed(App.getUser().getUsername()) ? "Unsubscribe" : "Subscribe");
@@ -121,11 +122,16 @@ public class ExperimentOverviewFragment extends Fragment {
         if (! experiment.isSubscribed(App.getUser().getUsername())) {
             Toast.makeText(getActivity().getApplicationContext(), "Must Subscribe Before Submitting A Trial!", Toast.LENGTH_SHORT).show();
         } else {
-            /* If geolocation is required, we warn the user*/
-            if (this.experiment.isGeolocationRequired()) {
-                notifyGeolocationRequired();
+            if(! experiment.isLocked()) {
+
+                /* If geolocation is required, we warn the user*/
+                if (this.experiment.isGeolocationRequired()) {
+                    notifyGeolocationRequired();
+                } else {
+                    goToSubmitTrialActivity();
+                }
             } else {
-                goToSubmitTrialActivity();
+                Toast.makeText(getActivity().getApplicationContext(), "Experiment Is Locked!", Toast.LENGTH_SHORT).show();
             }
         }
     }

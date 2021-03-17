@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -61,6 +62,9 @@ public class SubmitTrialActivity extends AppCompatActivity implements
         db.collection("trials")
                 .document(this.experiment.getTitle())
                 .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -75,6 +79,9 @@ public class SubmitTrialActivity extends AppCompatActivity implements
         db.collection("trials")
                 .document(this.experiment.getTitle())
                 .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -89,6 +96,9 @@ public class SubmitTrialActivity extends AppCompatActivity implements
         db.collection("trials")
                 .document(this.experiment.getTitle())
                 .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -103,6 +113,9 @@ public class SubmitTrialActivity extends AppCompatActivity implements
         db.collection("trials")
                 .document(this.experiment.getTitle())
                 .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
