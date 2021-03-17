@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         /* View User Profile On Click Listener */
         view_profile_btn.setOnClickListener((View v) -> {
             Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.putExtra("user", App.getUser());
             startActivity(intent);
         });
 
