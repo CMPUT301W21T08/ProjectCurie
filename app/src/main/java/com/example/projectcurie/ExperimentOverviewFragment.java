@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -25,6 +26,9 @@ import java.io.IOException;
 public class ExperimentOverviewFragment extends Fragment {
 
     private Experiment experiment;
+    /*TO DO: Change this boolean value to experiment.getSubscriptions().contains(user.getUserName()) */
+    private boolean isSubscribed = false;
+    public ExperimentOverviewFragmentInteractionListener listener;
 
     public ExperimentOverviewFragment() {
     }
@@ -42,6 +46,28 @@ public class ExperimentOverviewFragment extends Fragment {
         bundle.putSerializable("experiment", experiment);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public interface ExperimentOverviewFragmentInteractionListener {
+        void goSubscribeDialog();
+        void goUnsubscribeDialog();
+        void goSubscribeSuccess();
+        void goWarningSubscribe();
+
+        // TO DO: Modify to get status from database
+        boolean getSubscriptionStatus();
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ExperimentOverviewFragment.ExperimentOverviewFragmentInteractionListener){
+            listener = (ExperimentOverviewFragment.ExperimentOverviewFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -74,14 +100,39 @@ public class ExperimentOverviewFragment extends Fragment {
         /* Setup On Click Listener For Submitting Trials */
         Button submitButton = view.findViewById(R.id.submitTrialButton);
         submitButton.setOnClickListener(v -> {
-            try {
-                Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
-                intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
-                startActivity(intent);
-            } catch (IOException e) {
-                Log.e("Error", "Error: Could Not Serialize Experiment!");
+            // Only participate in trial if subscribed to the experiment
+            if (isSubscribed) {
+                try {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
+                    intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
+                    startActivity(intent);
+                } catch (IOException e) {
+                    Log.e("Error", "Error: Could Not Serialize Experiment!");
+                }
+            } else if (!isSubscribed) {
+                listener.goWarningSubscribe();
+            }
+
+        });
+        //TO DO: put an if statement between subscribe and unsuubscribe button depending on subscription status
+        Button subscribeButton = view.findViewById(R.id.experimentSubscriptionButton);
+        subscribeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.goSubscribeDialog();
+                isSubscribed = listener.getSubscriptionStatus();
             }
         });
+
+        Button unsubscribeButton = view.findViewById(R.id.experimentUnsubscribeButton);
+        unsubscribeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.goUnsubscribeDialog();
+                isSubscribed = false;
+            }
+        });
+
 
         return view;
     }

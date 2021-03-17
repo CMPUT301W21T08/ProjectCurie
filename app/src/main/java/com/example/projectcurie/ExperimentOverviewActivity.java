@@ -7,8 +7,11 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -22,7 +25,10 @@ import java.util.ArrayList;
  * This class implements a tabbed activity for viewing and commenting on an experiment.
  * @author Joshua Billson
  */
-public class ExperimentOverviewActivity extends AppCompatActivity implements AddCommentFragment.AddCommentDialogFragmentListener {
+public class ExperimentOverviewActivity extends AppCompatActivity implements AddCommentFragment.AddCommentDialogFragmentListener,
+                                                                                ExperimentOverviewFragment.ExperimentOverviewFragmentInteractionListener,
+                                                                                SubscribeDialogFragment.SubscribeDialogFragmentInteractionListener,
+                                                                                WarningSubscribeFragment.WarningSubscribeFragmentInteractionListener{
 
     private TabLayout tabs;
     private ViewPager2 viewPager;
@@ -30,6 +36,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     private ArrayList<Trial> trials;
     private ArrayList<Question> questions;
     private StateAdapter stateAdapter;
+    private boolean isSubscribed;
 
     /* Fragments */
     ExperimentOverviewFragment overviewFragment;
@@ -119,6 +126,49 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
                 .addOnFailureListener(e -> Log.e("Error", "Error: Couldn't Add New Question!"));
 
         Log.i("Info: The Comment To Be Posted:", body);
+    }
+
+    @Override
+    public void goSubscribeDialog() {
+        new SubscribeDialogFragment().show(getSupportFragmentManager(),"SUBSCRIBE DIALOG");
+    }
+
+    // TO DO: Modify to get status from database
+    // This function returns true if user is subscribed
+    @Override
+    public boolean getSubscriptionStatus(){
+        return true;
+    }
+
+    @Override
+    public void goUnsubscribeDialog() {
+
+    }
+
+    @Override
+    public void goSubscribeSuccess() {
+
+    }
+
+    @Override
+    public void goWarningSubscribe() {
+        new WarningSubscribeFragment().show(getSupportFragmentManager(),"SUBSCRIBE WARNING");
+    }
+
+    @Override
+    public void subscribeToExperiment() {
+        // TO DO: Add username to Subscription collection in the database
+        new SubscribeSuccessFragment().show(getSupportFragmentManager(),"SUBSCRIBE SUCCESS");
+        Button subscribeButton = findViewById(R.id.experimentSubscriptionButton);
+        Button unsubscribeButton = findViewById(R.id.experimentUnsubscribeButton);
+        subscribeButton.setVisibility(View.INVISIBLE);
+        unsubscribeButton.setVisibility(View.VISIBLE);
+        isSubscribed = true;
+    }
+
+    @Override
+    public void warningSubscribe() {
+
     }
 
 
