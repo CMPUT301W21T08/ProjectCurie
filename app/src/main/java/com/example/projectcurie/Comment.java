@@ -12,7 +12,9 @@ public class Comment implements Serializable {
     private String poster;
     private String body;
 
-    /* Empty Constructor For FireStore */
+    /**
+     *  Empty Constructor For FireStore
+     */
     public Comment() {
     }
 

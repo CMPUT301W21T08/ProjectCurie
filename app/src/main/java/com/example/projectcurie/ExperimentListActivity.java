@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -10,6 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -63,7 +67,7 @@ public class ExperimentListActivity extends AppCompatActivity {
         private Intent intent;
         private Experiment experiment;
         private ArrayList<Trial> trials = null;
-        private ArrayList<Question> questions = null;
+        private MessageBoard comments = null;
 
         public StartActivityOnFinalCallback(Experiment experiment, Context context) {
             this.experiment = experiment;
@@ -93,7 +97,7 @@ public class ExperimentListActivity extends AppCompatActivity {
                             }
 
                             /* In The Event That All Callbacks Have Returned */
-                            if (experiment != null && trials != null && questions != null) {
+                            if (experiment != null && trials != null && comments != null) {
                                 startActivityHelper();
                             }
 
@@ -110,34 +114,33 @@ public class ExperimentListActivity extends AppCompatActivity {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("experiments")
                     .document(this.experiment.getTitle())
-                    .collection("questions")
+                    .collection("comments")
+                    .document(this.experiment.getTitle())
                     .get()
 
                     /* Query Completion Callback */
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            questions = new ArrayList<>();
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                questions.add(doc.toObject(Question.class));
-                            }
-
-                            /* In The Event That All Callbacks Have Returned */
-                            if (experiment != null && trials != null && questions != null) {
-                                startActivityHelper();
-                            }
-
-                            /* Handle The Case Where The Query Was Unsuccessful */
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            comments = documentSnapshot.toObject(MessageBoard.class);
                         } else {
-                            Log.e("Error", "Error Fetching From Database!");
+                            comments = new MessageBoard(this.experiment.getTitle());
                         }
-                    });
+
+                        /* In The Event That All Callbacks Have Returned */
+                        if (experiment != null && trials != null && this.comments != null) {
+                            startActivityHelper();
+                        }
+                    })
+
+                    /* Handle The Case Where The Query Was Unsuccessful */
+                    .addOnFailureListener(e -> Log.e("Error", "Error Fetching From Database!"));
         }
 
         private void startActivityHelper() {
             try {
                 intent.putExtra("experiment", ObjectSerializer.serialize(experiment));
                 intent.putExtra("trials", ObjectSerializer.serialize(trials));
-                intent.putExtra("questions", ObjectSerializer.serialize(questions));
+                intent.putExtra("comments", ObjectSerializer.serialize(comments));
                 startActivity(intent);
             } catch (IOException e) {
                 Log.e("Error", "Error Serializing Experiment!");
