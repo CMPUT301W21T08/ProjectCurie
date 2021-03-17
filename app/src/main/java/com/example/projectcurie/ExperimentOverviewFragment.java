@@ -118,11 +118,13 @@ public class ExperimentOverviewFragment extends Fragment {
     }
 
     private void submitTrial() {
-        /* If We Are Not Subscribed, Inform User To Subscribe Before Submitting A Trial */
-        if (! experiment.isSubscribed(App.getUser().getUsername())) {
-            Toast.makeText(getActivity().getApplicationContext(), "Must Subscribe Before Submitting A Trial!", Toast.LENGTH_SHORT).show();
-        } else {
-            if(! experiment.isLocked()) {
+        /* Check That The Experiment Is Unlocked */
+        if (! experiment.isLocked()) {
+
+            /* If We Are Not Subscribed, Inform User To Subscribe Before Submitting A Trial */
+            if (! experiment.isSubscribed(App.getUser().getUsername())) {
+                Toast.makeText(getActivity().getApplicationContext(), "Must Subscribe Before Submitting A Trial!", Toast.LENGTH_SHORT).show();
+            } else {
 
                 /* If geolocation is required, we warn the user*/
                 if (this.experiment.isGeolocationRequired()) {
@@ -130,9 +132,9 @@ public class ExperimentOverviewFragment extends Fragment {
                 } else {
                     goToSubmitTrialActivity();
                 }
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Experiment Is Locked!", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "Experiment Is Locked!", Toast.LENGTH_SHORT).show();
         }
     }
 
