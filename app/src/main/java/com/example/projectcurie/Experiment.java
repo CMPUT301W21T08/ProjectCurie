@@ -45,6 +45,7 @@ public class Experiment implements Serializable {
             throw new IllegalArgumentException();
         }
 
+        this.subscriptions = new ArrayList<>();
         this.title = title;
         this.description = description;
         this.region = region;
@@ -149,6 +150,10 @@ public class Experiment implements Serializable {
         if (this.subscriptions.contains(username)) {
             subscriptions.remove(username);
         }
+    }
+
+    public boolean isSubscribed(String username) {
+        return this.subscriptions.contains(username);
     }
 
     @NotNull
