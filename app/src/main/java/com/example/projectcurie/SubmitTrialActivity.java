@@ -32,12 +32,8 @@ public class SubmitTrialActivity extends AppCompatActivity implements
         fragmentLayout = findViewById(R.id.trialFragmentLayout);
 
         /* Grab Data From Intent */
-        try {
-            this.experiment = (Experiment) ObjectSerializer.deserialize(getIntent().getStringExtra("experiment"));
-            this.statistics = (ExperimentStatistics) ObjectSerializer.deserialize(getIntent().getStringExtra("trials"));
-        } catch (IOException e) {
-            Log.e("Error", "Error: Could Not Deserialize Experiment!");
-        }
+        this.experiment = (Experiment) getIntent().getSerializableExtra("experiment");
+        this.statistics = (ExperimentStatistics) getIntent().getSerializableExtra("trials");
 
         /* Display Appropriate Fragment Depending On Experiment Type */
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
