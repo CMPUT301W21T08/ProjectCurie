@@ -101,4 +101,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements BinomialTr
     public void addCountBarcode(String barcodeString) {
 
     }
+
+
 }
