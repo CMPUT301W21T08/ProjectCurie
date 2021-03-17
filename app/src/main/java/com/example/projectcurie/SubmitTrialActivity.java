@@ -23,7 +23,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
     private FrameLayout fragmentLayout;
     private Experiment experiment;
-    private ExperimentStatistics statistics;
+    private ExperimentStatistics results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
         /* Grab Data From Intent */
         this.experiment = (Experiment) getIntent().getSerializableExtra("experiment");
-        this.statistics = (ExperimentStatistics) getIntent().getSerializableExtra("trials");
+        this.results = (ExperimentStatistics) getIntent().getSerializableExtra("trials");
 
         /* Display Appropriate Fragment Depending On Experiment Type */
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -57,10 +57,10 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     @Override
     public void uploadBinomialTrial(boolean value) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        statistics.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+        results.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
         db.collection("trials")
                 .document(this.experiment.getTitle())
-                .set(statistics);
+                .set(results);
     }
 
     @Override
@@ -71,10 +71,10 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     @Override
     public void uploadIntegerCountTrial(int value) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        statistics.addTrial(new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+        results.addTrial(new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
         db.collection("trials")
                 .document(this.experiment.getTitle())
-                .set(statistics);
+                .set(results);
     }
 
     @Override
@@ -85,10 +85,10 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     @Override
     public void uploadCountTrial() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        statistics.addTrial(new CountTrial(this.experiment.getTitle(), App.getUser().getUsername()));
+        results.addTrial(new CountTrial(this.experiment.getTitle(), App.getUser().getUsername()));
         db.collection("trials")
                 .document(this.experiment.getTitle())
-                .set(statistics);
+                .set(results);
     }
 
     @Override
@@ -99,10 +99,10 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     @Override
     public void uploadMeasurementTrial(double value) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        statistics.addTrial(new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+        results.addTrial(new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
         db.collection("trials")
                 .document(this.experiment.getTitle())
-                .set(statistics);
+                .set(results);
     }
 
     @Override
