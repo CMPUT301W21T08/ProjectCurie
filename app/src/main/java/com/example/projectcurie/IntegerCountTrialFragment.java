@@ -1,7 +1,5 @@
 package com.example.projectcurie;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,8 +25,8 @@ public class IntegerCountTrialFragment extends Fragment {
     private IntegerCountTrialFragment.IntegerCountTrialFragmentInteractionListener listener;
 
     public interface IntegerCountTrialFragmentInteractionListener {
-        void uploadIntegerCountTrial(String resultString);
-        void addIntCountBarcode(String barcodeString);
+        void uploadIntegerCountTrial(int value);
+        void addIntCountBarcode(String barcodeString, int value);
 
     }
 
@@ -52,51 +50,39 @@ public class IntegerCountTrialFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        incrementButton = (Button) view.findViewById(R.id.integerCountIncrementButton);
-        decrementButton = (Button) view.findViewById(R.id.integerCountDecrementButton);
-        generateQRButton = (Button) view.findViewById(R.id.integerCountTrialGenerateQRButton);
-        submitButton = (Button) view.findViewById(R.id.integerCountTrialSubmitButton);
-        addBarcodeButton = (Button) view.findViewById(R.id.integerCountTrialSubmitBarcodeButton);
-        result = (TextView) view.findViewById(R.id.integerCountTrialCounterTextView);
-        EditText barcodeInput = (EditText) view.findViewById(R.id.integerCountTrialBarcodeEditText);
+        incrementButton = view.findViewById(R.id.integerCountIncrementButton);
+        decrementButton = view.findViewById(R.id.integerCountDecrementButton);
+        generateQRButton = view.findViewById(R.id.binomialTrialGenerateQRButton);
+        submitButton = view.findViewById(R.id.binomialTrialSubmitButton);
+        addBarcodeButton = view.findViewById(R.id.binomialTrialSubmitBarcodeButton);
+        result = view.findViewById(R.id.integerCountTrialCounterTextView);
+        EditText barcodeInput = view.findViewById(R.id.binomialTrialBarcodeEditText);
 
 
-        incrementButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               counter++;
-               if (counter < 0) {
-                   counter = 0;
-               }
-               result.setText(String.valueOf(counter));
-           }
-       });
-
-        decrementButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                counter--;
-                if (counter < 0) {
-                    counter = 0;
-                }
-                result.setText(String.valueOf(counter));
+        incrementButton.setOnClickListener(v -> {
+            counter++;
+            if (counter < 0) {
+                counter = 0;
             }
+            result.setText(String.valueOf(counter));
         });
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intCountResult = result.toString();
-                listener.uploadIntegerCountTrial(intCountResult);
+        decrementButton.setOnClickListener(v -> {
+            counter--;
+            if (counter < 0) {
+                counter = 0;
             }
+            result.setText(String.valueOf(counter));
         });
 
-        addBarcodeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String barcode = barcodeInput.toString();
-                listener.addIntCountBarcode(barcode);
-            }
+        submitButton.setOnClickListener(v -> {
+            intCountResult = result.toString();
+            listener.uploadIntegerCountTrial(counter);
+        });
+
+        addBarcodeButton.setOnClickListener(v -> {
+            String barcode = barcodeInput.toString();
+            listener.addIntCountBarcode(barcode, counter);
         });
 
     }

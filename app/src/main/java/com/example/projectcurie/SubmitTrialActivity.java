@@ -11,16 +11,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.IOException;
 
-public class SubmitTrialActivity extends AppCompatActivity implements BinomialTrialFragment.BinomialTrialFragmentInteractionListener,
-                                                                        IntegerCountTrialFragment.IntegerCountTrialFragmentInteractionListener,
-                                                                        CountTrialFragment.CountTrialFragmentInteractionListener{
+public class SubmitTrialActivity extends AppCompatActivity implements
+        BinomialTrialFragment.BinomialTrialFragmentInteractionListener,
+        IntegerCountTrialFragment.IntegerCountTrialFragmentInteractionListener,
+        CountTrialFragment.CountTrialFragmentInteractionListener,
+        MeasurementTrialFragment.MeasurementTrialFragmentInteractionListener {
 
-    FrameLayout fragmentLayout;
-    ConstraintLayout submitSuccessLayout;
-    Experiment experiment;
-    Button homeButton;
+    private FrameLayout fragmentLayout;
+    private Experiment experiment;
+    private ExperimentStatistics statistics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,25 +31,11 @@ public class SubmitTrialActivity extends AppCompatActivity implements BinomialTr
         setContentView(R.layout.activity_submit_trial);
         fragmentLayout = findViewById(R.id.trialFragmentLayout);
 
-        // Implement home button so the activity would switch to Main Activity
-        homeButton = (Button) findViewById(R.id.submitTrialHomeButton);
-
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
         /* Grab Data From Intent */
-        try {
-            String serialString = getIntent().getStringExtra("experiment");
-            this.experiment = (Experiment) ObjectSerializer.deserialize(serialString);
-        } catch (IOException e) {
-            Log.e("Error", "Error: Could Not Deserialize Experiment!");
-        }
+        this.experiment = (Experiment) getIntent().getSerializableExtra("experiment");
+        this.statistics = (ExperimentStatistics) getIntent().getSerializableExtra("trials");
 
+        /* Display Appropriate Fragment Depending On Experiment Type */
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (experiment.getType().ordinal()) {
             case (0):
@@ -66,39 +55,58 @@ public class SubmitTrialActivity extends AppCompatActivity implements BinomialTr
     }
 
     @Override
-    public void uploadBinomialTrial(String resultString) {
-        //TO DO: Upload result to its respective trial class
-        fragmentLayout.setVisibility(View.GONE);
-        submitSuccessLayout = findViewById(R.id.submitSuccessLayout);
-        submitSuccessLayout.setVisibility(View.VISIBLE);
+    public void uploadBinomialTrial(boolean value) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        statistics.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+        db.collection("trials")
+                .document(this.experiment.getTitle())
+                .set(statistics);
     }
 
     @Override
-    public void addBinomialBarcode(String barcodeString) {
-
-    }
-
-    @Override
-    public void uploadIntegerCountTrial(String resultString) {
-        fragmentLayout.setVisibility(View.GONE);
-        submitSuccessLayout = findViewById(R.id.submitSuccessLayout);
-        submitSuccessLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void addIntCountBarcode(String barcodeString) {
+    public void addBinomialBarcode(String barcodeString, boolean value) {
 
     }
 
     @Override
-    public void uploadCountTrial(String resultString) {
-        fragmentLayout.setVisibility(View.GONE);
-        submitSuccessLayout = findViewById(R.id.submitSuccessLayout);
-        submitSuccessLayout.setVisibility(View.VISIBLE);
+    public void uploadIntegerCountTrial(int value) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        statistics.addTrial(new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+        db.collection("trials")
+                .document(this.experiment.getTitle())
+                .set(statistics);
+    }
+
+    @Override
+    public void addIntCountBarcode(String barcodeString, int value) {
+
+    }
+
+    @Override
+    public void uploadCountTrial() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        statistics.addTrial(new CountTrial(this.experiment.getTitle(), App.getUser().getUsername()));
+        db.collection("trials")
+                .document(this.experiment.getTitle())
+                .set(statistics);
     }
 
     @Override
     public void addCountBarcode(String barcodeString) {
+
+    }
+
+    @Override
+    public void uploadMeasurementTrial(double value) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        statistics.addTrial(new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+        db.collection("trials")
+                .document(this.experiment.getTitle())
+                .set(statistics);
+    }
+
+    @Override
+    public void addMeasurementBarcode(String barcodeString, double value) {
 
     }
 }

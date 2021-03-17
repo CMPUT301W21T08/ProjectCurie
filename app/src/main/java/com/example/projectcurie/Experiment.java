@@ -2,6 +2,8 @@ package com.example.projectcurie;
 
 import android.widget.ArrayAdapter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,10 +151,18 @@ public class Experiment implements Serializable {
         }
     }
 
-    public boolean isSubscribed(String username){
-        if (subscriptions.contains(username)){
+    public boolean isSubscribed(String username) {
+        if (subscriptions.contains(username)) {
             return true;
+        } else {
+            return false;
         }
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return this.title;
     }
 
     /* Create An Array Of All Tokens (Words) In The Searchable Fields Of The Experiment */

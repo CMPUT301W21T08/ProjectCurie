@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.graphics.Color;
+import android.content.Intent;
+import android.icu.util.Measure;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,9 +17,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * This class implements a tabbed activity for viewing and commenting on an experiment.
@@ -39,7 +36,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     /* Data */
     private User user = App.getUser();
     private Experiment experiment;
-    private ArrayList<Trial> trials;
+    private ExperimentStatistics statistics;
     private MessageBoard comments;
 
     /* Fragments */
@@ -57,9 +54,10 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         setContentView(R.layout.activity_experiment_overview);
 
         /* Grab Data From Intent */
-        grabExperiment();
-        grabTrials();
-        grabComments();
+        Intent intent = getIntent();
+        this.experiment = (Experiment) intent.getSerializableExtra("experiment");
+        this.statistics = (ExperimentStatistics) intent.getSerializableExtra("trials");
+        this.comments = (MessageBoard) intent.getSerializableExtra("comments");
 
         /* Grab Widgets */
         tabs = findViewById(R.id.tabLayout);
@@ -90,61 +88,15 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
 
     }
 
-    /* Deserialize Experiment From Intent */
-    private void grabExperiment() {
-        String serialString = getIntent().getStringExtra("experiment");
-        if (serialString != null) {
-            try {
-                this.experiment = (Experiment) ObjectSerializer.deserialize(serialString);
-            } catch (IOException e) {
-                Log.e("Error", "Error Deserializing Experiment!");
-            }
-        } else {
-            Log.i("Info", "Error Deserializing Experiment!");
-        }
-    }
-
-    /* Deserialize Trials From Intent */
-    private void grabTrials() {
-        String serialString = getIntent().getStringExtra("trials");
-        if (serialString != null) {
-            try {
-                this.trials = (ArrayList<Trial>) ObjectSerializer.deserialize(serialString);
-            } catch (IOException e) {
-                Log.e("Error", "Error Deserializing Experiment!");
-            }
-        } else {
-            Log.i("Info", "Error Deserializing Experiment!");
-        }
-    }
-
-    /* Deserialize Comments From Intent */
-    private void grabComments() {
-        String serialString = getIntent().getStringExtra("comments");
-        if (serialString != null) {
-            try {
-                this.comments = (MessageBoard) ObjectSerializer.deserialize(serialString);
-            } catch (IOException e) {
-                Log.e("Error", "Error Deserializing Experiment!");
-            }
-        } else {
-            Log.i("Info", "Error Deserializing Experiment!");
-        }
-    }
-
     @Override
     public void addComment(String body) {
-        comments.postQuestion(body, this.user.getUsername());
+        comments.postQuestion(body, user.getUsername());
         commentsFragment.refreshList();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("experiments")
-                .document(experiment.getTitle())
-                .collection("comments")
+        db.collection("comments")
                 .document(experiment.getTitle())
                 .set(comments)
                 .addOnFailureListener(e -> Log.e("Error", "Error: Couldn't Add New Question!"));
-
-        Log.i("Info: The Comment To Be Posted:", body);
     }
 
     @Override
@@ -170,8 +122,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         // TO DO: Add username to Subscription collection in the database
         new SubscribeSuccessFragment().show(getSupportFragmentManager(),"SUBSCRIBE SUCCESS");
         String username = user.getUsername();
-        grabExperiment();
-        experiment.subscribe(username);
+//        experiment.subscribe(username);
         // Updates experiment in the database
 //        FirebaseFirestore db = FirebaseFirestore.getInstance();
 //        db.collection("experiments").document(experiment.getTitle()).set(experiment);
@@ -215,7 +166,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    overviewFragment = ExperimentOverviewFragment.newInstance(experiment);
+                    overviewFragment = ExperimentOverviewFragment.newInstance(experiment, statistics);
                     return overviewFragment;
                 case 1:
                     dataFragment = new ExperimentDataFragment();

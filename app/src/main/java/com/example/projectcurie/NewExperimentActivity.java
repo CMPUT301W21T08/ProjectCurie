@@ -67,6 +67,7 @@ public class NewExperimentActivity extends AppCompatActivity {
             String minTrialsStr = minTrialEditText.getText().toString();
             boolean geolocationRequired = geolocationSwitch.isChecked();
 
+
             /* Try To Construct Experiment From The Given Fields; Throw Error If A Field Is Empty */
             try {
 
@@ -76,27 +77,28 @@ public class NewExperimentActivity extends AppCompatActivity {
                 switch (experimentType) {
                     case "Integer Count":
                         experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.INTEGER_COUNT);
-                        break;
-                    case "Measurement":
-                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.MEASUREMENT);
-                        break;
-                    case "Count":
-                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.COUNT);
-                        break;
-                    default:
-                        experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.BINOMIAL);
-                        break;
+                            break;
+                        case "Measurement":
+                            experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.MEASUREMENT);
+                            break;
+                        case "Count":
+                            experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.COUNT);
+                            break;
+                        default:
+                            experiment = new Experiment(title, description, region, minTrials, geolocationRequired, App.getUser().getUsername(), ExperimentType.BINOMIAL);
+                            break;
                 }
 
                 /* Save Experiment To Database */
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.collection("experiments").document(title).set(experiment);
 
-            /* Print Error Message If Any Fields Are Left Empty */
+                /* Print Error Message If Any Fields Are Left Empty */
             } catch (IllegalArgumentException e) {
                 Toast.makeText(this, "Error: Must Fill In All Fields!", Toast.LENGTH_SHORT).show();
             }
 
         });
     }
+
 }

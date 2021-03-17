@@ -1,11 +1,14 @@
 package com.example.projectcurie;
 
 import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.Html;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -29,6 +33,7 @@ public class ExperimentOverviewFragment extends Fragment {
     /*TO DO: Change this boolean value to experiment.getSubscriptions().contains(user.getUserName()) */
     public ExperimentOverviewFragmentInteractionListener listener;
     private User user = App.getUser();
+    private ExperimentStatistics statistics;
 
     public ExperimentOverviewFragment() {
     }
@@ -40,10 +45,11 @@ public class ExperimentOverviewFragment extends Fragment {
      * @return
      *     A new fragment.
      */
-    public static ExperimentOverviewFragment newInstance(Experiment experiment) {
+    public static ExperimentOverviewFragment newInstance(Experiment experiment, ExperimentStatistics statistics) {
         ExperimentOverviewFragment fragment = new ExperimentOverviewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("experiment", experiment);
+        bundle.putSerializable("trials", statistics);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -70,6 +76,7 @@ public class ExperimentOverviewFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.experiment = (Experiment) getArguments().getSerializable("experiment");
+        this.statistics = (ExperimentStatistics) getArguments().getSerializable("trials");
     }
 
     @Nullable
@@ -95,12 +102,10 @@ public class ExperimentOverviewFragment extends Fragment {
 
         /* Setup On Click Listener For Submitting Trials */
         Button submitButton = view.findViewById(R.id.submitTrialButton);
-        boolean isSub = true;
         submitButton.setOnClickListener(v -> {
             // Only participate in trial if subscribed to the experiment
-            if (isSub) {
+            if (experiment.isSubscribed(user.getUsername())) {
                 try {
-//                    experiment.isSubscribed(user.getUsername());
                     Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
                     intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
                     startActivity(intent);
@@ -109,6 +114,15 @@ public class ExperimentOverviewFragment extends Fragment {
                 }
             } else {
                 listener.goWarningSubscribe();
+            }
+            /* If geolocation is required, we warn the user*/
+            if (this.experiment.isGeolocationRequired()) {
+                showAlertDialog();
+            } else {
+                Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
+                intent.putExtra("experiment", this.experiment);
+                intent.putExtra("trials", this.statistics);
+                startActivity(intent);
             }
 
         });
@@ -131,5 +145,23 @@ public class ExperimentOverviewFragment extends Fragment {
 
 
         return view;
+    }
+
+    public void showAlertDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Warning")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage("This Experiment Requires Geolocation!")
+                .setPositiveButton("Ok", (dialog, which) -> {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
+                    intent.putExtra("experiment", this.experiment);
+                    intent.putExtra("trials", this.statistics);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    Toast.makeText(getContext(), "Nothing Happened", Toast.LENGTH_SHORT).show();
+                })
+                .create()
+                .show();
     }
 }
