@@ -45,6 +45,7 @@ public class Experiment implements Serializable {
             throw new IllegalArgumentException();
         }
 
+        this.subscriptions = new ArrayList<>();
         this.title = title;
         this.description = description;
         this.region = region;
@@ -152,11 +153,7 @@ public class Experiment implements Serializable {
     }
 
     public boolean isSubscribed(String username) {
-        if (subscriptions.contains(username)) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.subscriptions.contains(username);
     }
 
     @NotNull

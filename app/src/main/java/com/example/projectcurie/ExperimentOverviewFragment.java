@@ -1,18 +1,15 @@
+
 package com.example.projectcurie;
 
-import android.content.Context;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +17,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * This class implements the experiment overview fragment for the overview tab of the Experiment
@@ -30,10 +28,8 @@ import java.io.IOException;
 public class ExperimentOverviewFragment extends Fragment {
 
     private Experiment experiment;
-    /*TO DO: Change this boolean value to experiment.getSubscriptions().contains(user.getUserName()) */
-    public ExperimentOverviewFragmentInteractionListener listener;
-    private User user = App.getUser();
     private ExperimentStatistics statistics;
+    private Button subscribeButton;
 
     public ExperimentOverviewFragment() {
     }
@@ -52,24 +48,6 @@ public class ExperimentOverviewFragment extends Fragment {
         bundle.putSerializable("trials", statistics);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    public interface ExperimentOverviewFragmentInteractionListener {
-        Experiment goSubscribeDialog();
-        Experiment goUnsubscribeDialog();
-        void goWarningSubscribe();
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof ExperimentOverviewFragment.ExperimentOverviewFragmentInteractionListener){
-            listener = (ExperimentOverviewFragment.ExperimentOverviewFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -100,63 +78,73 @@ public class ExperimentOverviewFragment extends Fragment {
         experimentGeolocation.setText(Html.fromHtml("<b>Geolocation Required: </b><span>" + (this.experiment.isGeolocationRequired() ? "True" : "False") + "</span>"));
         experimentOwner.setText(Html.fromHtml("<b>Owner: </b><span>" + this.experiment.getOwner() + "</span>"));
 
+        /* Setup On Click Listener For Subscribing To Experiment */
+        subscribeButton = view.findViewById(R.id.experimentSubscriptionButton);
+        subscribeButton.setText(experiment.isSubscribed(App.getUser().getUsername()) ? "Unsubscribe" : "Subscribe");
+        subscribeButton.setOnClickListener(v -> {
+            toggleSubscription();
+            subscribeButton.setText(experiment.isSubscribed(App.getUser().getUsername()) ? "Unsubscribe" : "Subscribe");
+        });
+
         /* Setup On Click Listener For Submitting Trials */
         Button submitButton = view.findViewById(R.id.submitTrialButton);
-        submitButton.setOnClickListener(v -> {
-            // Only participate in trial if subscribed to the experiment
-            if (experiment.isSubscribed(user.getUsername())) {
-                try {
-                    Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
-                    intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
-                    startActivity(intent);
-                } catch (IOException e) {
-                    Log.e("Error", "Error: Could Not Serialize Experiment!");
-                }
-            } else {
-                listener.goWarningSubscribe();
-            }
-            /* If geolocation is required, we warn the user*/
-            if (this.experiment.isGeolocationRequired()) {
-                showAlertDialog();
-            } else {
-                Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
-                intent.putExtra("experiment", this.experiment);
-                intent.putExtra("trials", this.statistics);
-                startActivity(intent);
-            }
-
-        });
-        //TO DO: put an if statement between subscribe and unsuubscribe button depending on subscription status
-        Button subscribeButton = view.findViewById(R.id.experimentSubscriptionButton);
-        subscribeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                experiment = listener.goSubscribeDialog();
-            }
-        });
-
-        Button unsubscribeButton = view.findViewById(R.id.experimentUnsubscribeButton);
-        unsubscribeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                experiment = listener.goUnsubscribeDialog();
-            }
-        });
-
+        submitButton.setOnClickListener(v -> submitTrial());
 
         return view;
     }
 
-    public void showAlertDialog() {
+    private void toggleSubscription() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference ref = db.collection("experiments").document(experiment.getTitle());
+
+        /* Run Database Transaction To Toggle Subscription */
+        db.runTransaction(transaction -> {
+            Experiment experiment = transaction.get(ref).toObject(Experiment.class);
+            if (experiment.isSubscribed(App.getUser().getUsername())) {
+                experiment.unsubscribe(App.getUser().getUsername());
+            } else {
+                experiment.subscribe(App.getUser().getUsername());
+            }
+            transaction.set(ref, experiment);
+            return experiment;
+
+            /* On Transaction Success, Update Local Copy Of Experiment & Post Results To UI */
+        }).addOnSuccessListener(experiment -> {
+            this.experiment = experiment;
+            subscribeButton.setText(experiment.isSubscribed(App.getUser().getUsername()) ? "Unsubscribe" : "Subscribe");
+            String message = experiment.isSubscribed(App.getUser().getUsername()) ? "You Have Subscribed To This Experiment!" : "You Have Unsubscribed From This Experiment!";
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void submitTrial() {
+        /* If We Are Not Subscribed, Inform User To Subscribe Before Submitting A Trial */
+        if (! experiment.isSubscribed(App.getUser().getUsername())) {
+            Toast.makeText(getActivity().getApplicationContext(), "Must Subscribe Before Submitting A Trial!", Toast.LENGTH_SHORT).show();
+        } else {
+            /* If geolocation is required, we warn the user*/
+            if (this.experiment.isGeolocationRequired()) {
+                notifyGeolocationRequired();
+            } else {
+                goToSubmitTrialActivity();
+            }
+        }
+    }
+
+    private void goToSubmitTrialActivity() {
+        Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
+        intent.putExtra("experiment", this.experiment);
+        intent.putExtra("trials", this.statistics);
+        startActivity(intent);
+    }
+
+    private void notifyGeolocationRequired() {
         new AlertDialog.Builder(getContext())
                 .setTitle("Warning")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setMessage("This Experiment Requires Geolocation!")
                 .setPositiveButton("Ok", (dialog, which) -> {
-                    Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
-                    intent.putExtra("experiment", this.experiment);
-                    intent.putExtra("trials", this.statistics);
-                    startActivity(intent);
+                    goToSubmitTrialActivity();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
                     Toast.makeText(getContext(), "Nothing Happened", Toast.LENGTH_SHORT).show();
