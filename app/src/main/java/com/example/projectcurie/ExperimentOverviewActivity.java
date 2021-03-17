@@ -24,28 +24,31 @@ import java.util.ArrayList;
  */
 public class ExperimentOverviewActivity extends AppCompatActivity implements AddCommentFragment.AddCommentDialogFragmentListener {
 
+    /* Widgets */
     private TabLayout tabs;
     private ViewPager2 viewPager;
+    private StateAdapter stateAdapter;
+
+    /* Data */
+    private User user = App.getUser();
     private Experiment experiment;
     private ArrayList<Trial> trials;
     private MessageBoard comments;
-    private StateAdapter stateAdapter;
 
     /* Fragments */
-    ExperimentOverviewFragment overviewFragment;
-    ExperimentDataFragment dataFragment;
-    ExperimentCommentsFragment commentsFragment;
+    private ExperimentOverviewFragment overviewFragment;
+    private ExperimentDataFragment dataFragment;
+    private ExperimentCommentsFragment commentsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment_overview);
 
-
         /* Grab Data From Intent */
         grabExperiment();
         grabTrials();
-        grabQuestions();
+        grabComments();
 
         /* Grab Widgets */
         tabs = findViewById(R.id.tabLayout);
@@ -91,7 +94,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     }
 
     /* Deserialize Comments From Intent */
-    private void grabQuestions() {
+    private void grabComments() {
         String serialString = getIntent().getStringExtra("comments");
         if (serialString != null) {
             try {
@@ -106,7 +109,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
 
     @Override
     public void addComment(String body) {
-        comments.postQuestion(body, App.getUser().getUsername());
+        comments.postQuestion(body, this.user.getUsername());
         commentsFragment.refreshList();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("experiments")
