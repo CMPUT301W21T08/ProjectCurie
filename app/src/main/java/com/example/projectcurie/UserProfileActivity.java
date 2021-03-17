@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -8,13 +9,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -23,16 +29,17 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class UserProfileActivity extends AppCompatActivity implements EditUserDialogFragment.EditUserCallbackListener {
-    TextView usernameTextView;
-    TextView emailTextView;
-    TextView informationTextView;
-    TextView userDateJoin;
-    private User user;
+
+    private TextView usernameTextView;
+    private TextView emailTextView;
+    private TextView informationTextView;
+    private TextView userDateJoin;
     private Button editProfileButton;
+    private ListView experimentListView;
+    private User user;
 
 
-    ListView experimentListView;
-    private ExperimentArrayAdapter experimentArrayAdapter;
+    private ArrayAdapter<Experiment> experimentArrayAdapter;
     private ArrayList<Experiment> experiments;
 
     @Override
@@ -56,6 +63,19 @@ public class UserProfileActivity extends AppCompatActivity implements EditUserDi
         });
 
         /* Showing experiments by user */
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("experiments")
+                .whereEqualTo("owner", user.getUsername())
+                .get()
+                .addOnCompleteListener(task -> {
+                    experiments = new ArrayList<>();
+                    experimentArrayAdapter = new ArrayAdapter<Experiment>(getApplicationContext(), android.R.layout.simple_list_item_1, experiments);
+                    experimentListView.setAdapter(experimentArrayAdapter);
+                    for (DocumentSnapshot document : task.getResult()) {
+                        experiments.add(document.toObject(Experiment.class));
+                    }
+                    experimentArrayAdapter.notifyDataSetChanged();
+                });
 
 
 
