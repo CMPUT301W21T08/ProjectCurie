@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         });
 
         view_map_btn.setOnClickListener((View v) -> {
-
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            startActivity(intent);
         });
 
         search_user_btn.setOnClickListener((View v) -> {
