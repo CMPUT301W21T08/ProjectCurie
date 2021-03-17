@@ -27,8 +27,8 @@ public class ExperimentOverviewFragment extends Fragment {
 
     private Experiment experiment;
     /*TO DO: Change this boolean value to experiment.getSubscriptions().contains(user.getUserName()) */
-    private boolean isSubscribed = false;
     public ExperimentOverviewFragmentInteractionListener listener;
+    private User user = App.getUser();
 
     public ExperimentOverviewFragment() {
     }
@@ -49,13 +49,9 @@ public class ExperimentOverviewFragment extends Fragment {
     }
 
     public interface ExperimentOverviewFragmentInteractionListener {
-        void goSubscribeDialog();
-        void goUnsubscribeDialog();
-        void goSubscribeSuccess();
+        Experiment goSubscribeDialog();
+        Experiment goUnsubscribeDialog();
         void goWarningSubscribe();
-
-        // TO DO: Modify to get status from database
-        boolean getSubscriptionStatus();
 
     }
 
@@ -99,17 +95,19 @@ public class ExperimentOverviewFragment extends Fragment {
 
         /* Setup On Click Listener For Submitting Trials */
         Button submitButton = view.findViewById(R.id.submitTrialButton);
+        boolean isSub = true;
         submitButton.setOnClickListener(v -> {
             // Only participate in trial if subscribed to the experiment
-            if (isSubscribed) {
+            if (isSub) {
                 try {
+//                    experiment.isSubscribed(user.getUsername());
                     Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
                     intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
                     startActivity(intent);
                 } catch (IOException e) {
                     Log.e("Error", "Error: Could Not Serialize Experiment!");
                 }
-            } else if (!isSubscribed) {
+            } else {
                 listener.goWarningSubscribe();
             }
 
@@ -119,8 +117,7 @@ public class ExperimentOverviewFragment extends Fragment {
         subscribeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.goSubscribeDialog();
-                isSubscribed = listener.getSubscriptionStatus();
+                experiment = listener.goSubscribeDialog();
             }
         });
 
@@ -128,8 +125,7 @@ public class ExperimentOverviewFragment extends Fragment {
         unsubscribeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.goUnsubscribeDialog();
-                isSubscribed = false;
+                experiment = listener.goUnsubscribeDialog();
             }
         });
 

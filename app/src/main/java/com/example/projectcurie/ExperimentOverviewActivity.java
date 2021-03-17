@@ -28,6 +28,7 @@ import java.util.ArrayList;
 public class ExperimentOverviewActivity extends AppCompatActivity implements AddCommentFragment.AddCommentDialogFragmentListener,
                                                                                 ExperimentOverviewFragment.ExperimentOverviewFragmentInteractionListener,
                                                                                 SubscribeDialogFragment.SubscribeDialogFragmentInteractionListener,
+                                                                                UnsubscribeDialogFragment.UnsubscribeDialogFragmentInteractionListener,
                                                                                 WarningSubscribeFragment.WarningSubscribeFragmentInteractionListener{
 
     /* Widgets */
@@ -45,6 +46,10 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     private ExperimentOverviewFragment overviewFragment;
     private ExperimentDataFragment dataFragment;
     private ExperimentCommentsFragment commentsFragment;
+
+    /* Buttons */
+    private Button subscribeButton;
+    private Button unsubscribeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,20 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         new TabLayoutMediator(tabs, viewPager, (tab, position) -> {
             tab.setText(tabLabels[position]);
         }).attach();
+//
+        //checks if the user is subscribed to display the appropriate UI
+//        subscribeButton = findViewById(R.id.experimentSubscriptionButton);
+//        unsubscribeButton = findViewById(R.id.experimentUnsubscribeButton);
+//
+//        if(experiment.isSubscribed(user.getUsername())){
+//            subscribeButton.setVisibility(View.INVISIBLE);
+//            unsubscribeButton.setVisibility(View.VISIBLE);
+//        } else if(!experiment.isSubscribed(user.getUsername())){
+//            unsubscribeButton.setVisibility(View.INVISIBLE);
+//            subscribeButton.setVisibility(View.VISIBLE);
+//        }
+
+
     }
 
     /* Deserialize Experiment From Intent */
@@ -129,25 +148,16 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     }
 
     @Override
-    public void goSubscribeDialog() {
+    public Experiment goSubscribeDialog() {
         new SubscribeDialogFragment().show(getSupportFragmentManager(),"SUBSCRIBE DIALOG");
-    }
 
-    // TO DO: Modify to get status from database
-    // This function returns true if user is subscribed
-    @Override
-    public boolean getSubscriptionStatus(){
-        return true;
+        return this.experiment;
     }
 
     @Override
-    public void goUnsubscribeDialog() {
-
-    }
-
-    @Override
-    public void goSubscribeSuccess() {
-
+    public Experiment goUnsubscribeDialog() {
+        new UnsubscribeDialogFragment().show(getSupportFragmentManager(),"UNSUBSCRIBE DIALOG");
+        return this.experiment;
     }
 
     @Override
@@ -159,15 +169,33 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     public void subscribeToExperiment() {
         // TO DO: Add username to Subscription collection in the database
         new SubscribeSuccessFragment().show(getSupportFragmentManager(),"SUBSCRIBE SUCCESS");
-        Button subscribeButton = findViewById(R.id.experimentSubscriptionButton);
-        Button unsubscribeButton = findViewById(R.id.experimentUnsubscribeButton);
+        String username = user.getUsername();
+        grabExperiment();
+        experiment.subscribe(username);
+        // Updates experiment in the database
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        db.collection("experiments").document(experiment.getTitle()).set(experiment);
+
+        // Updates UI
+        subscribeButton = findViewById(R.id.experimentSubscriptionButton);
+        unsubscribeButton = findViewById(R.id.experimentUnsubscribeButton);
         subscribeButton.setVisibility(View.INVISIBLE);
         unsubscribeButton.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void warningSubscribe() {
+        new WarningSubscribeFragment().show(getSupportFragmentManager(),"SUBSCRIBE WARNING");
+    }
 
+    @Override
+    public void unsubscribeToExperiment() {
+        String username = user.getUsername();
+        experiment.unsubscribe(username);
+        subscribeButton = findViewById(R.id.experimentSubscriptionButton);
+        unsubscribeButton = findViewById(R.id.experimentUnsubscribeButton);
+        unsubscribeButton.setVisibility(View.INVISIBLE);
+        subscribeButton.setVisibility(View.VISIBLE);
     }
 
 

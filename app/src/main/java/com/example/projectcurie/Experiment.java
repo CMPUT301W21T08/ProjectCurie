@@ -149,6 +149,12 @@ public class Experiment implements Serializable {
         }
     }
 
+    public boolean isSubscribed(String username){
+        if (subscriptions.contains(username)){
+            return true;
+        }
+    }
+
     /* Create An Array Of All Tokens (Words) In The Searchable Fields Of The Experiment */
     private void tokenize() {
         ArrayList<String> searchableFields = new ArrayList<>(Arrays.asList(title, description, region, owner));
