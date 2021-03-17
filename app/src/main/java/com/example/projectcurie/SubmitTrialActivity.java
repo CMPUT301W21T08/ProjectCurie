@@ -109,6 +109,9 @@ public class SubmitTrialActivity extends AppCompatActivity implements
         db.collection("trials")
                 .document(this.experiment.getTitle())
                 .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -123,6 +126,9 @@ public class SubmitTrialActivity extends AppCompatActivity implements
         db.collection("trials")
                 .document(this.experiment.getTitle())
                 .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -137,6 +143,9 @@ public class SubmitTrialActivity extends AppCompatActivity implements
         db.collection("trials")
                 .document(this.experiment.getTitle())
                 .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
