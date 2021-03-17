@@ -32,6 +32,7 @@ public class Experiment implements Serializable {
     private String owner;
     private ExperimentType type;
     private ArrayList<String> tokens;
+    private ArrayList<String> subscriptions;
     private boolean locked = false;
 
     public Experiment() { }
@@ -126,6 +127,26 @@ public class Experiment implements Serializable {
 
     public void setTokens(ArrayList<String> tokens) {
         this.tokens = tokens;
+    }
+
+    public ArrayList<String> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(ArrayList<String> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    public void subscribe(String username) {
+        if (! this.subscriptions.contains(username)) {
+            subscriptions.add(username);
+        }
+    }
+
+    public void unsubscribe(String username) {
+        if (this.subscriptions.contains(username)) {
+            subscriptions.remove(username);
+        }
     }
 
     /* Create An Array Of All Tokens (Words) In The Searchable Fields Of The Experiment */

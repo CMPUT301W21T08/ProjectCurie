@@ -12,7 +12,6 @@ import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -39,6 +38,7 @@ public class EditUserDialogFragment extends DialogFragment {
         EditUserDialogFragment fragment = new EditUserDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable("user", user);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -83,7 +83,6 @@ public class EditUserDialogFragment extends DialogFragment {
                             .addOnSuccessListener(aVoid -> {
                                 App.setUser(user);
                                 listener.refreshProfile();
-                                Toast.makeText(getActivity().getApplicationContext(), "Profile Successfully Updated!", Toast.LENGTH_SHORT);
                             });
 
                 })
