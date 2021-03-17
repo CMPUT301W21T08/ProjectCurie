@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class BinomialTrialFragment extends Fragment {
-    private EditText barcode;
-    private String binomialResult;
     private TextView result;
     private SwitchCompat binomialSwitch;
     private Button addBarcodeButton;
@@ -25,9 +23,8 @@ public class BinomialTrialFragment extends Fragment {
     private BinomialTrialFragment.BinomialTrialFragmentInteractionListener listener;
 
     public interface BinomialTrialFragmentInteractionListener {
-        void uploadBinomialTrial(String resultString);
-        void addBinomialBarcode(String barcodeString);
-
+        void uploadBinomialTrial(boolean value);
+        void addBinomialBarcode(String barcodeString, boolean value);
     }
 
     @Override
@@ -42,8 +39,7 @@ public class BinomialTrialFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_binomial_trial, container, false);
     }
 
@@ -62,21 +58,12 @@ public class BinomialTrialFragment extends Fragment {
         });
 
         submitButton.setOnClickListener(v -> {
-            if (binomialSwitch.isChecked()) {
-                binomialResult = binomialSwitch.getTextOn().toString(); // sets result to FAIL
-            } else {
-                binomialResult = binomialSwitch.getTextOff().toString(); // sets result to PASS
-            }
-
-            listener.uploadBinomialTrial(binomialResult);
+            listener.uploadBinomialTrial(binomialSwitch.isChecked());
         });
 
-        addBarcodeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String barcode = barcodeInput.toString();
-                listener.addBinomialBarcode(barcode);
-            }
+        addBarcodeButton.setOnClickListener(v -> {
+            String barcode = barcodeInput.toString();
+            listener.addBinomialBarcode(barcode, binomialSwitch.isChecked());
         });
 
     }
