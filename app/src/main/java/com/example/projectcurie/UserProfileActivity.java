@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,23 +22,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity implements EditUserDialogFragment.EditUserCallbackListener {
     TextView usernameTextView;
     TextView emailTextView;
     TextView informationTextView;
     TextView userDateJoin;
-    private User user = App.getUser();
-    String email = user.getUsername() + "@gmail.com";
-    String about = "Tell us something about yourself!";
+    private User user;
+    private Button editProfileButton;
 
 
     ListView experimentListView;
     private ExperimentArrayAdapter experimentArrayAdapter;
     private ArrayList<Experiment> experiments;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +45,23 @@ public class UserProfileActivity extends AppCompatActivity {
         informationTextView = findViewById(R.id.information_text);
         experimentListView = findViewById(R.id.user_experiment_list);
         userDateJoin = findViewById(R.id.user_join_date);
+        editProfileButton = findViewById(R.id.edit_profile_button);
 
-        /* Initialization of user info */
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userRef = db.collection("users").document(user.getUsername());
+        user = (User) getIntent().getSerializableExtra("user");
 
-        /* Updating the email and about of the user in firestore */
-        userRef.update("email", email);
-        userRef.update("about", about);
-        
-        user.setEmail(email);
-        user.setAbout(about);
-        user.setDateJoined(new Date(System.currentTimeMillis())); /* implement in WelcomeActivity when user is new */
-        String dateJoined = user.getDateJoined().toString();
-        userRef.update("dateJoined", dateJoined);
+        showUserInfo();
 
+        editProfileButton.setOnClickListener(v -> {
+            EditUserDialogFragment.newInstance(user).show(getSupportFragmentManager(), "EDIT PROFILE FRAGMENT");
+        });
+
+        /* Showing experiments by user */
+
+
+
+    }
+
+    private void showUserInfo() {
         /* Showing the username */
         usernameTextView.setText(user.getUsername());
 
@@ -73,11 +72,13 @@ public class UserProfileActivity extends AppCompatActivity {
         informationTextView.setText(user.getAbout());
 
         /* Showing the User join date */
-        userDateJoin.setText(dateJoined);
+        Date joinDate = user.getDateJoined();
+        userDateJoin.setText(String.format("%02d-%02d-%d", joinDate.getDate(), joinDate.getMonth()+1, joinDate.getYear()+1900));
+    }
 
-        /* Showing experiments by user */
-
-
-
+    @Override
+    public void refreshProfile() {
+        showUserInfo();
+        Toast.makeText(getApplicationContext(), "Profile Updated!", Toast.LENGTH_SHORT).show();
     }
 }
