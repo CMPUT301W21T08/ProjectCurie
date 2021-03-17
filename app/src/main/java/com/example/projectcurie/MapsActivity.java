@@ -45,5 +45,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        // Add a marker in Sydney and move the camera
+        LatLng jasperAve = new LatLng(53.540967, -113.524325);
+        LatLng victoriaPark = new LatLng(53.533516, -113.522431);
+        mMap.addMarker(new MarkerOptions().position(jasperAve).title("Count Electric Cars"));
+        mMap.addMarker(new MarkerOptions().position(victoriaPark).title("Count Monarch Butterflies"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jasperAve, 14));
     }
+
 }
