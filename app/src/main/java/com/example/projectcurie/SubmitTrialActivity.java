@@ -1,5 +1,7 @@
 package com.example.projectcurie;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
@@ -12,7 +14,13 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.Transaction;
+import com.google.type.LatLng;
 
 import java.io.IOException;
 
@@ -58,19 +66,41 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     @Override
     public void uploadBinomialTrial(boolean value) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        results.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
-        db.collection("trials")
-                .document(this.experiment.getTitle())
-                .set(results);
-        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+        DocumentReference ref = db.collection("trials").document(this.experiment.getTitle());
+        db.runTransaction(transaction -> {
+            ExperimentStatistics trials = transaction.get(ref).toObject(ExperimentStatistics.class);
+            trials.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+            transaction.set(ref, trials, SetOptions.merge());
+            return trials;
+        }).addOnSuccessListener(statistics -> {
+            Toast.makeText(getApplicationContext(), "Trial Submitted!", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    @Override
+    public void uploadBinomialTrial(boolean value, LatLng location) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference ref = db.collection("trials").document(this.experiment.getTitle());
+        db.runTransaction(transaction -> {
+            ExperimentStatistics trials = transaction.get(ref).toObject(ExperimentStatistics.class);
+            trials.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), location, value));
+            transaction.set(ref, trials, SetOptions.merge());
+            return trials;
+        }).addOnSuccessListener(statistics -> {
+            Toast.makeText(getApplicationContext(), "Trial Submitted!", Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
     public void addBinomialBarcode(String barcodeString, boolean value) {
 
     }
+
+    @Override
+    public void addBinomialBarcode(String barcodeString, LatLng location, boolean value) {
+
+    }
+
 
     @Override
     public void uploadIntegerCountTrial(int value) {

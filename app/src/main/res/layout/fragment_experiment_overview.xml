@@ -82,19 +82,6 @@
         app:layout_constraintTop_toBottomOf="@+id/experimentGeolocationTextView" />
 
     <Button
-        android:id="@+id/experimentUnsubscribeButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#FF0000"
-        android:text="Unsubscribe"
-        android:textColor="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/experimentDescriptionTextView"
-        android:visibility="gone"/>
-
-    <Button
         android:id="@+id/experimentSubscriptionButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
@@ -130,7 +117,6 @@
         android:layout_marginBottom="32dp"
         android:backgroundTint="#03A9F4"
         android:text="Submit Trial"
-        android:onClick="showAlertDialog"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
