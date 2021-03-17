@@ -1,7 +1,5 @@
 package com.example.projectcurie;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -54,11 +52,11 @@ public class IntegerCountTrialFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         incrementButton = (Button) view.findViewById(R.id.integerCountIncrementButton);
         decrementButton = (Button) view.findViewById(R.id.integerCountDecrementButton);
-        generateQRButton = (Button) view.findViewById(R.id.integerCountTrialGenerateQRButton);
-        submitButton = (Button) view.findViewById(R.id.integerCountTrialSubmitButton);
-        addBarcodeButton = (Button) view.findViewById(R.id.integerCountTrialSubmitBarcodeButton);
+        generateQRButton = (Button) view.findViewById(R.id.binomialTrialGenerateQRButton);
+        submitButton = (Button) view.findViewById(R.id.binomialTrialSubmitButton);
+        addBarcodeButton = (Button) view.findViewById(R.id.binomialTrialSubmitBarcodeButton);
         result = (TextView) view.findViewById(R.id.integerCountTrialCounterTextView);
-        EditText barcodeInput = (EditText) view.findViewById(R.id.integerCountTrialBarcodeEditText);
+        EditText barcodeInput = (EditText) view.findViewById(R.id.binomialTrialBarcodeEditText);
 
 
         incrementButton.setOnClickListener(new View.OnClickListener() {
