@@ -24,28 +24,31 @@ import java.util.ArrayList;
  */
 public class ExperimentOverviewActivity extends AppCompatActivity implements AddCommentFragment.AddCommentDialogFragmentListener {
 
+    /* Widgets */
     private TabLayout tabs;
     private ViewPager2 viewPager;
-    private Experiment experiment;
-    private ArrayList<Trial> trials;
-    private ArrayList<Question> questions;
     private StateAdapter stateAdapter;
 
+    /* Data */
+    private User user = App.getUser();
+    private Experiment experiment;
+    private ArrayList<Trial> trials;
+    private MessageBoard comments;
+
     /* Fragments */
-    ExperimentOverviewFragment overviewFragment;
-    ExperimentDataFragment dataFragment;
-    ExperimentCommentsFragment commentsFragment;
+    private ExperimentOverviewFragment overviewFragment;
+    private ExperimentDataFragment dataFragment;
+    private ExperimentCommentsFragment commentsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment_overview);
 
-
         /* Grab Data From Intent */
         grabExperiment();
         grabTrials();
-        grabQuestions();
+        grabComments();
 
         /* Grab Widgets */
         tabs = findViewById(R.id.tabLayout);
@@ -90,12 +93,12 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         }
     }
 
-    /* Deserialize Questions From Intent */
-    private void grabQuestions() {
-        String serialString = getIntent().getStringExtra("questions");
+    /* Deserialize Comments From Intent */
+    private void grabComments() {
+        String serialString = getIntent().getStringExtra("comments");
         if (serialString != null) {
             try {
-                this.questions = (ArrayList<Question>) ObjectSerializer.deserialize(serialString);
+                this.comments = (MessageBoard) ObjectSerializer.deserialize(serialString);
             } catch (IOException e) {
                 Log.e("Error", "Error Deserializing Experiment!");
             }
@@ -106,16 +109,14 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
 
     @Override
     public void addComment(String body) {
+        comments.postQuestion(body, this.user.getUsername());
+        commentsFragment.refreshList();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Question question = new Question(body, App.getUser().getUsername());
         db.collection("experiments")
                 .document(experiment.getTitle())
-                .collection("questions")
-                .add(question)
-                .addOnSuccessListener(documentReference -> {
-                    questions.add(question);
-                    commentsFragment.refreshList();
-                })
+                .collection("comments")
+                .document(experiment.getTitle())
+                .set(comments)
                 .addOnFailureListener(e -> Log.e("Error", "Error: Couldn't Add New Question!"));
 
         Log.i("Info: The Comment To Be Posted:", body);
@@ -144,7 +145,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
                     dataFragment = new ExperimentDataFragment();
                     return dataFragment;
                 default:
-                    commentsFragment = ExperimentCommentsFragment.newInstance(questions);
+                    commentsFragment = ExperimentCommentsFragment.newInstance(comments.getQuestions());
                     return commentsFragment;
             }
         }
