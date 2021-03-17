@@ -29,6 +29,7 @@ import java.io.IOException;
 public class ExperimentOverviewFragment extends Fragment {
 
     private Experiment experiment;
+    private ExperimentStatistics statistics;
 
     public ExperimentOverviewFragment() {
     }
@@ -40,10 +41,11 @@ public class ExperimentOverviewFragment extends Fragment {
      * @return
      *     A new fragment.
      */
-    public static ExperimentOverviewFragment newInstance(Experiment experiment) {
+    public static ExperimentOverviewFragment newInstance(Experiment experiment, ExperimentStatistics statistics) {
         ExperimentOverviewFragment fragment = new ExperimentOverviewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("experiment", experiment);
+        bundle.putSerializable("trials", statistics);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -52,6 +54,7 @@ public class ExperimentOverviewFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.experiment = (Experiment) getArguments().getSerializable("experiment");
+        this.statistics = (ExperimentStatistics) getArguments().getSerializable("trials");
     }
 
     @Nullable
@@ -78,18 +81,19 @@ public class ExperimentOverviewFragment extends Fragment {
         /* Setup On Click Listener For Submitting Trials */
         Button submitButton = view.findViewById(R.id.submitTrialButton);
         submitButton.setOnClickListener(v -> {
+
             /* If geolocation is required, we warn the user*/
-            if(this.experiment.isGeolocationRequired()){
+            if (this.experiment.isGeolocationRequired()) {
                 showAlertDialog(submitButton);
 
-            }else {
+            } else {
                 try {
-                    Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
-                    intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
-                    startActivity(intent);
-                } catch (IOException e) {
-                    Log.e("Error", "Error: Could Not Serialize Experiment!");
-                }
+                Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
+                intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
+                intent.putExtra("trials", ObjectSerializer.serialize(this.statistics));
+                startActivity(intent);
+            } catch (IOException e) {
+                Log.e("Error", "Error: Could Not Serialize Experiment!");
             }
 
         });
