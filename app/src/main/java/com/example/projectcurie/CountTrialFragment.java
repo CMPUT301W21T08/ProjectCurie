@@ -1,7 +1,5 @@
 package com.example.projectcurie;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,9 +22,8 @@ public class CountTrialFragment extends Fragment {
     private CountTrialFragment.CountTrialFragmentInteractionListener listener;
 
     public interface CountTrialFragmentInteractionListener {
-        void uploadCountTrial(String resultString);
+        void uploadCountTrial();
         void addCountBarcode(String barcodeString);
-
     }
 
     @Override
@@ -49,26 +46,18 @@ public class CountTrialFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        countButton = (Button) view.findViewById(R.id.countTrialButton);
-        generateQRButton = (Button) view.findViewById(R.id.countTrialGenerateQRButton);
-        addBarcodeButton = (Button) view.findViewById(R.id.countTrialSubmitBarcodeButton);
-        EditText barcodeInput = (EditText) view.findViewById(R.id.integerCountTrialBarcodeEditText);
+        countButton = view.findViewById(R.id.countTrialButton);
+        generateQRButton = view.findViewById(R.id.countTrialGenerateQRButton);
+        addBarcodeButton = view.findViewById(R.id.countTrialSubmitBarcodeButton);
+        EditText barcodeInput = view.findViewById(R.id.binomialTrialBarcodeEditText);
 
 
-        countButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.uploadCountTrial("1");
-            }
-        });
+        countButton.setOnClickListener(v -> listener.uploadCountTrial());
 
 
-        addBarcodeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String barcode = barcodeInput.toString();
-                listener.addCountBarcode(barcode);
-            }
+        addBarcodeButton.setOnClickListener(v -> {
+            String barcode = barcodeInput.getText().toString();
+            listener.addCountBarcode(barcode);
         });
 
     }

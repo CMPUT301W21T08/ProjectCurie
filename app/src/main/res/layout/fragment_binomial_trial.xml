@@ -8,109 +8,104 @@
     tools:layout_editor_absoluteX="215dp"
     tools:layout_editor_absoluteY="122dp">
 
-    <Switch
-        android:id="@+id/binomial_switch"
-        android:layout_width="76dp"
-        android:layout_height="59dp"
-        android:layout_marginTop="216dp"
-        android:checked="false"
-        android:maxHeight="10dp"
-        android:textOff="PASS"
-        android:textOn="FAIL"
-        android:theme="@style/SwitchThemeOverlay"
-        app:layout_constraintBottom_toTopOf="@+id/binomialResult"
+    <TextView
+        android:id="@+id/binomialTrialHeaderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Enter Pass Or Fail"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/binomialTrialSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="#536CE8"
+        android:buttonTint="#FFFFFF"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:switchMinWidth="55dp"
+        android:textColor="#000000"
+        android:theme="@style/SwitchThemeOverlay"
+        app:layout_constraintBottom_toTopOf="@+id/binomialTrialBarcodeEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/binomialTrialHeaderTextView" />
 
     <TextView
         android:id="@+id/binomialResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="396dp"
-        android:text="PASS"
+        android:layout_marginTop="24dp"
+        android:text="FAIL"
         android:textColor="@color/black"
-        android:textSize="36sp"
+        android:textSize="34sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.534"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/binomialTrialSwitch" />
 
     <EditText
         android:id="@+id/binomialTrialBarcodeEditText"
-        android:layout_width="250dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="28dp"
-        android:backgroundTint="#4CAF50"
+        android:layout_width="240dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="Custom Barcode (Optional)"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintBottom_toTopOf="@+id/binomialTrialGenerateQRButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.937" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/binomialTrialGenerateQRButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#03A9F4"
+        android:text="Generate QR"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/binomialTrialSubmitButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/binomialTrialSubmitButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#03A9F4"
+        android:text="Submit Trial"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/binomialTrialSubmitBarcodeButton"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="111dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="28dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="6dp"
         android:text="Add Barcode"
-        android:textAllCaps="false"
         android:textColor="#03A9F4"
         app:layout_constraintBottom_toTopOf="@+id/binomialTrialGenerateQRButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.256"
-        app:layout_constraintStart_toEndOf="@+id/search_keyword_editText"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.923" />
-
-    <Button
-        android:id="@+id/binomialTrialGenerateQRButton"
-        android:layout_width="353dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="496dp"
-        android:background="#03A9F4"
-        android:text="Generate QR"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/binomialTrialSubmitButton"
-        android:layout_width="353dp"
-        android:layout_height="52dp"
-        android:background="#03A9F4"
-        android:text="Submit"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/binomialTrialGenerateQRButton"
-        app:layout_constraintVertical_bias="0.161" />
-
-    <TextView
-        android:id="@+id/binomialTitle"
-        android:layout_width="397dp"
-        android:layout_height="68dp"
-        android:text="Enter Pass or Fail"
-        android:textColor="@color/black"
-        android:textSize="50dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/binomial_switch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:text="Add Barcode" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
