@@ -3,6 +3,7 @@ package com.example.projectcurie;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -54,6 +55,24 @@ public class UserProfileActivity extends AppCompatActivity implements EditUserDi
         userDateJoin = findViewById(R.id.user_join_date);
         editProfileButton = findViewById(R.id.edit_profile_button);
 
+        /* Initialize Experiment List View */
+        experiments = new ArrayList<>();
+        experimentArrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, experiments);
+        experimentListView.setAdapter(experimentArrayAdapter);
+
+        /* Setup List Item On Click Listener */
+        experimentListView.setOnItemLongClickListener((parent, view, position, id) -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Lock/Delete Experiment")
+                    .setMessage("Do You Want To Lock Or Delete This Experiment?")
+                    .setNegativeButton("Lock", null)
+                    .setNeutralButton("Back", null)
+                    .setPositiveButton("Delete", null)
+                    .create()
+                    .show();
+            return false;
+        });
+
         user = (User) getIntent().getSerializableExtra("user");
 
         showUserInfo();
@@ -68,9 +87,6 @@ public class UserProfileActivity extends AppCompatActivity implements EditUserDi
                 .whereEqualTo("owner", user.getUsername())
                 .get()
                 .addOnCompleteListener(task -> {
-                    experiments = new ArrayList<>();
-                    experimentArrayAdapter = new ArrayAdapter<Experiment>(getApplicationContext(), android.R.layout.simple_list_item_1, experiments);
-                    experimentListView.setAdapter(experimentArrayAdapter);
                     for (DocumentSnapshot document : task.getResult()) {
                         experiments.add(document.toObject(Experiment.class));
                     }
