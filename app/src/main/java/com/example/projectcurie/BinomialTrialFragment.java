@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.type.LatLng;
+
 public class BinomialTrialFragment extends Fragment {
     private TextView result;
     private SwitchCompat binomialSwitch;
@@ -25,7 +27,9 @@ public class BinomialTrialFragment extends Fragment {
 
     public interface BinomialTrialFragmentInteractionListener {
         void uploadBinomialTrial(boolean value);
+        void uploadBinomialTrial(boolean value, LatLng location);
         void addBinomialBarcode(String barcodeString, boolean value);
+        void addBinomialBarcode(String barcodeString, LatLng location, boolean value);
     }
 
     @Override
