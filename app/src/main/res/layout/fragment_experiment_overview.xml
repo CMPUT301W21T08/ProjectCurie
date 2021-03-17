@@ -117,6 +117,7 @@
         android:layout_marginBottom="32dp"
         android:backgroundTint="#03A9F4"
         android:text="Submit Trial"
+        android:onClick="showAlertDialog"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

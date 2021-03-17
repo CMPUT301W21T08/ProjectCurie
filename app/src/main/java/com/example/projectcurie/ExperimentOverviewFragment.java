@@ -1,10 +1,13 @@
 package com.example.projectcurie;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.Html;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -77,7 +81,13 @@ public class ExperimentOverviewFragment extends Fragment {
         /* Setup On Click Listener For Submitting Trials */
         Button submitButton = view.findViewById(R.id.submitTrialButton);
         submitButton.setOnClickListener(v -> {
-            try {
+
+            /* If geolocation is required, we warn the user*/
+            if (this.experiment.isGeolocationRequired()) {
+                showAlertDialog(submitButton);
+
+            } else {
+                try {
                 Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
                 intent.putExtra("experiment", ObjectSerializer.serialize(this.experiment));
                 intent.putExtra("trials", ObjectSerializer.serialize(this.statistics));
@@ -85,8 +95,36 @@ public class ExperimentOverviewFragment extends Fragment {
             } catch (IOException e) {
                 Log.e("Error", "Error: Could Not Serialize Experiment!");
             }
+
         });
 
         return view;
+    }
+
+    public void showAlertDialog(View v) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Warning");
+        alert.setMessage("This experiment requires geolocation turned on.");
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Toast.makeText(getContext(), "GoodJob", Toast.LENGTH_SHORT).show();
+                try {
+
+                    Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
+                    intent.putExtra("experiment", ObjectSerializer.serialize(experiment));
+                    startActivity(intent);
+                } catch (IOException e) {
+                    Log.e("Error", "Error: Could Not Serialize Experiment!");
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getContext(), "Nothing Happened", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alert.create().show();
     }
 }

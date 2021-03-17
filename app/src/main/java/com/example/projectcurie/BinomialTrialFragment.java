@@ -22,6 +22,7 @@ public class BinomialTrialFragment extends Fragment {
     private Button submitButton;
     private BinomialTrialFragment.BinomialTrialFragmentInteractionListener listener;
 
+
     public interface BinomialTrialFragmentInteractionListener {
         void uploadBinomialTrial(boolean value);
         void addBinomialBarcode(String barcodeString, boolean value);
