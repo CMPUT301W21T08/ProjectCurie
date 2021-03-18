@@ -71,6 +71,5 @@ public class ExperimentCommentsFragment extends Fragment {
     }
 
     public void refreshList() {
-        commentController.fetchAndNotifyQuestions(experiment);
     }
 }

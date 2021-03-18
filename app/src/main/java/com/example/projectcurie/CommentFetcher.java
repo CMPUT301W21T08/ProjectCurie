@@ -1,10 +1,12 @@
 package com.example.projectcurie;
 
-import android.widget.ArrayAdapter;
+import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,10 +21,9 @@ public class CommentFetcher implements Serializable {
     public void fetchQuestions(String experiment, Runnable runnable) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("questions").whereEqualTo("experiment", experiment)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addSnapshotListener((value, error) -> {
                     comments.clear();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot document : value) {
                         Comment comment = document.toObject(Comment.class);
                         comment.setId(document.getId());
                         comments.add(comment);
