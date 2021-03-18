@@ -12,6 +12,7 @@ import android.icu.util.Measure;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -32,7 +33,6 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     private User user = App.getUser();
     private Experiment experiment;
     private ExperimentStatistics statistics;
-    private MessageBoard comments;
 
     /* Fragments */
     private ExperimentOverviewFragment overviewFragment;
@@ -48,7 +48,6 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         Intent intent = getIntent();
         this.experiment = (Experiment) intent.getSerializableExtra("experiment");
         this.statistics = (ExperimentStatistics) intent.getSerializableExtra("trials");
-        this.comments = (MessageBoard) intent.getSerializableExtra("comments");
 
         /* Grab Widgets */
         tabs = findViewById(R.id.tabLayout);
@@ -67,13 +66,13 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
 
     @Override
     public void addComment(String body) {
-        comments.postQuestion(body, user.getUsername());
-        commentsFragment.refreshList();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("comments")
-                .document(experiment.getTitle())
-                .set(comments)
-                .addOnFailureListener(e -> Log.e("Error", "Error: Couldn't Add New Question!"));
+        db.collection("questions")
+                .document()
+                .set(new Comment(body, user.getUsername(), experiment.getTitle()))
+                .addOnSuccessListener(aVoid -> {
+                    commentsFragment.refreshList();
+                });
     }
 
 
@@ -99,7 +98,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
                     dataFragment = new ExperimentDataFragment();
                     return dataFragment;
                 default:
-                    commentsFragment = ExperimentCommentsFragment.newInstance(comments.getQuestions());
+                    commentsFragment = ExperimentCommentsFragment.newInstance(experiment.getTitle());
                     return commentsFragment;
             }
         }
