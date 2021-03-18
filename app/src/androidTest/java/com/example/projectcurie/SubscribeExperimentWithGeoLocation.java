@@ -76,6 +76,8 @@ public class SubscribeExperimentWithGeoLocation {
 
         Thread.sleep(3000);
 
+        try {
+
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.submitTrialButton), withText("Submit Trial"),
                         childAtPosition(
@@ -87,37 +89,49 @@ public class SubscribeExperimentWithGeoLocation {
         appCompatButton3.perform(click());
 
         Thread.sleep(3000);
+            ViewInteraction appCompatButton4 = onView(
+                    allOf(withId(R.id.experimentSubscriptionButton), withText("Subscribe"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withClassName(is("android.widget.FrameLayout")),
+                                            0),
+                                    5),
+                            isDisplayed()));
+            appCompatButton4.perform(click());
 
-        ViewInteraction appCompatButton4 = onView(
-                allOf(withId(R.id.experimentSubscriptionButton), withText("Subscribe"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        0),
-                                5),
-                        isDisplayed()));
-        appCompatButton4.perform(click());
+            Thread.sleep(3000);
 
-        Thread.sleep(3000);
+            ViewInteraction appCompatButton5 = onView(
+                    allOf(withId(R.id.submitTrialButton), withText("Submit Trial"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withClassName(is("android.widget.FrameLayout")),
+                                            0),
+                                    7),
+                            isDisplayed()));
+            appCompatButton5.perform(click());
 
-        ViewInteraction appCompatButton5 = onView(
-                allOf(withId(R.id.submitTrialButton), withText("Submit Trial"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        0),
-                                7),
-                        isDisplayed()));
-        appCompatButton5.perform(click());
+            ViewInteraction appCompatButton6 = onView(
+                    allOf(withId(android.R.id.button1), withText("Ok"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withClassName(is("android.widget.ScrollView")),
+                                            0),
+                                    3)));
+            appCompatButton6.perform(scrollTo(), click());
 
-        ViewInteraction appCompatButton6 = onView(
-                allOf(withId(android.R.id.button1), withText("Ok"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        appCompatButton6.perform(scrollTo(), click());
+        } catch(Exception e) {
+
+            ViewInteraction appCompatButton6 = onView(
+                    allOf(withId(android.R.id.button1), withText("Ok"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withClassName(is("android.widget.ScrollView")),
+                                            0),
+                                    3)));
+            appCompatButton6.perform(scrollTo(), click());
+
+        }
 
     }
 

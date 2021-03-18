@@ -99,7 +99,7 @@ public class EditProfileTest {
                                         0),
                                 1),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("ironman3000@marvel.com"), closeSoftKeyboard());
+        appCompatEditText1.perform(replaceText("ironman3000@marvel.com"), closeSoftKeyboard());
         Thread.sleep(3000);
         ViewInteraction appCompatEditText2 = onView(
                 allOf(withId(R.id.editTextDescription),
@@ -107,7 +107,8 @@ public class EditProfileTest {
                                 childAtPosition(
                                         withId(android.R.id.custom),
                                         0),
-                                2),
+                                2
+                                ),
                         isDisplayed()));
         appCompatEditText2.perform(replaceText("I Am Ironman"), closeSoftKeyboard());
 

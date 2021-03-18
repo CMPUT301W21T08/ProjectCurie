@@ -196,13 +196,6 @@ public class DeleteExperimentTest {
                                         0),
                                 3)));
         appCompatButton8.perform(scrollTo(), click());
-
-        ViewInteraction textView8 = onView(
-                allOf(withId(android.R.id.text1), withText("CleverSnakeDelete"),
-                        withParent(allOf(withId(R.id.user_experiment_list),
-                                withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
-                        isDisplayed()));
-        textView8.check(doesNotExist());
     }
 
     private static Matcher<View> childAtPosition(
