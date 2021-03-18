@@ -12,12 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import org.jetbrains.annotations.NotNull;
+
 public class SearchUserFragment extends DialogFragment {
     private EditText search_keyword;
     private SearchUserFragment.SearchUserFragmentInteractionListener listener;
 
     public interface SearchUserFragmentInteractionListener {
-        void goSearchUser(String keywords);
+        void goSearchUser(@NotNull String keywords);
     }
 
     @Override
@@ -33,7 +35,7 @@ public class SearchUserFragment extends DialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@NotNull Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_search_user, null);
         search_keyword = view.findViewById(R.id.search_keyword_editText1);
 

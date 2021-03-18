@@ -19,6 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -179,13 +181,11 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
 
     }
     @Override
-    public void goSearchUser(String keywords) {
+    public void goSearchUser(@NotNull String keywords) {
         /* Grab Experiments From Database */
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         DocumentReference reference = db.collection("users").document(keywords);
 
-        if(keywords == null) { Toast.makeText(getApplicationContext(), "User not found", Toast.LENGTH_LONG).show(); }
         reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
