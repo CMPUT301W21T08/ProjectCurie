@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 /**
  * This class implements the experiment overview fragment for the overview tab of the Experiment
  * Overview activity.
