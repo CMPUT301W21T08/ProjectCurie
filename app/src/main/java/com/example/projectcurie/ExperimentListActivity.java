@@ -46,9 +46,7 @@ public class ExperimentListActivity extends AppCompatActivity {
         /* Upon Clicking On An Experiment, Open The Experiment Overview Activity */
         experimentListView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             Experiment experiment = this.experiments.get(position);
-            Intent intent = new Intent(getApplicationContext(), ExperimentOverviewActivity.class);
-            StartActivityOnFinalCallback startActivityOnFinalCallback = new StartActivityOnFinalCallback(intent, experiment);
-            startActivityOnFinalCallback.goToExperimentOverview();
+            startExperimentOverviewActivity(experiment);
         });
     }
 
@@ -56,6 +54,32 @@ public class ExperimentListActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         finish();
+    }
+
+    /* Grab All Trials Associated With The Given Experiment */
+    private void startExperimentOverviewActivity(Experiment experiment) {
+        /* Query The Database For All Trials Related To this.experiment */
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("trials")
+                .document(experiment.getTitle())
+                .get()
+
+                /* Query Completion Callback */
+                .addOnSuccessListener(documentSnapshot -> {
+                    ExperimentStatistics statistics;
+                    if (documentSnapshot.exists()) {
+                        statistics = documentSnapshot.toObject(ExperimentStatistics.class);
+                    } else {
+                        statistics = new ExperimentStatistics(experiment.getTitle(), experiment.getType());
+                    }
+                    Intent intent = new Intent(getApplicationContext(), ExperimentOverviewActivity.class);
+                    intent.putExtra("experiment", experiment);
+                    intent.putExtra("trials", statistics);
+                    startActivity(intent);
+                })
+
+                /* Handle The Case Where The Query Was Unsuccessful */
+                .addOnFailureListener(e -> Log.e("Error", "Error Fetching Trials From Database!"));
     }
 
     /**
@@ -68,7 +92,6 @@ public class ExperimentListActivity extends AppCompatActivity {
         private Intent intent;
         private Experiment experiment;
         private ExperimentStatistics statistics = null;
-        private MessageBoard comments = null;
 
         public StartActivityOnFinalCallback(Intent intent, Experiment experiment) {
             this.intent = intent;
@@ -78,7 +101,6 @@ public class ExperimentListActivity extends AppCompatActivity {
 
         public void goToExperimentOverview() {
             grabTrials();
-            grabComments();
         }
 
         /* Grab All Trials Associated With The Given Experiment */
@@ -97,10 +119,6 @@ public class ExperimentListActivity extends AppCompatActivity {
                             statistics = new ExperimentStatistics(experiment.getTitle(), experiment.getType());
                         }
 
-                        /* In The Event That All Callbacks Have Returned */
-                        if (statistics != null && comments != null) {
-                            startActivityHelper();
-                        }
                     })
 
                     /* Handle The Case Where The Query Was Unsuccessful */
@@ -108,34 +126,9 @@ public class ExperimentListActivity extends AppCompatActivity {
         }
 
         /* Grab All Comments Associated With A Given Experiment */
-        private void grabComments() {
-            /* Query The Database For All Trials Related To this.experiment */
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("comments")
-                    .document(experiment.getTitle())
-                    .get()
-
-                    /* Query Completion Callback */
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            comments = documentSnapshot.toObject(MessageBoard.class);
-                        } else {
-                            comments = new MessageBoard(experiment.getTitle());
-                        }
-
-                        /* In The Event That All Callbacks Have Returned */
-                        if (statistics != null && comments != null) {
-                            startActivityHelper();
-                        }
-                    })
-
-                    /* Handle The Case Where The Query Was Unsuccessful */
-                    .addOnFailureListener(e -> Log.e("Error", "Error Fetching Comments From Database!"));
-        }
 
         private void startActivityHelper() {
             intent.putExtra("trials", statistics);
-            intent.putExtra("comments", comments);
             startActivity(intent);
         }
     }

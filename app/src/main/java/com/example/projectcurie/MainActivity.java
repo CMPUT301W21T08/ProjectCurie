@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,15 +9,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements SearchExperimentFragment.SearchExperimentFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements SearchExperimentFragment.SearchExperimentFragmentInteractionListener,
+                                                                SearchUserFragment.SearchUserFragmentInteractionListener{
 
     TextView username;
     Button search_exp_btn;
@@ -98,11 +110,14 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         });
 
         view_map_btn.setOnClickListener((View v) -> {
-
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            startActivity(intent);
         });
 
+        /* Search User on Click Listener */
         search_user_btn.setOnClickListener((View v) -> {
-            searchUsers();
+            //searchUsers();
+            new SearchUserFragment().show(getSupportFragmentManager(), "SEARCH USER FRAGMENT");
         });
 
         barcode_btn.setOnClickListener((View v) -> {
@@ -149,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
 
-                        /* Iterate Over Experiments */
+                        /* Iterate Over Experiments  */
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             experiments.add(document.toObject(Experiment.class));
                         }
@@ -167,6 +182,37 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
                         Log.i("Info", "Error Fetching Experiments!");
                     }
                 });
+
+    }
+    @Override
+    public void goSearchUser(@NotNull String keywords) {
+        /* Grab Experiments From Database */
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference reference = db.collection("users").document(keywords);
+
+        reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("TAG", "DocumentSnapshotData: " + document.getData());
+                        User tempUser = new User(document.getString("username"));
+                        tempUser.setAbout(document.getString("about"));
+                        tempUser.setEmail(document.getString("email"));
+                        tempUser.setDateJoined(document.getDate("dateJoined"));
+                        Intent intent = new Intent(getApplicationContext(), UserSearchProfileActivity.class);
+                        intent.putExtra("user", tempUser);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "User not found", Toast.LENGTH_LONG).show();
+                        Log.d("Info", "No document", task.getException());
+                    }
+                } else {
+                    Log.d("Failed", "Get failed with");
+                }
+            }
+        });
 
     }
 }
