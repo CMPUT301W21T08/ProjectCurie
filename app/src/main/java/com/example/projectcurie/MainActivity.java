@@ -1,8 +1,6 @@
 package com.example.projectcurie;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,12 +41,14 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
     Button barcode_btn;
     Button view_profile_btn;
     Button view_loc;
+    private static final int REQUEST_LOCATION = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         search_exp_btn = findViewById(R.id.searchExperiments_btn);
         view_exp_btn = findViewById(R.id.viewExperiments_btn);
         new_exp_btn = findViewById(R.id.addExperiment_btn);
@@ -53,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         barcode_btn = findViewById(R.id.scanBarcode_btn);
         view_profile_btn = findViewById(R.id.view_profile_btn);
         username = findViewById(R.id.username_textview);
-
+        GetGeoLocation geo = new GetGeoLocation();
 
         /* Set Username */
         username.setText(App.getUser().getUsername());
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         new_exp_btn.setOnClickListener((View v) -> {
             Intent intent = new Intent(getApplicationContext(), NewExperimentActivity.class);
             startActivity(intent);
+
         });
 
         /* View User Profile On Click Listener */
