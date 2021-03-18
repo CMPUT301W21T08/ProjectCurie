@@ -22,10 +22,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddAnswerFragment extends DialogFragment {
 
-    public AddAnswerFragment() { }
     private EditText answer_body;
     AddAnswerDialogFragmentListener listener;
 
+    /** Obligatory Empty Constructor */
+    public AddAnswerFragment() { }
+
+    /**
+     * The activity which implements this interface agrees to post a new answer to the database given
+     * a string returned from this DialogFragment.
+     */
     public interface AddAnswerDialogFragmentListener {
         void addAnswer(String body);
     }
@@ -52,7 +58,6 @@ public class AddAnswerFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_answer, null);
         answer_body = view.findViewById(R.id.addAnswerEditText);
-
         return new AlertDialog.Builder(getContext())
                 .setView(view)
                 .setTitle("Add Answer")

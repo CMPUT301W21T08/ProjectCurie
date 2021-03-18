@@ -3,7 +3,7 @@ package com.example.projectcurie;
 import com.google.type.LatLng;
 
 /**
- * This class represents the results of a single measurement trial.
+ * This class stores the results of a single measurement trial.
  * @author Joshua Billson
  */
 public class MeasurementTrial extends Trial {
@@ -18,6 +18,8 @@ public class MeasurementTrial extends Trial {
      *     The title of the experiment to which this trial belongs.
      * @param author
      *     The username of the user who submits this trial.
+     * @param measurement
+     *     The measurement associated with the trial.
      */
     public MeasurementTrial(String experiment, String author, double measurement) {
         super(experiment, author);
@@ -32,6 +34,8 @@ public class MeasurementTrial extends Trial {
      *     The title of the experiment to which this trial belongs.
      * @param author
      *     The username of the user who submits this trial.
+     * @param measurement
+     *     The measurement associated with the trial.
      */
     public MeasurementTrial(String experiment, String author, LatLng location, double measurement) {
         super(experiment, author, location);

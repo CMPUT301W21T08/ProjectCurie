@@ -3,7 +3,7 @@ package com.example.projectcurie;
 import com.google.type.LatLng;
 
 /**
- * This class represents the results of a single count trial.
+ * This class stores the results of a single count trial.
  * @author Joshua Billson
  */
 public class CountTrial extends Trial {

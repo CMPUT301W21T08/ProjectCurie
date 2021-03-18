@@ -12,7 +12,6 @@ import android.widget.ListView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -22,8 +21,6 @@ import java.util.ArrayList;
  */
 public class ExperimentListActivity extends AppCompatActivity {
 
-    private ListView experimentListView;
-    private ExperimentArrayAdapter experimentArrayAdapter;
     private ArrayList<Experiment> experiments;
 
     @Override
@@ -39,8 +36,8 @@ public class ExperimentListActivity extends AppCompatActivity {
         }
 
         /* Initialize list View */
-        experimentListView = findViewById(R.id.experimentListView);
-        experimentArrayAdapter = new ExperimentArrayAdapter(this, experiments);
+        ListView experimentListView = findViewById(R.id.experimentListView);
+        ExperimentArrayAdapter experimentArrayAdapter = new ExperimentArrayAdapter(this, experiments);
         experimentListView.setAdapter(experimentArrayAdapter);
 
         /* Upon Clicking On An Experiment, Open The Experiment Overview Activity */
@@ -80,56 +77,5 @@ public class ExperimentListActivity extends AppCompatActivity {
 
                 /* Handle The Case Where The Query Was Unsuccessful */
                 .addOnFailureListener(e -> Log.e("Error", "Error Fetching Trials From Database!"));
-    }
-
-    /**
-     * This class is used for issuing multiple callbacks to the database and waiting to start the
-     * next activity until all such callbacks have been handled. This allows us to carry out multiple
-     * database queries before starting the Experiment Overview activity.
-     * @author Joshua Billson
-     */
-    private class StartActivityOnFinalCallback implements Serializable {
-        private Intent intent;
-        private Experiment experiment;
-        private ExperimentStatistics statistics = null;
-
-        public StartActivityOnFinalCallback(Intent intent, Experiment experiment) {
-            this.intent = intent;
-            this.experiment = experiment;
-            this.intent.putExtra("experiment", experiment);
-        }
-
-        public void goToExperimentOverview() {
-            grabTrials();
-        }
-
-        /* Grab All Trials Associated With The Given Experiment */
-        private void grabTrials() {
-            /* Query The Database For All Trials Related To this.experiment */
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("trials")
-                    .document(experiment.getTitle())
-                    .get()
-
-                    /* Query Completion Callback */
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            statistics = documentSnapshot.toObject(ExperimentStatistics.class);
-                        } else {
-                            statistics = new ExperimentStatistics(experiment.getTitle(), experiment.getType());
-                        }
-
-                    })
-
-                    /* Handle The Case Where The Query Was Unsuccessful */
-                    .addOnFailureListener(e -> Log.e("Error", "Error Fetching Trials From Database!"));
-        }
-
-        /* Grab All Comments Associated With A Given Experiment */
-
-        private void startActivityHelper() {
-            intent.putExtra("trials", statistics);
-            startActivity(intent);
-        }
     }
 }
