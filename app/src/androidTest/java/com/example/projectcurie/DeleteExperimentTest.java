@@ -38,6 +38,10 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * Executes test for deleting an experiment
+ * @author Paul Cleofas
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class DeleteExperimentTest {
@@ -45,6 +49,10 @@ public class DeleteExperimentTest {
     @Rule
     public ActivityTestRule<WelcomeActivity> mActivityTestRule = new ActivityTestRule<>(WelcomeActivity.class);
 
+    /**
+     *
+     * @throws InterruptedException
+     */
     @Test
     public void deleteExperimentTest() throws InterruptedException {
         Thread.sleep(3000);

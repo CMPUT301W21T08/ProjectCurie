@@ -38,6 +38,10 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * Executes test for locking an experiment
+ * @author Paul Cleofas
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class LockExperimentTest {

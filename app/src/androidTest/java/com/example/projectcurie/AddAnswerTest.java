@@ -35,6 +35,10 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * Executes test for Add Answer
+ * @author Paul Cleofas
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class AddAnswerTest {
@@ -42,6 +46,10 @@ public class AddAnswerTest {
     @Rule
     public ActivityTestRule<WelcomeActivity> mActivityTestRule = new ActivityTestRule<>(WelcomeActivity.class);
 
+    /**
+     *
+     * @throws InterruptedException
+     */
     @Test
     public void addAnswerTest() throws InterruptedException {
 

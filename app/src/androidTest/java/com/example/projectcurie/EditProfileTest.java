@@ -31,6 +31,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * Executes test for editing own user Profile
+ * @author Paul Cleofas
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class EditProfileTest {

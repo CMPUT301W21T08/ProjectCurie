@@ -35,6 +35,10 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * Executes test for Adding Question to comments tab
+ * @author Paul Cleofas
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class AddQuestionTest {
