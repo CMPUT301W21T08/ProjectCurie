@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * This class currently doesn't do anything interesting.
+ */
 public class ExperimentDataFragment extends Fragment {
     public ExperimentDataFragment() {
     }

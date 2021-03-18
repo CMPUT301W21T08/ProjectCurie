@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,11 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/**
+ * @author Bo Cen
+ */
 public class ExperimentCommentsFragment extends Fragment {
+
     private Button new_comment;
     private ArrayList<Comment> questions;
     private ArrayAdapter<Comment> arrayAdapter;
@@ -58,7 +63,13 @@ public class ExperimentCommentsFragment extends Fragment {
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             Comment question = questions.get(position);
+            String qid = question.getId();
+            String q_expname = question.getExperiment();
             Log.i("Question ID", question.getId());
+            Intent intent = new Intent(getActivity(), AnswerListActivity.class);
+            intent.putExtra("q_expname", q_expname);
+            intent.putExtra("qid", qid);
+            startActivity(intent);
         });
 
         /* Set On Click Listener For Adding A New Question */
@@ -68,9 +79,5 @@ public class ExperimentCommentsFragment extends Fragment {
             fragment.show(getActivity().getSupportFragmentManager(), "ADD COMMENT FRAGMENT");
         });
         return view;
-    }
-
-    public void refreshList() {
-        commentController.fetchAndNotifyQuestions(experiment);
     }
 }

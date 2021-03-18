@@ -17,21 +17,21 @@ import android.widget.EditText;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This class implements the fragment for adding a new question and seeing a list of existing questions.
- * List of existing questions is fetched from the firestore database.
- * Newly submitted questions are added to the firestore database.
+ * This class implements the Dialog Fragment for adding a new question to the FireStore database.
  *
  * @author Bo Cen
  */
 public class AddCommentFragment extends DialogFragment {
 
-    public AddCommentFragment() { }
     private EditText comment_body;
     AddCommentDialogFragmentListener listener;
 
     public interface AddCommentDialogFragmentListener {
         void addComment(String body);
     }
+
+    /** Obligatory Empty Constructor */
+    public AddCommentFragment() { }
 
     @Override
     public void onAttach(@NotNull Context context) {
@@ -58,10 +58,8 @@ public class AddCommentFragment extends DialogFragment {
 
         return new AlertDialog.Builder(getContext())
                 .setView(view)
-                .setTitle("Add Questions")
+                .setTitle("Add Question")
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("Submit", (dialogInterface, i) -> {
-                    listener.addComment(comment_body.getText().toString());
-                }).create();
+                .setPositiveButton("Submit", (dialogInterface, i) -> listener.addComment(comment_body.getText().toString())).create();
     }
 }

@@ -20,9 +20,11 @@ import android.widget.Toast;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
+
 /**
- * This class implements the experiment overview fragment for the overview tab of the Experiment
- * Overview activity.
+ * This class implements the experiment overview tab of the Experiment Overview activity.
  * @author Joshua Billson
  */
 public class ExperimentOverviewFragment extends Fragment {
@@ -31,13 +33,16 @@ public class ExperimentOverviewFragment extends Fragment {
     private ExperimentStatistics statistics;
     private Button subscribeButton;
 
+    /** Obligatory Empty Constructor */
     public ExperimentOverviewFragment() {
     }
 
     /**
-     * Use this to pass an experiment to the fragment.
+     * Use this to pass an experiment and its associated trials to the fragment.
      * @param experiment
      *     The experiment we want the fragment to display.
+     * @param statistics
+     *     The trials associated with the experiment we want to display.
      * @return
      *     A new fragment.
      */
@@ -113,17 +118,21 @@ public class ExperimentOverviewFragment extends Fragment {
             this.experiment = experiment;
             subscribeButton.setText(experiment.isSubscribed(App.getUser().getUsername()) ? "Unsubscribe" : "Subscribe");
             String message = experiment.isSubscribed(App.getUser().getUsername()) ? "You Have Subscribed To This Experiment!" : "You Have Unsubscribed From This Experiment!";
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         });
     }
 
+    /*
+    * Open Submit Trial Activity If The User Is Subscribed, The Experiment is Unlocked, And
+    * They Accept To Submit Geolocation If The Experiment Requires It
+    */
     private void submitTrial() {
         /* Check That The Experiment Is Unlocked */
         if (! experiment.isLocked()) {
 
             /* If We Are Not Subscribed, Inform User To Subscribe Before Submitting A Trial */
             if (! experiment.isSubscribed(App.getUser().getUsername())) {
-                Toast.makeText(getActivity().getApplicationContext(), "Must Subscribe Before Submitting A Trial!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Must Subscribe Before Submitting A Trial!", Toast.LENGTH_SHORT).show();
             } else {
 
                 /* If geolocation is required, we warn the user*/
@@ -134,17 +143,19 @@ public class ExperimentOverviewFragment extends Fragment {
                 }
             }
         } else {
-            Toast.makeText(getActivity().getApplicationContext(), "Experiment Is Locked!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Experiment Is Locked!", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /* Navigate To The Submit Trial Activity */
     private void goToSubmitTrialActivity() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), SubmitTrialActivity.class);
+        Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), SubmitTrialActivity.class);
         intent.putExtra("experiment", this.experiment);
         intent.putExtra("trials", this.statistics);
         startActivity(intent);
     }
 
+    /* Display A Warning If Geolocation Is Required To Submit A Trial */
     private void notifyGeolocationRequired() {
         new AlertDialog.Builder(getContext())
                 .setTitle("Warning")

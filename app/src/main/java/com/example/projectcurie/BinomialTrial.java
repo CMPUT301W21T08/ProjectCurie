@@ -3,7 +3,7 @@ package com.example.projectcurie;
 import com.google.type.LatLng;
 
 /**
- * This class represents the results of a single binomial trial.
+ * Stores the results of a single binomial trial.
  * @author Joshua Billson
  */
 public class BinomialTrial extends Trial {

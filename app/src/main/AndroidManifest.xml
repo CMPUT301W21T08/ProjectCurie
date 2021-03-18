@@ -43,6 +43,9 @@
             android:name=".UserProfileActivity"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".AnswerListActivity"
+            android:parentActivityName=".AnswerListActivity" />
+        <activity
             android:name=".ExperimentOverviewActivity"
             android:parentActivityName=".MainActivity" />
         <activity
