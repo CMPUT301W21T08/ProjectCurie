@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ExperimentCommentsFragment extends Fragment {
@@ -56,9 +58,18 @@ public class ExperimentCommentsFragment extends Fragment {
         commentController = new CommentController(questions, arrayAdapter);
         commentController.fetchAndNotifyQuestions(experiment);
 
+        /**
+         * Onclick listener to get question selected and package question experiment name + ID into bundle.
+         */
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             Comment question = questions.get(position);
+            String qid = question.getId();
+            String q_expname = question.getExperiment();
             Log.i("Question ID", question.getId());
+            Intent intent = new Intent(getActivity(), AnswerListActivity.class);
+            intent.putExtra("q_expname", q_expname);
+            intent.putExtra("qid", qid);
+            startActivity(intent);
         });
 
         /* Set On Click Listener For Adding A New Question */
