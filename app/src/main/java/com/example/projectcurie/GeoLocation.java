@@ -217,3 +217,4 @@ class GeoLocation extends Service implements LocationListener {
         return null;
     }
 }
+///Author https://howtodoandroid.medium.com/how-to-get-current-latitude-and-longitude-in-android-example-35437a51052a
