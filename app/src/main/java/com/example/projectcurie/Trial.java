@@ -1,7 +1,5 @@
 package com.example.projectcurie;
 
-import androidx.annotation.NonNull;
-
 import com.google.type.LatLng;
 
 import java.io.Serializable;
@@ -61,6 +59,8 @@ public class Trial implements Serializable {
     }
 
     public double getLatitude() {
+        GetGeoLocation geo = new GetGeoLocation();
+        latitude = geo.getLatitude();
         return latitude;
     }
 
@@ -69,11 +69,17 @@ public class Trial implements Serializable {
     }
 
     public double getLongitude() {
+        GetGeoLocation geo = new GetGeoLocation();
+        longitude = geo.getLongitude();
         return longitude;
     }
+    public double getLocation()
+    {
+        GetGeoLocation geo = new GetGeoLocation();
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        return geo.getLatitude() ;
+    }
+    public void setLongitude(double longitude) { this.longitude = longitude;
     }
 
     public String getExperiment() {

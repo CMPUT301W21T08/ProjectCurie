@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.projectcurie">
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -30,7 +31,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+            android:value="$AIzaSyARPumtdHJax1rIbNP38YmCov0DMpK-WvM" />
 
         <activity
             android:name=".MapsActivity"
@@ -53,7 +54,7 @@
         <activity android:name=".SubmitTrialActivity" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".WelcomeActivity">
+        <activity android:name=".GetGeoLocation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
