@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 /**
  * This class currently doesn't do anything interesting.
+ * This class will implement experiment data and statistics in phase 4.
  */
 public class ExperimentDataFragment extends Fragment {
     public ExperimentDataFragment() {
