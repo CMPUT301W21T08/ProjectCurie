@@ -17,7 +17,7 @@ public class CommentController {
         fetcher.fetchQuestions(experiment, () -> this.adapter.notifyDataSetChanged());
     }
 
-    public void fetchAndNotifyAnswers(Comment question) {
-        fetcher.fetchAnswers(question, () -> this.adapter.notifyDataSetChanged());
+    public void fetchAndNotifyAnswers(String questionID) {
+        fetcher.fetchAnswers(questionID, () -> this.adapter.notifyDataSetChanged());
     }
 }

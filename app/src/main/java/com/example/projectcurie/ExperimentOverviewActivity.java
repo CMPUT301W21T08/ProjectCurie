@@ -8,11 +8,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
-import android.icu.util.Measure;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -69,10 +66,7 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("questions")
                 .document()
-                .set(new Comment(body, user.getUsername(), experiment.getTitle()))
-                .addOnSuccessListener(aVoid -> {
-                    commentsFragment.refreshList();
-                });
+                .set(new Comment(body, user.getUsername(), experiment.getTitle()));
     }
 
 

@@ -2,7 +2,9 @@ package com.example.projectcurie;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,25 +22,34 @@ import java.util.ArrayList;
  * @author Bo Cen
  */
 public class AnswerListActivity extends AppCompatActivity implements AddAnswerFragment.AddAnswerDialogFragmentListener {
+    String poster;
+    String questionID;
+    String question_ExperimentName;
 
-    private Button new_answer;
-    Comment question;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer_list);
 
-        new_answer = findViewById(R.id.add_answer_btn);
+        poster = App.getUser().getUsername();
+        questionID = getIntent().getStringExtra("qid");
+        question_ExperimentName = getIntent().getStringExtra("q_expname");
+
+        ListView listView = findViewById(R.id.answersListView);
+        ArrayList<Comment> answers = new ArrayList<>();
+        ArrayAdapter<Comment> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, answers);
+        listView.setAdapter(arrayAdapter);
+
+        CommentController commentController = new CommentController(answers, arrayAdapter);
+        commentController.fetchAndNotifyAnswers(questionID);
+
+        Button new_answer = findViewById(R.id.add_answer_btn);
         new_answer.setOnClickListener(v -> {
             new AddAnswerFragment().show(getSupportFragmentManager(), "ADD_ANSWER");
         });
     }
 
     public void addAnswer(String body){
-        String poster = App.getUser().getUsername();
-        Bundle question = getIntent().getExtras();
-        String questionID = question.getString("qid");
-        String question_ExperimentName = question.getString("q_expname");
         Log.i("Poster Id", poster);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("questions").document(questionID).collection("answers")

@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ExperimentCommentsFragment extends Fragment {
@@ -58,9 +57,6 @@ public class ExperimentCommentsFragment extends Fragment {
         commentController = new CommentController(questions, arrayAdapter);
         commentController.fetchAndNotifyQuestions(experiment);
 
-        /**
-         * Onclick listener to get question selected and package question experiment name + ID into bundle.
-         */
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             Comment question = questions.get(position);
             String qid = question.getId();
@@ -79,9 +75,5 @@ public class ExperimentCommentsFragment extends Fragment {
             fragment.show(getActivity().getSupportFragmentManager(), "ADD COMMENT FRAGMENT");
         });
         return view;
-    }
-
-    public void refreshList() {
-        commentController.fetchAndNotifyQuestions(experiment);
     }
 }
