@@ -11,6 +11,8 @@ import java.io.Serializable;
 public class Comment implements Serializable {
     private String poster;
     private String body;
+    private String experiment;
+    private transient String id;
 
     /**
      *  Empty Constructor For FireStore
@@ -18,9 +20,10 @@ public class Comment implements Serializable {
     public Comment() {
     }
 
-    public Comment(String body, String poster){
+    public Comment(String body, String poster, String experiment){
         this.body = body;
         this.poster = poster;
+        this.experiment = experiment;
     }
 
     public String getPoster() {
@@ -37,6 +40,22 @@ public class Comment implements Serializable {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getExperiment() {
+        return experiment;
+    }
+
+    public void setExperiment(String experiment) {
+        this.experiment = experiment;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @NonNull
