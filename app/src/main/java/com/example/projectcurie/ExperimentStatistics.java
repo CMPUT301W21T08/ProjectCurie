@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * This class stores all trials associated with a given experiment and provides methods for
  * extracting common statistics from those trials.
  * @author Joshua Billson
+ * @deprecated We Are Refactoring How We Model Trials In Our System.
  */
 public class ExperimentStatistics implements Serializable {
 

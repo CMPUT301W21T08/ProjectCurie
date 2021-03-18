@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 
 /**
- * Comments are represented by this class and inherited by Question and Answer classes.
+ * Represents a single question or answer posted to an experiment.
  * @author Bo Cen
  */
 public class Comment implements Serializable {
@@ -20,6 +20,15 @@ public class Comment implements Serializable {
     public Comment() {
     }
 
+    /**
+     * Create A new comment associated with a particular experiment.
+     * @param body
+     *     The body of the comment.
+     * @param poster
+     *     The username of the comment's poster.
+     * @param experiment
+     *     The title of the experiment to which this comment is posted.
+     */
     public Comment(String body, String poster, String experiment){
         this.body = body;
         this.poster = poster;

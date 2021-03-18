@@ -31,11 +31,6 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     private Experiment experiment;
     private ExperimentStatistics statistics;
 
-    /* Fragments */
-    private ExperimentOverviewFragment overviewFragment;
-    private ExperimentDataFragment dataFragment;
-    private ExperimentCommentsFragment commentsFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +56,11 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         }).attach();
     }
 
+    /**
+     * Add a new question to this experiment and update the database.
+     * @param body
+     *     The body of the question we want to post.
+     */
     @Override
     public void addComment(String body) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -68,7 +68,6 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
                 .document()
                 .set(new Comment(body, user.getUsername(), experiment.getTitle()));
     }
-
 
     /**
      * This class manages fragments for each tab in the activity. Each tab is associated with a
@@ -86,14 +85,11 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    overviewFragment = ExperimentOverviewFragment.newInstance(experiment, statistics);
-                    return overviewFragment;
+                    return ExperimentOverviewFragment.newInstance(experiment, statistics);
                 case 1:
-                    dataFragment = new ExperimentDataFragment();
-                    return dataFragment;
+                    return new ExperimentDataFragment();
                 default:
-                    commentsFragment = ExperimentCommentsFragment.newInstance(experiment.getTitle());
-                    return commentsFragment;
+                    return ExperimentCommentsFragment.newInstance(experiment.getTitle());
             }
         }
 
