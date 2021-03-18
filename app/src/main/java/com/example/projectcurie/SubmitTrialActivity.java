@@ -74,6 +74,8 @@ public class SubmitTrialActivity extends AppCompatActivity implements
             return trials;
         }).addOnSuccessListener(statistics -> {
             Toast.makeText(getApplicationContext(), "Trial Submitted!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -88,6 +90,8 @@ public class SubmitTrialActivity extends AppCompatActivity implements
             return trials;
         }).addOnSuccessListener(statistics -> {
             Toast.makeText(getApplicationContext(), "Trial Submitted!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         });
     }
 
