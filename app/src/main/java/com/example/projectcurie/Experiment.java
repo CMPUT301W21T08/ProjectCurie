@@ -1,14 +1,10 @@
 package com.example.projectcurie;
 
-import android.widget.ArrayAdapter;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
 
 /**
  * This Enumeration Represents The Different Types Of Experiments That A User Can Create.
@@ -22,7 +18,8 @@ enum ExperimentType {
 }
 
 /**
- * Experiments are represented by this class.
+ * This class represents a database instance of a single experiment. It records the type of experiment,
+ * along with any metadata associated with it.
  * @author Joshua BIllson
  */
 public class Experiment implements Serializable {
@@ -37,23 +34,76 @@ public class Experiment implements Serializable {
     private ArrayList<String> subscriptions;
     private boolean locked = false;
 
+    /** Empty Constructor For Deserializing From FireStore */
     public Experiment() { }
 
+    /**
+     * Instantiate a new Experiment to be uploaded to the database.
+     * @param title
+     *     The title of the experiment.
+     * @param description
+     *     A textual description of the experiment.
+     * @param region
+     *     A region in which trials are to take place.
+     * @param minTrialNumber
+     *     The minimum number of trials that must be submitted to this experiment.
+     * @param geolocationRequired
+     *     Indicates whether trials requires geolocation on behalf of the experimenter.
+     * @param owner
+     *     The username of the experiment's publisher.
+     * @param type
+     *     An enumeration that encodes the type of experiment (binomial, count, integer count, measurement).
+     * @throws IllegalArgumentException
+     *     If any of the required fields are empty, throws an error.
+     */
     public Experiment(String title, String description, String region, int minTrialNumber, boolean geolocationRequired, String owner, ExperimentType type) throws IllegalArgumentException {
         /* Disallow Empty Fields For Title, Description, Region, & Owner */
         if ((title.trim().isEmpty()) || (description.trim().isEmpty()) || (region.trim()).isEmpty() || (owner.trim().isEmpty())) {
             throw new IllegalArgumentException();
+        } else {
+            this.subscriptions = new ArrayList<>();
+            this.title = title;
+            this.description = description;
+            this.region = region;
+            this.minTrialNumber = minTrialNumber;
+            this.geolocationRequired = geolocationRequired;
+            this.owner = owner;
+            this.type = type;
+            tokenize();
         }
+    }
 
-        this.subscriptions = new ArrayList<>();
-        this.title = title;
-        this.description = description;
-        this.region = region;
-        this.minTrialNumber = minTrialNumber;
-        this.geolocationRequired = geolocationRequired;
-        this.owner = owner;
-        this.type = type;
-        tokenize();
+    /**
+     * Subscribe a user to this experiment so that they can submit trials.
+     * @param username
+     *     The username of the user who wishes to subscribe.
+     */
+    public void subscribe(String username) {
+        if (! this.subscriptions.contains(username)) {
+            subscriptions.add(username);
+        }
+    }
+
+    /**
+     * Unsubscribe a user to this experiment so that they can no longer submit trials.
+     * @param username
+     *     The username of the user who wishes to unsubscribe.
+     */
+    public void unsubscribe(String username) {
+        if (this.subscriptions.contains(username)) {
+            subscriptions.remove(username);
+        }
+    }
+
+    /**
+     * Determine whether a given user is subscribed to this experiment.
+     * @param username
+     *     The username of the user whose subscription status we wish to check.
+     * @return
+     *     The user's subscription status.
+     */
+    public boolean isSubscribed(String username) {
+        return this.subscriptions.contains(username);
     }
 
     public String getTitle() {
@@ -140,22 +190,6 @@ public class Experiment implements Serializable {
         this.subscriptions = subscriptions;
     }
 
-    public void subscribe(String username) {
-        if (! this.subscriptions.contains(username)) {
-            subscriptions.add(username);
-        }
-    }
-
-    public void unsubscribe(String username) {
-        if (this.subscriptions.contains(username)) {
-            subscriptions.remove(username);
-        }
-    }
-
-    public boolean isSubscribed(String username) {
-        return this.subscriptions.contains(username);
-    }
-
     @NotNull
     @Override
     public String toString() {
@@ -182,7 +216,7 @@ public class Experiment implements Serializable {
                 "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s",
                 "t", "can", "will", "just", "don", "should", "now"));
 
-        tokens = new ArrayList<String>();
+        tokens = new ArrayList<>();
         for (String field : searchableFields) {
             if (field != null) {
                 for (String token : field.split("\\W+")) {
@@ -192,6 +226,5 @@ public class Experiment implements Serializable {
                 }
             }
         }
-
     }
 }

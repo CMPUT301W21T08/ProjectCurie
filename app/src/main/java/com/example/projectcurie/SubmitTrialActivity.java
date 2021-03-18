@@ -1,28 +1,18 @@
 package com.example.projectcurie;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.Transaction;
 import com.google.type.LatLng;
 
-import java.io.IOException;
 
 public class SubmitTrialActivity extends AppCompatActivity implements
         BinomialTrialFragment.BinomialTrialFragmentInteractionListener,
@@ -119,7 +109,17 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void uploadIntegerCountTrial(int value, LatLng location) {
+
+    }
+
+    @Override
     public void addIntCountBarcode(String barcodeString, int value) {
+
+    }
+
+    @Override
+    public void addIntCountBarcode(String barcodeString, LatLng location, int value) {
 
     }
 
@@ -136,7 +136,17 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void uploadCountTrial(LatLng location) {
+
+    }
+
+    @Override
     public void addCountBarcode(String barcodeString) {
+
+    }
+
+    @Override
+    public void addCountBarcode(String barcodeString, LatLng location) {
 
     }
 
@@ -153,7 +163,17 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void uploadMeasurementTrial(double value, LatLng location) {
+
+    }
+
+    @Override
     public void addMeasurementBarcode(String barcodeString, double value) {
+
+    }
+
+    @Override
+    public void addMeasurementBarcode(String barcodeString, LatLng location, double value) {
 
     }
 }

@@ -18,7 +18,11 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/**
+ * @author Bo Cen
+ */
 public class ExperimentCommentsFragment extends Fragment {
+
     private Button new_comment;
     private ArrayList<Comment> questions;
     private ArrayAdapter<Comment> arrayAdapter;

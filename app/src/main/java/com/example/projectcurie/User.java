@@ -13,7 +13,6 @@ public class User implements Serializable {
     private String email;
     private String about;
     private Date dateJoined;
-    private ArrayList<String> subscriptions;
     private ArrayList<String> blacklisted;
 
     public User(){}
@@ -23,8 +22,21 @@ public class User implements Serializable {
         this.email = "";
         this.about = "";
         this.dateJoined = new Date();
-        this.subscriptions = new ArrayList<>();
         this.blacklisted = new ArrayList<>();
+    }
+
+    public void removeBlacklisted(String username) {
+        this.blacklisted.remove(username);
+    }
+
+    public void addBlacklist(String username) {
+        if (! this.blacklisted.contains(username)) {
+            this.blacklisted.add(username);
+        }
+    }
+
+    public boolean isBlacklisted(String username) {
+        return this.blacklisted.contains(username);
     }
 
     public String getUsername() {
@@ -59,39 +71,11 @@ public class User implements Serializable {
         this.dateJoined = dateJoined;
     }
 
-    public ArrayList<String> getSubscriptions() {
-        return subscriptions;
-    }
-
-    public void setSubscriptions(ArrayList<String> subscriptions) {
-        this.subscriptions = subscriptions;
-    }
-
     public void setBlacklisted(ArrayList<String> blacklisted) {
         this.blacklisted = blacklisted;
     }
 
     public ArrayList<String> getBlacklisted(){
         return blacklisted;
-    }
-
-    public void removeBlacklisted(String username) {
-        this.blacklisted.remove(username);
-    }
-
-    public void addBlacklist(String username) {
-        if (! this.blacklisted.contains(username)) {
-            this.blacklisted.add(username);
-        }
-    }
-
-    public void addSubscription(String experiment) {
-        if (! this.subscriptions.contains(experiment)) {
-            this.subscriptions.add(experiment);
-        }
-    }
-
-    public void removeSubscription(String experiment) {
-        this.subscriptions.remove(experiment);
     }
 }

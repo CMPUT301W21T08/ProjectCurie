@@ -3,7 +3,7 @@ package com.example.projectcurie;
 import com.google.type.LatLng;
 
 /**
- * This class represents the results of a single integer count trial.
+ * This class stores the results of a single integer count trial.
  * @author Joshua Billson
  */
 public class IntegerCountTrial extends Trial {
