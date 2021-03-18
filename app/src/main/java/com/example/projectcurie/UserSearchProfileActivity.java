@@ -20,6 +20,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This class implements the activity for presenting the profile of the searched user.
+ * @author Klyde Pausang
+ */
 public class UserSearchProfileActivity extends AppCompatActivity {
 
     TextView userEmail;

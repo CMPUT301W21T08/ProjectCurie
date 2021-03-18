@@ -32,7 +32,12 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * This class implements an activity for presenting the user profile.
+ * The user profile can be edited by clicking the edit profile button.
+ * The user's experiment can be locked or deleted by holding on the experiment.
+ * @author Klyde Pausang
+ */
 public class UserProfileActivity extends AppCompatActivity implements EditUserDialogFragment.EditUserCallbackListener {
 
     private TextView usernameTextView;
