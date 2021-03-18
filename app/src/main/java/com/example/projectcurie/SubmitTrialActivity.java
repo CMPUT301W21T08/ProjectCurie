@@ -1,5 +1,7 @@
 package com.example.projectcurie;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
@@ -10,8 +12,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.Transaction;
+import com.google.type.LatLng;
 
 import java.io.IOException;
 
@@ -23,7 +32,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
     private FrameLayout fragmentLayout;
     private Experiment experiment;
-    private ExperimentStatistics statistics;
+    private ExperimentStatistics results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +42,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
         /* Grab Data From Intent */
         this.experiment = (Experiment) getIntent().getSerializableExtra("experiment");
-        this.statistics = (ExperimentStatistics) getIntent().getSerializableExtra("trials");
+        this.results = (ExperimentStatistics) getIntent().getSerializableExtra("trials");
 
         /* Display Appropriate Fragment Depending On Experiment Type */
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -57,10 +66,29 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     @Override
     public void uploadBinomialTrial(boolean value) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        statistics.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
-        db.collection("trials")
-                .document(this.experiment.getTitle())
-                .set(statistics);
+        DocumentReference ref = db.collection("trials").document(this.experiment.getTitle());
+        db.runTransaction(transaction -> {
+            ExperimentStatistics trials = transaction.get(ref).toObject(ExperimentStatistics.class);
+            trials.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+            transaction.set(ref, trials, SetOptions.merge());
+            return trials;
+        }).addOnSuccessListener(statistics -> {
+            Toast.makeText(getApplicationContext(), "Trial Submitted!", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    @Override
+    public void uploadBinomialTrial(boolean value, LatLng location) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference ref = db.collection("trials").document(this.experiment.getTitle());
+        db.runTransaction(transaction -> {
+            ExperimentStatistics trials = transaction.get(ref).toObject(ExperimentStatistics.class);
+            trials.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), location, value));
+            transaction.set(ref, trials, SetOptions.merge());
+            return trials;
+        }).addOnSuccessListener(statistics -> {
+            Toast.makeText(getApplicationContext(), "Trial Submitted!", Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -69,12 +97,21 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void addBinomialBarcode(String barcodeString, LatLng location, boolean value) {
+
+    }
+
+
+    @Override
     public void uploadIntegerCountTrial(int value) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        statistics.addTrial(new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+        results.addTrial(new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
         db.collection("trials")
                 .document(this.experiment.getTitle())
-                .set(statistics);
+                .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -85,10 +122,13 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     @Override
     public void uploadCountTrial() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        statistics.addTrial(new CountTrial(this.experiment.getTitle(), App.getUser().getUsername()));
+        results.addTrial(new CountTrial(this.experiment.getTitle(), App.getUser().getUsername()));
         db.collection("trials")
                 .document(this.experiment.getTitle())
-                .set(statistics);
+                .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -99,10 +139,13 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     @Override
     public void uploadMeasurementTrial(double value) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        statistics.addTrial(new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
+        results.addTrial(new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
         db.collection("trials")
                 .document(this.experiment.getTitle())
-                .set(statistics);
+                .set(results);
+        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override

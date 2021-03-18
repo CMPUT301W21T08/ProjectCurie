@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,11 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -65,9 +69,9 @@ public class UserProfileActivity extends AppCompatActivity implements EditUserDi
             new AlertDialog.Builder(this)
                     .setTitle("Lock/Delete Experiment")
                     .setMessage("Do You Want To Lock Or Delete This Experiment?")
-                    .setNegativeButton("Lock", null)
+                    .setNegativeButton("Lock", (dialog, which) -> lockExperiment(position))
                     .setNeutralButton("Back", null)
-                    .setPositiveButton("Delete", null)
+                    .setPositiveButton("Delete", (dialog, which) -> deleteExperiment(position))
                     .create()
                     .show();
             return false;
@@ -110,6 +114,37 @@ public class UserProfileActivity extends AppCompatActivity implements EditUserDi
         /* Showing the User join date */
         Date joinDate = user.getDateJoined();
         userDateJoin.setText(String.format("%02d-%02d-%d", joinDate.getDate(), joinDate.getMonth()+1, joinDate.getYear()+1900));
+    }
+
+    private void deleteExperiment(int position) {
+        Experiment experiment = this.experiments.get(position);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference experimentRef = db.collection("experiments").document(experiment.getTitle());
+        DocumentReference commentsRef = db.collection("comments").document(experiment.getTitle());
+        DocumentReference trialsRef = db.collection("trials").document(experiment.getTitle());
+        WriteBatch batch = db.batch();
+        batch.delete(experimentRef);
+        batch.delete(commentsRef);
+        batch.delete(trialsRef);
+        batch.commit()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this.getApplicationContext(), "Deleted Experiment!", Toast.LENGTH_SHORT).show();
+                    this.experiments.remove(position);
+                    this.experimentArrayAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> Log.e("Error", "Error Deleting Experiment!"));
+    }
+
+    private void lockExperiment(int position) {
+        Experiment experiment = this.experiments.get(position);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference experimentRef = db.collection("experiments").document(experiment.getTitle());
+        experimentRef.update("locked",true)
+                    .addOnSuccessListener(e -> {
+                        Toast.makeText(getApplicationContext(), "Experiment Is Now Locked!", Toast.LENGTH_SHORT).show();
+                        experiment.setLocked(true);
+                    })
+                    .addOnFailureListener(e -> Log.e("Error", "Error: Couldn't Lock The Experiment!"));
     }
 
     @Override

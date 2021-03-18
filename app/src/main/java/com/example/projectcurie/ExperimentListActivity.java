@@ -1,9 +1,7 @@
 package com.example.projectcurie;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,6 +50,12 @@ public class ExperimentListActivity extends AppCompatActivity {
             StartActivityOnFinalCallback startActivityOnFinalCallback = new StartActivityOnFinalCallback(intent, experiment);
             startActivityOnFinalCallback.goToExperimentOverview();
         });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
     }
 
     /**
