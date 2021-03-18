@@ -42,6 +42,7 @@ public class UserProfileActivity extends AppCompatActivity implements EditUserDi
     private Button editProfileButton;
     private ListView experimentListView;
     private User user;
+    private String lockString;
 
 
     private ArrayAdapter<Experiment> experimentArrayAdapter;
@@ -66,10 +67,12 @@ public class UserProfileActivity extends AppCompatActivity implements EditUserDi
 
         /* Setup List Item On Click Listener */
         experimentListView.setOnItemLongClickListener((parent, view, position, id) -> {
+            Experiment experiment = this.experiments.get(position);
+            lockString = experiment.isLocked() ? "Unlock" : "Lock";
             new AlertDialog.Builder(this)
                     .setTitle("Lock/Delete Experiment")
                     .setMessage("Do You Want To Lock Or Delete This Experiment?")
-                    .setNegativeButton("Lock", (dialog, which) -> lockExperiment(position))
+                    .setNegativeButton(lockString, (dialog, which) -> lockExperiment(position))
                     .setNeutralButton("Back", null)
                     .setPositiveButton("Delete", (dialog, which) -> deleteExperiment(position))
                     .create()
@@ -139,12 +142,23 @@ public class UserProfileActivity extends AppCompatActivity implements EditUserDi
         Experiment experiment = this.experiments.get(position);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference experimentRef = db.collection("experiments").document(experiment.getTitle());
-        experimentRef.update("locked",true)
+        if (! experiment.isLocked()) {
+            experimentRef.update("locked", true)
                     .addOnSuccessListener(e -> {
                         Toast.makeText(getApplicationContext(), "Experiment Is Now Locked!", Toast.LENGTH_SHORT).show();
                         experiment.setLocked(true);
+                        lockString= "Unlock";
                     })
                     .addOnFailureListener(e -> Log.e("Error", "Error: Couldn't Lock The Experiment!"));
+        } else {
+            experimentRef.update("locked", false)
+                    .addOnSuccessListener(e -> {
+                        Toast.makeText(getApplicationContext(), "Experiment Is Now Unlocked!", Toast.LENGTH_SHORT).show();
+                        experiment.setLocked(false);
+                        lockString= "Lock";
+                    })
+                    .addOnFailureListener(e -> Log.e("Error", "Error: Couldn't Unlock The Experiment!"));
+        }
     }
 
     @Override
