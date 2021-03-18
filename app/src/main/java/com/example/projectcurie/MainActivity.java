@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
     Button search_user_btn;
     Button barcode_btn;
     Button view_profile_btn;
+    Button view_loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         view_profile_btn = findViewById(R.id.view_profile_btn);
         username = findViewById(R.id.username_textview);
 
+
         /* Set Username */
         username.setText(App.getUser().getUsername());
 
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         search_exp_btn.setOnClickListener((View v) ->{
             new SearchExperimentFragment().show(getSupportFragmentManager(), "SEARCH EXPERIMENT FRAGMENT");
         });
+
+
 
         /* View Experiments On Click Listener */
         view_exp_btn.setOnClickListener((View v) -> {
