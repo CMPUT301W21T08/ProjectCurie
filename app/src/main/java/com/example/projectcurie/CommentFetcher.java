@@ -5,20 +5,18 @@ import android.widget.ArrayAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CommentFetcher {
+public class CommentFetcher implements Serializable {
     ArrayList<Comment> comments;
-    ArrayAdapter<Comment> adapter;
 
-    public CommentFetcher(ArrayList<Comment> comments, ArrayAdapter<Comment> adapter) {
+    public CommentFetcher(ArrayList<Comment> comments) {
         this.comments = comments;
-        this.adapter = adapter;
     }
 
-    public void fetchQuestions(String experiment) {
+    public void fetchQuestions(String experiment, Runnable runnable) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("questions").whereEqualTo("experiment", experiment)
                 .get()
@@ -29,11 +27,11 @@ public class CommentFetcher {
                         comment.setId(document.getId());
                         comments.add(comment);
                     }
-                    adapter.notifyDataSetChanged();
+                    runnable.run();
                 });
     }
 
-    public void fetchAnswers(Comment question) {
+    public void fetchAnswers(Comment question, Runnable runnable) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("questions").document(question.getId()).collection("answers")
                 .get()
@@ -42,9 +40,8 @@ public class CommentFetcher {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         comments.add(document.toObject(Comment.class));
                     }
-                    adapter.notifyDataSetChanged();
+                    runnable.run();
                 });
-
     }
 
     public ArrayList<Comment> getComments() {
@@ -53,13 +50,5 @@ public class CommentFetcher {
 
     public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
-    }
-
-    public ArrayAdapter<Comment> getAdapter() {
-        return adapter;
-    }
-
-    public void setAdapter(ArrayAdapter<Comment> adapter) {
-        this.adapter = adapter;
     }
 }
