@@ -1,7 +1,7 @@
 package com.example.projectcurie;
 
-import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,14 +42,20 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
     Button barcode_btn;
     Button view_profile_btn;
     Button view_loc;
-    private static final int REQUEST_LOCATION = 1;
+    GeoLocation geo;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         setContentView(R.layout.activity_main);
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         search_exp_btn = findViewById(R.id.searchExperiments_btn);
         view_exp_btn = findViewById(R.id.viewExperiments_btn);
         new_exp_btn = findViewById(R.id.addExperiment_btn);
@@ -57,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         barcode_btn = findViewById(R.id.scanBarcode_btn);
         view_profile_btn = findViewById(R.id.view_profile_btn);
         username = findViewById(R.id.username_textview);
-        GetGeoLocation geo = new GetGeoLocation();
 
         /* Set Username */
         username.setText(App.getUser().getUsername());
@@ -126,7 +132,14 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         });
 
         barcode_btn.setOnClickListener((View v) -> {
-            scanBarcode();
+                geo = new GeoLocation(MainActivity.this);
+                if(geo.canGetLocation()){
+                    double latitude = geo.getLatitude();
+                    username.setText(String.valueOf(latitude));
+                }else{
+                    geo.showSettingsAlert();
+                }
+
         });
     }
 

@@ -12,8 +12,8 @@ public class Trial implements Serializable {
     private Date timestamp;
     private String experiment;
     private String author;
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+    private Double longitude;
     private LatLng location;
     private LatLng locationLatLng;
     public Trial() { }
@@ -47,45 +47,27 @@ public class Trial implements Serializable {
      *     The username of the user who submits this trial.
      */
     public Trial(String experiment, String author,LatLng location) {
-        GetGeoLocation geo = new GetGeoLocation();
         this.experiment = experiment;
         this.author = author;
         this.timestamp = new Date();
-        this.latitude = geo.getLatitude();
-        this.longitude = geo.getLongitude();
+        //this.latitude = geo.getLatitude();
+        //this.longitude = geo.getLongitude();
         this.location = location;
-        this.locationLatLng = getLocation();
     }
 
     public Date getTimestamp() {
         return timestamp;
     }
-
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
+    public double getLatitude() { return latitude;}
     public void setLatitude(double latitude) { this.latitude = latitude; }
 
-
-
     public double getLongitude() { return longitude; }
-    public void setLongitude(double longitude) {
-        this.longitude = longitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
 
-    public LatLng getLocation() {;
-        // Creates a new geolocation object and retrieves latitude/longitude
-        //then converts both lat/long into a LatLng Type
-        GetGeoLocation geo = new GetGeoLocation();
-        Double lat_val = geo.getLatitude();
-        Double lng_val = geo.getLongitude();
-        LatLng currentLoc = new LatLng(lat_val,lng_val);
-        return currentLoc;
-
-    }
 
     public String getExperiment() {
         return experiment;
