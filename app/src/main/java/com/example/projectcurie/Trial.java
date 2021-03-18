@@ -70,14 +70,14 @@ public class Trial implements Serializable {
     }
     public void setLatitude(double latitude) { this.latitude = latitude; }
 
-    
-    
+
+
     public double getLongitude() { return longitude; }
     public void setLongitude(double longitude) {
         this.longitude = longitude; }
 
     public LatLng getLocation() {;
-    // Creates a new geolocation object and retrieves latitude/longitude
+        // Creates a new geolocation object and retrieves latitude/longitude
         //then converts both lat/long into a LatLng Type
         GetGeoLocation geo = new GetGeoLocation();
         Double lat_val = geo.getLatitude();
