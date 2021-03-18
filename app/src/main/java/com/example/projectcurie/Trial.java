@@ -47,11 +47,12 @@ public class Trial implements Serializable {
      *     The username of the user who submits this trial.
      */
     public Trial(String experiment, String author,LatLng location) {
+        GetGeoLocation geo = new GetGeoLocation();
         this.experiment = experiment;
         this.author = author;
         this.timestamp = new Date();
-        this.latitude = getLatitude();
-        this.longitude = getLongitude();
+        this.latitude = geo.getLatitude();
+        this.longitude = geo.getLongitude();
         this.location = location;
         this.locationLatLng = getLocation();
     }
@@ -64,26 +65,20 @@ public class Trial implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public Double getLatitude() {
-        GetGeoLocation geo = new GetGeoLocation();
-        latitude = geo.getLatitude();
+    public double getLatitude() {
         return latitude;
     }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        GetGeoLocation geo = new GetGeoLocation();
-        this.longitude = geo.getLongitude();
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) { this.longitude = longitude;
-    }
+    
+    
+    public double getLongitude() { return longitude; }
+    public void setLongitude(double longitude) {
+        this.longitude = longitude; }
 
     public LatLng getLocation() {;
+    // Creates a new geolocation object and retrieves latitude/longitude
+        //then converts both lat/long into a LatLng Type
         GetGeoLocation geo = new GetGeoLocation();
         Double lat_val = geo.getLatitude();
         Double lng_val = geo.getLongitude();
