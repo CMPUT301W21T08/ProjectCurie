@@ -23,6 +23,7 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -37,13 +38,14 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class AddExperimentTest {
+public class AddNewExperimentTest {
 
     @Rule
     public ActivityTestRule<WelcomeActivity> mActivityTestRule = new ActivityTestRule<>(WelcomeActivity.class);
 
     @Test
-    public void addExperimentTest() {
+    public void addNewExperimentTest() throws InterruptedException {
+        Thread.sleep(3000);
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.start_button), withText("Start"),
                         childAtPosition(
@@ -78,7 +80,7 @@ public class AddExperimentTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(3);
+                .atPosition(1);
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction appCompatEditText = onView(
@@ -89,9 +91,19 @@ public class AddExperimentTest {
                                         0),
                                 2),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("CountTest"), closeSoftKeyboard());
+        appCompatEditText.perform(longClick());
 
         ViewInteraction appCompatEditText2 = onView(
+                allOf(withId(R.id.titleEditText),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                2),
+                        isDisplayed()));
+        appCompatEditText2.perform(replaceText("AddMeasurementTest"), closeSoftKeyboard());
+
+        ViewInteraction appCompatEditText3 = onView(
                 allOf(withId(R.id.descriptionEditText),
                         childAtPosition(
                                 childAtPosition(
@@ -99,9 +111,19 @@ public class AddExperimentTest {
                                         0),
                                 4),
                         isDisplayed()));
-        appCompatEditText2.perform(replaceText("This is description."), closeSoftKeyboard());
+        appCompatEditText3.perform(replaceText("described"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText3 = onView(
+        ViewInteraction appCompatEditText4 = onView(
+                allOf(withId(R.id.descriptionEditText), withText("described"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                4),
+                        isDisplayed()));
+        appCompatEditText4.perform(click());
+
+        ViewInteraction appCompatEditText5 = onView(
                 allOf(withId(R.id.minTrialsEditText),
                         childAtPosition(
                                 childAtPosition(
@@ -109,9 +131,9 @@ public class AddExperimentTest {
                                         0),
                                 5),
                         isDisplayed()));
-        appCompatEditText3.perform(replaceText("100"), closeSoftKeyboard());
+        appCompatEditText5.perform(replaceText("100"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText4 = onView(
+        ViewInteraction appCompatEditText6 = onView(
                 allOf(withId(R.id.regionEditText),
                         childAtPosition(
                                 childAtPosition(
@@ -119,7 +141,7 @@ public class AddExperimentTest {
                                         0),
                                 3),
                         isDisplayed()));
-        appCompatEditText4.perform(replaceText("Edmonton"), closeSoftKeyboard());
+        appCompatEditText6.perform(replaceText("Edmonton"), closeSoftKeyboard());
 
         ViewInteraction switchCompat = onView(
                 allOf(withId(R.id.geolocationSwitch),
@@ -152,8 +174,7 @@ public class AddExperimentTest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
-
-        ViewInteraction appCompatButton5 = onView(
+        ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.view_profile_btn), withText("View Profile"),
                         childAtPosition(
                                 childAtPosition(
@@ -161,29 +182,15 @@ public class AddExperimentTest {
                                         0),
                                 3),
                         isDisplayed()));
-        appCompatButton5.perform(click());
+        appCompatButton4.perform(click());
 
-        DataInteraction textView = onData(anything())
-                .inAdapterView(allOf(withId(R.id.user_experiment_list),
-                        childAtPosition(
-                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                10)))
-                .atPosition(0);
-        textView.perform(click());
 
         ViewInteraction textView2 = onView(
-                allOf(withId(android.R.id.text1), withText("CountTest"),
+                allOf(withId(android.R.id.text1), withText("AddMeasurementTest"),
                         withParent(allOf(withId(R.id.user_experiment_list),
                                 withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
                         isDisplayed()));
-        textView2.check(matches(isDisplayed()));
-
-        ViewInteraction textView3 = onView(
-                allOf(withId(android.R.id.text1), withText("CountTest"),
-                        withParent(allOf(withId(R.id.user_experiment_list),
-                                withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
-                        isDisplayed()));
-        textView3.check(matches(withText("CountTest")));
+        textView2.check(matches(withText("AddMeasurementTest")));
     }
 
     private static Matcher<View> childAtPosition(
