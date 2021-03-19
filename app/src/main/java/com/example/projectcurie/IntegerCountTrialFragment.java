@@ -1,6 +1,7 @@
 package com.example.projectcurie;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.google.type.LatLng;
 
 /**
  * This Fragment provides a UI interface for submitting an Integer Count trial to an experiment
@@ -32,10 +31,7 @@ public class IntegerCountTrialFragment extends Fragment {
      */
     public interface IntegerCountTrialFragmentInteractionListener {
         void uploadIntegerCountTrial(int value);
-        void uploadIntegerCountTrial(int value, LatLng location);
         void addIntCountBarcode(String barcodeString, int value);
-        void addIntCountBarcode(String barcodeString, LatLng location, int value);
-
     }
 
     @Override

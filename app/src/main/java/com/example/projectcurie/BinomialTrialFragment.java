@@ -1,6 +1,7 @@
 package com.example.projectcurie;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +33,7 @@ public class BinomialTrialFragment extends Fragment {
      */
     public interface BinomialTrialFragmentInteractionListener {
         void uploadBinomialTrial(boolean value);
-        void uploadBinomialTrial(boolean value, LatLng location);
         void addBinomialBarcode(String barcodeString, boolean value);
-        void addBinomialBarcode(String barcodeString, LatLng location, boolean value);
     }
 
     @Override

@@ -1,4 +1,6 @@
 package com.example.projectcurie;
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
@@ -12,16 +14,26 @@ public class Trial implements Serializable {
     private Date timestamp;
     private String experiment;
     private String author;
-    private Double latitude;
-    private Double longitude;
-    private LatLng location;
-    private LatLng locationLatLng;
+    private double latitude;
+    private double longitude;
+
+    /** Empty Constructor For Deserializing From FireStore */
     public Trial() { }
-    /** Empty Constructor For Deserializing From FireStore
+
+    /**
      * @param experiment
+     *     The title of the experiment to which this trial belongs.
      * @param author
-     * @param location*/
+     *     The username of the user who submits this trial.
+     * @param location
+     *     The geolocation of the trial.
+     */
     public Trial(String experiment, String author, com.google.type.LatLng location) {
+        this.timestamp = new Date();
+        this.experiment = experiment;
+        this.author = author;
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
     }
 
     /**
@@ -47,13 +59,12 @@ public class Trial implements Serializable {
      * @param author
      *     The username of the user who submits this trial.
      */
-    public Trial(String experiment, String author,LatLng location) {
+    public Trial(String experiment, String author, Location location) {
         this.experiment = experiment;
         this.author = author;
         this.timestamp = new Date();
-        //this.latitude = geo.getLatitude();
-        //this.longitude = geo.getLongitude();
-        this.location = location;
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
     }
 
     public Date getTimestamp() {
@@ -64,11 +75,12 @@ public class Trial implements Serializable {
     }
 
     public double getLatitude() { return latitude;}
+
     public void setLatitude(double latitude) { this.latitude = latitude; }
 
     public double getLongitude() { return longitude; }
-    public void setLongitude(double longitude) { this.longitude = longitude; }
 
+    public void setLongitude(double longitude) { this.longitude = longitude; }
 
     public String getExperiment() {
         return experiment;

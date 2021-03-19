@@ -1,6 +1,7 @@
 package com.example.projectcurie;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.google.type.LatLng;
 
 /**
  * This Fragment provides a UI interface for submitting a measurement trial to an experiment which
@@ -31,9 +30,7 @@ public class MeasurementTrialFragment extends Fragment {
 
     public interface MeasurementTrialFragmentInteractionListener {
         void uploadMeasurementTrial(double value);
-        void uploadMeasurementTrial(double value, LatLng location);
         void addMeasurementBarcode(String barcodeString, double value);
-        void addMeasurementBarcode(String barcodeString, LatLng location, double value);
     }
 
     /** Obligatory Empty Constructor */
