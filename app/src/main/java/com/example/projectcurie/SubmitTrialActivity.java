@@ -5,9 +5,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SubmitTrialActivity extends AppCompatActivity implements
@@ -59,8 +61,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements
             binomialTrial = new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value);
         }
         uploadTrial(experiment.getTitle(), binomialTrial);
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -78,8 +78,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements
             integerCountTrial = new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), value);
         }
         uploadTrial(experiment.getTitle(), integerCountTrial);
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -97,9 +95,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements
             countTrial = new CountTrial(this.experiment.getTitle(), App.getUser().getUsername());
         }
         uploadTrial(experiment.getTitle(), countTrial);
-        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -117,9 +112,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements
             measurementTrial = new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), value);
         }
         uploadTrial(experiment.getTitle(), measurementTrial);
-        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -133,7 +125,11 @@ public class SubmitTrialActivity extends AppCompatActivity implements
                 .document(experiment)
                 .collection("trials")
                 .document()
-                .set(trial);
-
+                .set(trial)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener( e -> {
+                    Log.e("Error", e.getLocalizedMessage());
+                });
     }
 }
