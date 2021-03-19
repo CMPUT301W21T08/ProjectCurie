@@ -1,6 +1,6 @@
 package com.example.projectcurie;
 
-import com.google.type.LatLng;
+import android.location.Location;
 
 /**
  * Stores the results of a single binomial trial.
@@ -33,7 +33,7 @@ public class BinomialTrial extends Trial {
      * @param author
      *     The username of the user who submits this trial.
      */
-    public BinomialTrial(String experiment, String author, LatLng location, boolean success) {
+    public BinomialTrial(String experiment, String author, Location location, boolean success) {
         super(experiment, author, location);
         this.success = success;
     }

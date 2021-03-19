@@ -3,16 +3,12 @@ package com.example.projectcurie;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
-import com.google.type.LatLng;
-
 
 public class SubmitTrialActivity extends AppCompatActivity implements
         BinomialTrialFragment.BinomialTrialFragmentInteractionListener,
@@ -22,7 +18,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
     private FrameLayout fragmentLayout;
     private Experiment experiment;
-    private ExperimentStatistics results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +27,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
         /* Grab Data From Intent */
         this.experiment = (Experiment) getIntent().getSerializableExtra("experiment");
-        this.results = (ExperimentStatistics) getIntent().getSerializableExtra("trials");
 
         /* Display Appropriate Fragment Depending On Experiment Type */
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -55,34 +49,14 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
     @Override
     public void uploadBinomialTrial(boolean value) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference ref = db.collection("trials").document(this.experiment.getTitle());
-        db.runTransaction(transaction -> {
-            ExperimentStatistics trials = transaction.get(ref).toObject(ExperimentStatistics.class);
-            trials.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
-            transaction.set(ref, trials, SetOptions.merge());
-            return trials;
-        }).addOnSuccessListener(statistics -> {
-            Toast.makeText(getApplicationContext(), "Trial Submitted!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-        });
-    }
-
-    @Override
-    public void uploadBinomialTrial(boolean value, LatLng location) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference ref = db.collection("trials").document(this.experiment.getTitle());
-        db.runTransaction(transaction -> {
-            ExperimentStatistics trials = transaction.get(ref).toObject(ExperimentStatistics.class);
-            trials.addTrial(new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), location, value));
-            transaction.set(ref, trials, SetOptions.merge());
-            return trials;
-        }).addOnSuccessListener(statistics -> {
-            Toast.makeText(getApplicationContext(), "Trial Submitted!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-        });
+        BinomialTrial binomialTrial;
+        if (experiment.isGeolocationRequired()) {
+            GeoLocation location = new GeoLocation(this);
+            binomialTrial = new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), location.getLocation(), value);
+        } else {
+            binomialTrial = new BinomialTrial(this.experiment.getTitle(), App.getUser().getUsername(), value);
+        }
+        uploadTrial(experiment.getTitle(), binomialTrial);
     }
 
     @Override
@@ -91,26 +65,15 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void addBinomialBarcode(String barcodeString, LatLng location, boolean value) {
-
-    }
-
-
-    @Override
     public void uploadIntegerCountTrial(int value) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        results.addTrial(new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
-        db.collection("trials")
-                .document(this.experiment.getTitle())
-                .set(results);
-        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void uploadIntegerCountTrial(int value, LatLng location) {
-
+        IntegerCountTrial integerCountTrial;
+        if (experiment.isGeolocationRequired()) {
+            GeoLocation location = new GeoLocation(this);
+            integerCountTrial = new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), location.getLocation(), value);
+        } else {
+            integerCountTrial = new IntegerCountTrial(this.experiment.getTitle(), App.getUser().getUsername(), value);
+        }
+        uploadTrial(experiment.getTitle(), integerCountTrial);
     }
 
     @Override
@@ -119,25 +82,15 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void addIntCountBarcode(String barcodeString, LatLng location, int value) {
-
-    }
-
-    @Override
     public void uploadCountTrial() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        results.addTrial(new CountTrial(this.experiment.getTitle(), App.getUser().getUsername()));
-        db.collection("trials")
-                .document(this.experiment.getTitle())
-                .set(results);
-        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void uploadCountTrial(LatLng location) {
-
+        CountTrial countTrial;
+        if (experiment.isGeolocationRequired()) {
+            GeoLocation location = new GeoLocation(this);
+            countTrial = new CountTrial(this.experiment.getTitle(), App.getUser().getUsername(), location.getLocation());
+        } else {
+            countTrial = new CountTrial(this.experiment.getTitle(), App.getUser().getUsername());
+        }
+        uploadTrial(experiment.getTitle(), countTrial);
     }
 
     @Override
@@ -146,25 +99,15 @@ public class SubmitTrialActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void addCountBarcode(String barcodeString, LatLng location) {
-
-    }
-
-    @Override
     public void uploadMeasurementTrial(double value) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        results.addTrial(new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), value));
-        db.collection("trials")
-                .document(this.experiment.getTitle())
-                .set(results);
-        Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void uploadMeasurementTrial(double value, LatLng location) {
-
+        MeasurementTrial measurementTrial;
+        if (experiment.isGeolocationRequired()) {
+            GeoLocation location = new GeoLocation(this);
+            measurementTrial = new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), location.getLocation(), value);
+        } else {
+            measurementTrial = new MeasurementTrial(this.experiment.getTitle(), App.getUser().getUsername(), value);
+        }
+        uploadTrial(experiment.getTitle(), measurementTrial);
     }
 
     @Override
@@ -172,8 +115,17 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    public void addMeasurementBarcode(String barcodeString, LatLng location, double value) {
-
+    private void uploadTrial(String experiment, Trial trial) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("experiments")
+                .document(experiment)
+                .collection("trials")
+                .document()
+                .set(trial)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Trial Submitted", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener( e -> {
+                    Log.e("Error", e.getLocalizedMessage());
+                });
     }
 }

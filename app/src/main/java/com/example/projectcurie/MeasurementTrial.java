@@ -1,6 +1,6 @@
 package com.example.projectcurie;
 
-import com.google.type.LatLng;
+import android.location.Location;
 
 /**
  * This class stores the results of a single measurement trial.
@@ -37,7 +37,7 @@ public class MeasurementTrial extends Trial {
      * @param measurement
      *     The measurement associated with the trial.
      */
-    public MeasurementTrial(String experiment, String author, LatLng location, double measurement) {
+    public MeasurementTrial(String experiment, String author, Location location, double measurement) {
         super(experiment, author, location);
         this.measurement = measurement;
     }

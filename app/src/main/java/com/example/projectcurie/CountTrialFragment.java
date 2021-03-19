@@ -1,6 +1,7 @@
 package com.example.projectcurie;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,6 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.google.type.LatLng;
 
 /**
  * This Fragment provides a UI interface for submitting a count trial to an experiment which requires it.
@@ -28,9 +27,7 @@ public class CountTrialFragment extends Fragment {
      */
     public interface CountTrialFragmentInteractionListener {
         void uploadCountTrial();
-        void uploadCountTrial(LatLng location);
         void addCountBarcode(String barcodeString);
-        void addCountBarcode(String barcodeString, LatLng location);
     }
 
     @Override

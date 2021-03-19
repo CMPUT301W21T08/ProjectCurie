@@ -30,7 +30,6 @@ import java.util.Objects;
 public class ExperimentOverviewFragment extends Fragment {
 
     private Experiment experiment;
-    private ExperimentStatistics statistics;
     private Button subscribeButton;
 
     /** Obligatory Empty Constructor */
@@ -41,16 +40,13 @@ public class ExperimentOverviewFragment extends Fragment {
      * Use this to pass an experiment and its associated trials to the fragment.
      * @param experiment
      *     The experiment we want the fragment to display.
-     * @param statistics
-     *     The trials associated with the experiment we want to display.
      * @return
      *     A new fragment.
      */
-    public static ExperimentOverviewFragment newInstance(Experiment experiment, ExperimentStatistics statistics) {
+    public static ExperimentOverviewFragment newInstance(Experiment experiment) {
         ExperimentOverviewFragment fragment = new ExperimentOverviewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("experiment", experiment);
-        bundle.putSerializable("trials", statistics);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -59,7 +55,6 @@ public class ExperimentOverviewFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.experiment = (Experiment) getArguments().getSerializable("experiment");
-        this.statistics = (ExperimentStatistics) getArguments().getSerializable("trials");
     }
 
     @Nullable
@@ -151,7 +146,6 @@ public class ExperimentOverviewFragment extends Fragment {
     private void goToSubmitTrialActivity() {
         Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), SubmitTrialActivity.class);
         intent.putExtra("experiment", this.experiment);
-        intent.putExtra("trials", this.statistics);
         startActivity(intent);
     }
 

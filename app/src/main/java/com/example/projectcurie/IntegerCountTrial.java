@@ -1,6 +1,6 @@
 package com.example.projectcurie;
 
-import com.google.type.LatLng;
+import android.location.Location;
 
 /**
  * This class stores the results of a single integer count trial.
@@ -33,7 +33,7 @@ public class IntegerCountTrial extends Trial {
      * @param author
      *     The username of the user who submits this trial.
      */
-    public IntegerCountTrial(String experiment, String author, LatLng location, int count) {
+    public IntegerCountTrial(String experiment, String author, Location location, int count) {
         super(experiment, author, location);
         this.count = count;
     }
