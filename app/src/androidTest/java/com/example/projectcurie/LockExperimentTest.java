@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Executes test for locking an experiment
- * @author Paul Cleofas
+ * @author Joshua Billson
  */
 public class LockExperimentTest {
     private Solo solo;
@@ -72,7 +72,7 @@ public class LockExperimentTest {
     }
 
     @Test
-    public void addAnswerTest() throws InterruptedException {
+    public void lockExperimentTest() {
         /* Navigate To Experiment Overview */
         solo.clickOnView(solo.getView(R.id.view_profile_btn));
         solo.waitForActivity(".UserProfileActivity");
