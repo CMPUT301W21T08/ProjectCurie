@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "265691381809",
+    "project_id": "projectcurie-f5fef",
+    "storage_bucket": "projectcurie-f5fef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265691381809:android:1c7281c1e7304735839510",
+        "android_client_info": {
+          "package_name": "com.example.projectcurie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "265691381809-jia8flji7re2vpi4qvrgb5bphpfbtjal.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw6EpU9UAx5KRgHdYWVoFlReHVfpHu0b4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "265691381809-jia8flji7re2vpi4qvrgb5bphpfbtjal.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
