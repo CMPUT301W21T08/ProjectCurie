@@ -135,13 +135,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         });
 
         barcode_btn.setOnClickListener((View v) -> {
-                geo = new GeoLocation(MainActivity.this);
-                if(geo.canGetLocation()){
-                    double latitude = geo.getLatitude();
-                    username.setText(String.valueOf(latitude));
-                }else{
-                    geo.showSettingsAlert();
-                }
+            Log.i("Info", "Barcode Button Pressed");
 
         });
     }
