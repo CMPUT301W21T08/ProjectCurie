@@ -3,13 +3,11 @@ package com.example.projectcurie;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SubmitTrialActivity extends AppCompatActivity implements
@@ -20,7 +18,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
     private FrameLayout fragmentLayout;
     private Experiment experiment;
-    private ExperimentStatistics results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +27,6 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
         /* Grab Data From Intent */
         this.experiment = (Experiment) getIntent().getSerializableExtra("experiment");
-        this.results = (ExperimentStatistics) getIntent().getSerializableExtra("trials");
 
         /* Display Appropriate Fragment Depending On Experiment Type */
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

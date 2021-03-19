@@ -29,7 +29,6 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     /* Data */
     private User user = App.getUser();
     private Experiment experiment;
-    private ExperimentStatistics statistics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,6 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         /* Grab Data From Intent */
         Intent intent = getIntent();
         this.experiment = (Experiment) intent.getSerializableExtra("experiment");
-        this.statistics = (ExperimentStatistics) intent.getSerializableExtra("trials");
 
         /* Grab Widgets */
         tabs = findViewById(R.id.tabLayout);
@@ -85,9 +83,9 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return ExperimentOverviewFragment.newInstance(experiment, statistics);
+                    return ExperimentOverviewFragment.newInstance(experiment);
                 case 1:
-                    return new ExperimentDataFragment();
+                    return ExperimentDataFragment.newInstance(experiment);
                 default:
                     return ExperimentCommentsFragment.newInstance(experiment.getTitle());
             }

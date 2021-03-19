@@ -55,27 +55,8 @@ public class ExperimentListActivity extends AppCompatActivity {
 
     /* Grab All Trials Associated With The Given Experiment */
     private void startExperimentOverviewActivity(Experiment experiment) {
-        /* Query The Database For All Trials Related To this.experiment */
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("trials")
-                .document(experiment.getTitle())
-                .get()
-
-                /* Query Completion Callback */
-                .addOnSuccessListener(documentSnapshot -> {
-                    ExperimentStatistics statistics;
-                    if (documentSnapshot.exists()) {
-                        statistics = documentSnapshot.toObject(ExperimentStatistics.class);
-                    } else {
-                        statistics = new ExperimentStatistics(experiment.getTitle(), experiment.getType());
-                    }
-                    Intent intent = new Intent(getApplicationContext(), ExperimentOverviewActivity.class);
-                    intent.putExtra("experiment", experiment);
-                    intent.putExtra("trials", statistics);
-                    startActivity(intent);
-                })
-
-                /* Handle The Case Where The Query Was Unsuccessful */
-                .addOnFailureListener(e -> Log.e("Error", "Error Fetching Trials From Database!"));
+        Intent intent = new Intent(getApplicationContext(), ExperimentOverviewActivity.class);
+        intent.putExtra("experiment", experiment);
+        startActivity(intent);
     }
 }

@@ -15,12 +15,33 @@ import android.view.ViewGroup;
  * This class will implement experiment data and statistics in phase 4.
  */
 public class ExperimentDataFragment extends Fragment {
+
+    private Experiment experiment;
+
     public ExperimentDataFragment() {
+    }
+
+    public static ExperimentDataFragment newInstance(Experiment experiment) {
+        ExperimentDataFragment fragment = new ExperimentDataFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("experiment", experiment);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.experiment = (Experiment) getArguments().getSerializable("experiment");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_experiment_data, container, false);
+       View view = inflater.inflate(R.layout.fragment_experiment_data, container, false);
+       TrialController controller = new TrialController(experiment, view);
+       controller.postStatistics();
+       return view;
     }
 }

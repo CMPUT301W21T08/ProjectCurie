@@ -7,29 +7,18 @@ import java.util.ArrayList;
  * This class stores all trials associated with a given experiment and provides methods for
  * extracting common statistics from those trials.
  * @author Joshua Billson
- * @deprecated We Are Refactoring How We Model Trials In Our System.
  */
 public class ExperimentStatistics implements Serializable {
 
-    private String experiment;
-    private ExperimentType experimentType;
     private ArrayList<Trial> trials;
-
-    /** Empty constructor for deserializing from FireStore. */
-    public ExperimentStatistics() {
-    }
 
     /**
      * Constructor for initializing a new ExperimentStatics object when creating a new Experiment.
-     * @param experiment
-     *     The name of the experiment to which this object refers.
-     * @param experimentType
-     *     The type of experiment to which this experiment refers (binomial, measurement, etc).
+     * @param trials
+     *     An array of trials for which we want to compute some statistics.
      */
-    public ExperimentStatistics(String experiment, ExperimentType experimentType) {
-        this.experiment = experiment;
-        this.experimentType = experimentType;
-        trials = new ArrayList<>();
+    public ExperimentStatistics(ArrayList<Trial> trials) {
+        this.trials = trials;
     }
 
     /**
@@ -54,32 +43,6 @@ public class ExperimentStatistics implements Serializable {
         return total / ((double) this.totalCount());
     }
 
-    /**
-     * Add a new trial to this experiment. Can be any of type BinomialTrial, CountTrial,
-     * IntegerCountTrial, or MeasurementTrial.
-     * @param trial
-     *     The trial we want to submit.
-     */
-    public void addTrial(Trial trial) {
-        this.trials.add(trial);
-    }
-
-    public String getExperiment() {
-        return experiment;
-    }
-
-    public void setExperiment(String experiment) {
-        this.experiment = experiment;
-    }
-
-    public ExperimentType getExperimentType() {
-        return experimentType;
-    }
-
-    public void setExperimentType(ExperimentType experimentType) {
-        this.experimentType = experimentType;
-    }
-
     public ArrayList<Trial> getTrials() {
         return trials;
     }
@@ -90,19 +53,18 @@ public class ExperimentStatistics implements Serializable {
 
     /* Helper method for extracting a value from different types of trial. */
     private double getValue(Trial trial) {
-        switch (this.experimentType.ordinal()) {
-            case 0:  // Count
-                CountTrial countTrial = (CountTrial) trial;
-                return countTrial.getCount();
-            case 1:  // Integer Count
-                IntegerCountTrial integerCountTrial = (IntegerCountTrial) trial;
-                return integerCountTrial.getCount();
-            case 2:  // Measurement
-                MeasurementTrial measurementTrial = (MeasurementTrial) trial;
-                return measurementTrial.getMeasurement();
-            default:  // Binomial
-                BinomialTrial binomialTrial = (BinomialTrial) trial;
-                return (binomialTrial.isSuccess()) ? 1.0 : 0.0;
+        if (trial instanceof CountTrial) {
+            CountTrial countTrial = (CountTrial) trial;
+            return countTrial.getCount();
+        } else if (trial instanceof IntegerCountTrial) {
+            IntegerCountTrial integerCountTrial = (IntegerCountTrial) trial;
+            return integerCountTrial.getCount();
+        } else if (trial instanceof MeasurementTrial) {
+            MeasurementTrial measurementTrial = (MeasurementTrial) trial;
+            return measurementTrial.getMeasurement();
+        } else {
+            BinomialTrial binomialTrial = (BinomialTrial) trial;
+            return (binomialTrial.isSuccess()) ? 1.0 : 0.0;
         }
     }
 }
