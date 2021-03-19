@@ -78,4 +78,6 @@ public class User implements Serializable {
     public ArrayList<String> getBlacklisted(){
         return blacklisted;
     }
+
 }
+

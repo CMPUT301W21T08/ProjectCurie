@@ -1,15 +1,18 @@
 package com.example.projectcurie;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,12 +41,21 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
     Button search_user_btn;
     Button barcode_btn;
     Button view_profile_btn;
+    Button view_loc;
+    GeoLocation geo;
 
+//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         setContentView(R.layout.activity_main);
-
         search_exp_btn = findViewById(R.id.searchExperiments_btn);
         view_exp_btn = findViewById(R.id.viewExperiments_btn);
         new_exp_btn = findViewById(R.id.addExperiment_btn);
@@ -60,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         search_exp_btn.setOnClickListener((View v) ->{
             new SearchExperimentFragment().show(getSupportFragmentManager(), "SEARCH EXPERIMENT FRAGMENT");
         });
+
+
 
         /* View Experiments On Click Listener */
         view_exp_btn.setOnClickListener((View v) -> {
@@ -96,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         new_exp_btn.setOnClickListener((View v) -> {
             Intent intent = new Intent(getApplicationContext(), NewExperimentActivity.class);
             startActivity(intent);
+
         });
 
         /* View User Profile On Click Listener */
@@ -117,7 +132,14 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         });
 
         barcode_btn.setOnClickListener((View v) -> {
-            scanBarcode();
+                geo = new GeoLocation(MainActivity.this);
+                if(geo.canGetLocation()){
+                    double latitude = geo.getLatitude();
+                    username.setText(String.valueOf(latitude));
+                }else{
+                    geo.showSettingsAlert();
+                }
+
         });
     }
 

@@ -1,12 +1,8 @@
 package com.example.projectcurie;
-
-import androidx.annotation.NonNull;
-
-import com.google.type.LatLng;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
 import java.util.Date;
-
 /**
  * This class represents an experiment trial and is the base class from which all other
  * trials inherit.
@@ -14,13 +10,19 @@ import java.util.Date;
  */
 public class Trial implements Serializable {
     private Date timestamp;
-    private double latitude;
-    private double longitude;
     private String experiment;
     private String author;
-
-    /** Empty Constructor For Deserializing From FireStore */
+    private Double latitude;
+    private Double longitude;
+    private LatLng location;
+    private LatLng locationLatLng;
     public Trial() { }
+    /** Empty Constructor For Deserializing From FireStore
+     * @param experiment
+     * @param author
+     * @param location*/
+    public Trial(String experiment, String author, com.google.type.LatLng location) {
+    }
 
     /**
      * Constructor for trials which do not require geolocation.
@@ -33,6 +35,7 @@ public class Trial implements Serializable {
         this.experiment = experiment;
         this.author = author;
         this.timestamp = new Date();
+
     }
 
     /**
@@ -44,37 +47,28 @@ public class Trial implements Serializable {
      * @param author
      *     The username of the user who submits this trial.
      */
-    public Trial(String experiment, String author, LatLng location) {
-        this.latitude = location.getLatitude();
-        this.longitude = location.getLongitude();
+    public Trial(String experiment, String author,LatLng location) {
         this.experiment = experiment;
         this.author = author;
         this.timestamp = new Date();
+        //this.latitude = geo.getLatitude();
+        //this.longitude = geo.getLongitude();
+        this.location = location;
     }
 
     public Date getTimestamp() {
         return timestamp;
     }
-
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
+    public double getLatitude() { return latitude;}
+    public void setLatitude(double latitude) { this.latitude = latitude; }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
+    public double getLongitude() { return longitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
 
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
 
     public String getExperiment() {
         return experiment;
@@ -91,4 +85,7 @@ public class Trial implements Serializable {
     public void setAuthor(String author) {
         this.author = author;
     }
+
+
+
 }
