@@ -48,7 +48,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AnswerListActivity"
-            android:parentActivityName=".AnswerListActivity" />
+            android:parentActivityName=".ExperimentOverviewActivity" />
         <activity
             android:name=".ExperimentOverviewActivity"
             android:parentActivityName=".MainActivity" />
