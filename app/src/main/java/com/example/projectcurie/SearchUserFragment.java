@@ -14,6 +14,12 @@ import androidx.fragment.app.DialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class implements the fragment for taking in a username to be searched.
+ * The username is case sensitive.
+ * Currently has a bug where if you type nothing in the box, app will crash.
+ * @author Klyde Pausang
+ */
 public class SearchUserFragment extends DialogFragment {
     private EditText search_keyword;
     private SearchUserFragment.SearchUserFragmentInteractionListener listener;
@@ -22,6 +28,7 @@ public class SearchUserFragment extends DialogFragment {
         void goSearchUser(@NotNull String keywords);
     }
 
+    
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

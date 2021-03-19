@@ -26,6 +26,10 @@ public class AddCommentFragment extends DialogFragment {
     private EditText comment_body;
     AddCommentDialogFragmentListener listener;
 
+    /**
+     * The activity which implements this interface agrees to post a new question to the database given
+     * a string returned from this DialogFragment.
+     */
     public interface AddCommentDialogFragmentListener {
         void addComment(String body);
     }
