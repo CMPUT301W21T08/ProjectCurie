@@ -3,6 +3,7 @@ package com.example.projectcurie;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -91,7 +93,13 @@ public class NewExperimentActivity extends AppCompatActivity {
 
                 /* Save Experiment To Database */
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("experiments").document(title).set(experiment);
+                db.collection("experiments")
+                        .document(title)
+                        .set(experiment)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Experiment Created!", Toast.LENGTH_SHORT).show();
+                            finish();
+                        });
 
                 /* Print Error Message If Any Fields Are Left Empty */
             } catch (IllegalArgumentException e) {
