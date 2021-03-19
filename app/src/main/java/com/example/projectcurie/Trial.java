@@ -35,6 +35,7 @@ public class Trial implements Serializable {
         this.experiment = experiment;
         this.author = author;
         this.timestamp = new Date();
+
     }
 
     /**

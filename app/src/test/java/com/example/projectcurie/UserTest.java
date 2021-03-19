@@ -53,6 +53,7 @@ public class UserTest {
         user = new User("CoolGuy123");
         user.setEmail("coolguy123@gmail.com");
         Assert.assertEquals("coolguy123@gmail.com", user.getEmail());
+        Assert.assertNotEquals(null, user.getEmail());
 
     }
 
@@ -63,7 +64,7 @@ public class UserTest {
         user = new User("CoolGuy123");
         user.setAbout("I am CoolGuy123, and I like to party");
         Assert.assertEquals("I am CoolGuy123, and I like to party", user.getAbout());
-        Assert.assertNotEquals("yepyep", user.getAbout());
+        Assert.assertNotEquals("null", user.getAbout());
 
     }
 
@@ -75,7 +76,7 @@ public class UserTest {
         user.setAbout("TestAbout!!!");
 
         Assert.assertEquals("TestAbout!!!", user.getAbout());
-        Assert.assertNotEquals("yooo", user.getAbout());
+        Assert.assertNotEquals(null, user.getAbout());
 
     }
 
@@ -86,6 +87,8 @@ public class UserTest {
         user = new User("CoolGuy123");
         this.testDateJoined = new Date();
         Assert.assertEquals(testDateJoined, user.getDateJoined());
+        Assert.assertNotEquals(null, user.getDateJoined());
+
     }
 
     @Test

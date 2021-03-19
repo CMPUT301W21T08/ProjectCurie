@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
     Button view_loc;
     GeoLocation geo;
 
-
+//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
