@@ -10,6 +10,10 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This activity allows the user to submit a trial results to a given experiment. The UI which is
+ * presented to the user depends on the type of experiment (Binomial, Count, Integer Count, Measurement).
+ */
 public class SubmitTrialActivity extends AppCompatActivity implements
         BinomialTrialFragment.BinomialTrialFragmentInteractionListener,
         IntegerCountTrialFragment.IntegerCountTrialFragmentInteractionListener,
@@ -115,6 +119,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements
 
     }
 
+    /* Upload A Trial To The Database */
     private void uploadTrial(String experiment, Trial trial) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("experiments")

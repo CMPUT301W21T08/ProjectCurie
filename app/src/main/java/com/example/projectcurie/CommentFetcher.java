@@ -45,7 +45,9 @@ public class CommentFetcher implements Serializable {
         } else {
             isSet = true;
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("questions").whereEqualTo("experiment", experiment)
+            db.collection("experiments")
+                    .document(experiment)
+                    .collection("questions")
                     .addSnapshotListener((value, error) -> {
                         comments.clear();
                         for (QueryDocumentSnapshot document : value) {
@@ -63,18 +65,24 @@ public class CommentFetcher implements Serializable {
      * Grabs the data from a collection of answers and sets an observer such that any update
      * to the underlying data will result in re-querying the database and trigger a caller
      * defined Runnable to execute at its conclusion.
+     * @param experiment
+     *     The title of the experiment to which the answers belong.
      * @param questionId
-     *     The ID of the question to which the answers belong..
+     *     The ID of the question to which the answers belong.
      * @param runnable
      *     User-defined Runnable that will execute each time a change in the database is detected.
      */
-    public void fetchAnswers(String questionId, Runnable runnable) {
+    public void fetchAnswers(String experiment, String questionId, Runnable runnable) {
         if (isSet) {
             throw new IllegalStateException();
         } else {
             isSet = true;
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("questions").document(questionId).collection("answers")
+            db.collection("experiments")
+                    .document(experiment)
+                    .collection("questions")
+                    .document(questionId)
+                    .collection("answers")
                     .addSnapshotListener((value, error) -> {
                         comments.clear();
                         for (QueryDocumentSnapshot document : value) {

@@ -62,7 +62,9 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
     @Override
     public void addComment(String body) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("questions")
+        db.collection("experiments")
+                .document(experiment.getTitle())
+                .collection("questions")
                 .document()
                 .set(new Comment(body, user.getUsername(), experiment.getTitle()));
     }

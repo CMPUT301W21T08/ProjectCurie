@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
+ * This activity provides the main menu by which the user will interact with the app. From this
+ * activity, the user can opt to search or browse experiments, view their own profile, search
+ * for other users, submit a new experiment, or scan a barcode to submit an experiment trial.
  * @author Mitchell Labrecque
  */
 public class MainActivity extends AppCompatActivity implements SearchExperimentFragment.SearchExperimentFragmentInteractionListener,
