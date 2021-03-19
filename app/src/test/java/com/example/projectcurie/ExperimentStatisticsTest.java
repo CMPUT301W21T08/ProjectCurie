@@ -1,6 +1,9 @@
 package com.example.projectcurie;
 
 import org.junit.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class ExperimentStatisticsTest {
@@ -11,11 +14,12 @@ public class ExperimentStatisticsTest {
         String experiment = "Mock Experiment";
         String author = "MockUser87";
         boolean[] values = {true, true, false, true, true, false, false, true, false, true};
-        statistics = new ExperimentStatistics("Mock Experiment", ExperimentType.BINOMIAL);
 
+        ArrayList<Trial> trials = new ArrayList<>();
         for (boolean value : values) {
-            statistics.addTrial(new BinomialTrial(experiment, author, value));
+            trials.add(new BinomialTrial(experiment, author, value));
         }
+        statistics = new ExperimentStatistics(trials);
 
         assertEquals(0.6, statistics.mean(), 0.001);
     }
@@ -24,11 +28,12 @@ public class ExperimentStatisticsTest {
     public void testCount() {
         String experiment = "Mock Experiment";
         String author = "MockUser87";
-        statistics = new ExperimentStatistics("Mock Experiment", ExperimentType.COUNT);
 
+        ArrayList<Trial> trials = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            statistics.addTrial(new CountTrial(experiment, author));
+            trials.add(new CountTrial(experiment, author));
         }
+        statistics = new ExperimentStatistics(trials);
 
         assertEquals(1.0, statistics.mean(), 0.001);
     }
@@ -38,11 +43,12 @@ public class ExperimentStatisticsTest {
         String experiment = "Mock Experiment";
         String author = "MockUser87";
         int[] values = {5, 1, 7, 3, 9, 11, 21, 7, 19, 28, 31, 22, 35};
-        statistics = new ExperimentStatistics("Mock Experiment", ExperimentType.INTEGER_COUNT);
 
+        ArrayList<Trial> trials = new ArrayList<>();
         for (int value : values) {
-            statistics.addTrial(new IntegerCountTrial(experiment, author, value));
+            trials.add(new IntegerCountTrial(experiment, author, value));
         }
+        statistics = new ExperimentStatistics(trials);
 
         assertEquals(15.3, roundDouble(statistics.mean()), 0.1);
     }
@@ -52,11 +58,12 @@ public class ExperimentStatisticsTest {
         String experiment = "Mock Experiment";
         String author = "MockUser87";
         double[] values = {5.6, 3.4, 21.5, 6.3, 11.4, 67.3, 14.8, 7.3, 13.4, 33.6};
-        statistics = new ExperimentStatistics("Mock Experiment", ExperimentType.MEASUREMENT);
 
+        ArrayList<Trial> trials = new ArrayList<>();
         for (double value : values) {
-            statistics.addTrial(new MeasurementTrial(experiment, author, value));
+            trials.add(new MeasurementTrial(experiment, author, value));
         }
+        statistics = new ExperimentStatistics(trials);
 
         assertEquals(18.46, roundDouble(statistics.mean()), 0.1);
     }
