@@ -41,7 +41,7 @@ public class AnswerListActivity extends AppCompatActivity implements AddAnswerFr
         listView.setAdapter(arrayAdapter);
 
         CommentController commentController = new CommentController(answers, arrayAdapter);
-        commentController.fetchAndNotifyAnswers(questionID);
+        commentController.fetchAndNotifyAnswers(question_ExperimentName, questionID);
 
         Button new_answer = findViewById(R.id.add_answer_btn);
         new_answer.setOnClickListener(v -> {
@@ -57,8 +57,13 @@ public class AnswerListActivity extends AppCompatActivity implements AddAnswerFr
     public void addAnswer(String body){
         Log.i("Poster Id", poster);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("questions").document(questionID).collection("answers")
-                .add(new Comment(body, poster, question_ExperimentName));
+        db.collection("experiments")
+                .document(question_ExperimentName)
+                .collection("questions")
+                .document(questionID)
+                .collection("answers")
+                .document()
+                .set(new Comment(body, poster, question_ExperimentName));
     }
 }
 

@@ -43,10 +43,12 @@ public class CommentController {
      * Set this controller to monitor the answers posted to a given question. When an update is
      * detected in the underlying database, it will fetch the most recent data and notify its ArrayAdapter
      * of the need to re-render the List View.
+     * @param experiment
+     *     The title of the experiment to which these answers belong.
      * @param questionID
      *     The ID of the question to which these answers belong.
      */
-    public void fetchAndNotifyAnswers(String questionID) {
-        fetcher.fetchAnswers(questionID, () -> this.adapter.notifyDataSetChanged());
+    public void fetchAndNotifyAnswers(String experiment, String questionID) {
+        fetcher.fetchAnswers(experiment, questionID, () -> this.adapter.notifyDataSetChanged());
     }
 }
