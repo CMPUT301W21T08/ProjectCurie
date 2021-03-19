@@ -19,11 +19,11 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 /**
- * @author Bo Cen
  * This class represents the comments associated with an experiment in a tab.
  * This class is a ListView which has a list of questions associated with a class. It bundles information
  * regarding the experiment name and experiment ID to be passed onto the answers ListView. First onclick
  * listener opens listview item selected, second onclick listen opens fragment to add new question.
+ * @author Bo Cen
  */
 public class ExperimentCommentsFragment extends Fragment {
 

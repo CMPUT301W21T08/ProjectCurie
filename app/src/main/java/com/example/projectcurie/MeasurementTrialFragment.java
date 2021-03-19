@@ -1,7 +1,6 @@
 package com.example.projectcurie;
 
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,6 +27,10 @@ public class MeasurementTrialFragment extends Fragment {
     private Button submitTrialButton;
     private Button addBarcodeButton;
 
+    /**
+     * Implemented by this Fragment's parent Activity to enable submitting new trials to the
+     * FireStore database and registering bar codes.
+     */
     public interface MeasurementTrialFragmentInteractionListener {
         void uploadMeasurementTrial(double value);
         void addMeasurementBarcode(String barcodeString, double value);

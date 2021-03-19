@@ -24,6 +24,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ * Serializes an object into a string. Useful for storing objects to shared preferences.
+ */
 public class ObjectSerializer {
 
     public static String serialize(Serializable obj) throws IOException {

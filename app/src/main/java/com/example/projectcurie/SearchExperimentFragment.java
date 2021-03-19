@@ -12,10 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * This Dialog Fragment presents the user with a simple text bar into which they can enter one or
+ * more keywords by which to search for matching experiments. Upon submitting a search query, the
+ * the user will be shown the results.
+ */
 public class SearchExperimentFragment extends DialogFragment {
     private EditText search_keyword;
     private SearchExperimentFragmentInteractionListener listener;
 
+    /**
+     * Implemented by this Fragment's parent Activity to conduct a database search for experiments
+     * whose searchable fields match some given keywords.
+     */
     public interface SearchExperimentFragmentInteractionListener {
         void goSearchExperiment(String keywords);
     }

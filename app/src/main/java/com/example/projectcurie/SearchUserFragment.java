@@ -24,6 +24,10 @@ public class SearchUserFragment extends DialogFragment {
     private EditText search_keyword;
     private SearchUserFragment.SearchUserFragmentInteractionListener listener;
 
+    /**
+     * Implemented by this Fragment's parent Activity to conduct a database search of a given
+     * user and display the results.
+     */
     public interface SearchUserFragmentInteractionListener {
         void goSearchUser(@NotNull String keywords);
     }
