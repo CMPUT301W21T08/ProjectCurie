@@ -49,6 +49,11 @@ public class AnswerListActivity extends AppCompatActivity implements AddAnswerFr
         });
     }
 
+    /**
+     * Adds answer body from fragment with poster name and experiment to the Firestore database.
+     * @param body
+     *     The body of the answer.
+     */
     public void addAnswer(String body){
         Log.i("Poster Id", poster);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
