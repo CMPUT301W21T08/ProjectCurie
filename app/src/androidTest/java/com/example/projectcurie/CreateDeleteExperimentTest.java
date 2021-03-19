@@ -45,7 +45,6 @@ public class CreateDeleteExperimentTest {
         solo.clickOnButton("Create Experiment");
 
         /* Navigate To Profile */
-        solo.goBack();
         solo.waitForActivity(".MainActivity");
         solo.clickOnView(solo.getView(R.id.view_profile_btn));
         solo.waitForActivity(".UserProfileActivity");

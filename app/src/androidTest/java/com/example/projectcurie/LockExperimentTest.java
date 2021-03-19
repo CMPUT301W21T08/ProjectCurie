@@ -45,8 +45,6 @@ public class LockExperimentTest {
         solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
         solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
         solo.clickOnButton("Create Experiment");
-
-        solo.goBack();
         solo.waitForActivity(".MainActivity");
     }
 
