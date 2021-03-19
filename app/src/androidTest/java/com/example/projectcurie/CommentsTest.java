@@ -20,10 +20,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Executes test for locking an experiment
- * @author Paul Cleofas
+ * Tests adding questions and answers to an experiment.
+ * @author Joshua Billson
  */
-public class LockExperimentTest {
+public class CommentsTest {
     private Solo solo;
 
     @Rule
@@ -74,22 +74,25 @@ public class LockExperimentTest {
     @Test
     public void addAnswerTest() throws InterruptedException {
         /* Navigate To Experiment Overview */
-        solo.clickOnView(solo.getView(R.id.view_profile_btn));
-        solo.waitForActivity(".UserProfileActivity");
+        solo.clickOnView(solo.getView(R.id.viewExperiments_btn));
+        solo.clickOnText("Delete This Experiment");
+        solo.clickOnText("Comments");
 
-        /* Test That Experiment Exists */
-        assertTrue(solo.waitForText("Delete This Experiment"));
-
-        /* Lock Experiment */
-        solo.clickLongOnText("Delete This Experiment");
+        /* Add Comment */
+        solo.clickOnButton("New Comment");
         solo.waitForDialogToOpen();
-        solo.clickOnButton("Lock");
+        solo.enterText((EditText) solo.getView(R.id.addQuestionEditText), "This is a question");
+        solo.clickOnText("Submit");
         solo.waitForDialogToClose();
+        assertTrue(solo.searchText("This is a question"));
+        solo.clickOnText("This is a question");
 
-        /* Unlock Experiment */
-        solo.clickLongOnText("Delete This Experiment");
+        /* Add Answer */
+        solo.clickOnButton("New Answer");
         solo.waitForDialogToOpen();
-        solo.clickOnButton("Unlock");
+        solo.enterText((EditText) solo.getView(R.id.addAnswerEditText), "This is an answer");
+        solo.clickOnText("Submit");
         solo.waitForDialogToClose();
+        assertTrue(solo.searchText("This is an answer"));
     }
 }
