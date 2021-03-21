@@ -40,8 +40,8 @@ public class ExperimentDataFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_experiment_data, container, false);
-       TrialController controller = new TrialController(experiment, view);
-       controller.postStatistics();
+       TrialController controller = new TrialController(view);
+       controller.postStatistics(experiment);
        return view;
     }
 }

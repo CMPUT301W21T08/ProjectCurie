@@ -6,7 +6,7 @@ import android.location.Location;
  * This class stores the results of a single integer count trial.
  * @author Joshua Billson
  */
-public class IntegerCountTrial extends Trial {
+public class IntegerCountTrial extends Trial implements Comparable<Trial> {
     private int count;
 
     /** Empty Constructor For Deserializing From FireStore */
@@ -46,5 +46,11 @@ public class IntegerCountTrial extends Trial {
     /** Setter for count */
     public void setCount(int count) {
         this.count = count;
+    }
+
+    @Override
+    public int compareTo(Trial o) {
+        IntegerCountTrial other = (IntegerCountTrial) o;
+        return Integer.compare(this.count, other.getCount());
     }
 }

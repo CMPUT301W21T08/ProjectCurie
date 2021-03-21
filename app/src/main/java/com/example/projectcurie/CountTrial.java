@@ -6,7 +6,7 @@ import android.location.Location;
  * This class stores the results of a single count trial.
  * @author Joshua Billson
  */
-public class CountTrial extends Trial {
+public class CountTrial extends Trial implements Comparable<Trial> {
 
     private int count;
 
@@ -47,5 +47,10 @@ public class CountTrial extends Trial {
     /** Setter for count */
     public void setCount(int count) {
         this.count = count;
+    }
+
+    @Override
+    public int compareTo(Trial o) {
+        return 0;
     }
 }

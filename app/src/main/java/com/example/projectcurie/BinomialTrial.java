@@ -6,7 +6,7 @@ import android.location.Location;
  * Stores the results of a single binomial trial.
  * @author Joshua Billson
  */
-public class BinomialTrial extends Trial {
+public class BinomialTrial extends Trial implements Comparable<Trial> {
     private boolean success;
 
     /** Empty Constructor For Deserializing From FireStore */
@@ -46,5 +46,13 @@ public class BinomialTrial extends Trial {
     /** Setter for success */
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    @Override
+    public int compareTo(Trial o) {
+        BinomialTrial other = (BinomialTrial) o;
+        int thisVal = (this.success) ? 1 : -1;
+        int otherVal = (other.isSuccess()) ? 1 : -1;
+        return thisVal - otherVal;
     }
 }

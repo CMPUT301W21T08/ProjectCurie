@@ -6,7 +6,7 @@ import android.location.Location;
  * This class stores the results of a single measurement trial.
  * @author Joshua Billson
  */
-public class MeasurementTrial extends Trial {
+public class MeasurementTrial extends Trial implements Comparable<Trial> {
     private double measurement;
 
     /** Empty Constructor For Deserializing From FireStore */
@@ -50,5 +50,11 @@ public class MeasurementTrial extends Trial {
     /** Setter for measurement */
     public void setMeasurement(double measurement) {
         this.measurement = measurement;
+    }
+
+    @Override
+    public int compareTo(Trial o) {
+        MeasurementTrial other = (MeasurementTrial) o;
+        return Double.compare(this.measurement, other.getMeasurement());
     }
 }
