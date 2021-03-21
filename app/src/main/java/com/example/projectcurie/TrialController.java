@@ -1,5 +1,6 @@
 package com.example.projectcurie;
 
+import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,21 +21,19 @@ public class TrialController {
 
     private ExperimentStatistics statistics;
     private ArrayList<Trial> trials;
-    private Experiment experiment;
+    private TrialFetcher fetcher;
     private View view;
 
     /**
      * Create a new TrialController which will monitor the database for trials submitted to a
      * given experiment and render the statistics to a given View.
-     * @param experiment
-     *     The experiment whose trials we are interested in.
      * @param view
      *     The Activity or Fragment to which we want to render the trial statistics.
      */
-    public TrialController(Experiment experiment, View view) {
+    public TrialController(View view) {
         this.trials = new ArrayList<>();
+        this.fetcher = new TrialFetcher(this.trials);
         this.statistics = new ExperimentStatistics(this.trials);
-        this.experiment = experiment;
         this.view = view;
     }
 
@@ -43,37 +42,23 @@ public class TrialController {
      * in. After initially acquiring the trials and rendering their statistics to the IU, it will
      * monitor for any changes in the database. If such a change occurs in the relevant collection
      * of trials, it will re-fetch the data and re-render the UI to display the current statistics.
+     * @param experiment
+     *     The experiment whose trials we are interested in.
      */
-    public void postStatistics() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("experiments")
-                .document(experiment.getTitle())
-                .collection("trials")
-                .addSnapshotListener((value, error) -> {
-                    trials.clear();
-                    if (value != null) {
-                        for (DocumentSnapshot document : value) {
-                            switch (experiment.getType().ordinal()) {
-                                case (0):
-                                    trials.add(document.toObject(CountTrial.class));
-                                    break;
-                                case (1):
-                                    trials.add(document.toObject(IntegerCountTrial.class));
-                                    break;
-                                case (2):
-                                    trials.add(document.toObject(MeasurementTrial.class));
-                                    break;
-                                case (3):
-                                    trials.add(document.toObject(BinomialTrial.class));
-                                    break;
-                            }
-                        }
-                        TextView trialCountTextView = view.findViewById(R.id.trialCountTextView);
-                        TextView trialMeanTextView = view.findViewById(R.id.trialMeanTextView);
-                        trialCountTextView.setText(String.format(Locale.CANADA, "Trial Count: %d", statistics.totalCount()));
-                        trialMeanTextView.setText(String.format(Locale.CANADA, "Mean: %.2f", statistics.mean()));
-                    }
-                });
-
+    public void postStatistics(Experiment experiment) {
+        this.fetcher.fetchTrials(experiment, () -> {
+            TextView trialCountTextView = view.findViewById(R.id.trialCountTextView);
+            TextView trialMeanTextView = view.findViewById(R.id.trialMeanTextView);
+            TextView trialMedianTextView = view.findViewById(R.id.trialMedianTextView);
+            TextView trialLowerQuartileTextView = view.findViewById(R.id.trialLowerQuartileTextView);
+            TextView trialUpperQuartileTextView = view.findViewById(R.id.trialUpperQuartileTextView);
+            TextView trialStandardDeviationTextView = view.findViewById(R.id.trialStandardDeviationTextView);
+            trialCountTextView.setText(Html.fromHtml("<b>Total Trials: </b><span>" + String.format(Locale.CANADA, "%d", statistics.totalCount()) + "</span>"));
+            trialMeanTextView.setText(Html.fromHtml("<b>Mean: </b><span>" + String.format(Locale.CANADA, "%.2f", statistics.mean()) + "</span>"));
+            trialMedianTextView.setText(Html.fromHtml("<b>Median: </b><span>" + String.format(Locale.CANADA, "%.2f", statistics.median()) + "</span>"));
+            trialLowerQuartileTextView.setText(Html.fromHtml("<b>Lower Quartile: </b><span>" + String.format(Locale.CANADA, "%.2f", statistics.lowerQuartile()) + "</span>"));
+            trialUpperQuartileTextView.setText(Html.fromHtml("<b>Upper Quartile: </b><span>" + String.format(Locale.CANADA, "%.2f", statistics.upperQuartile()) + "</span>"));
+            trialStandardDeviationTextView.setText(Html.fromHtml("<b>Standard Deviation: </b><span>" + String.format(Locale.CANADA, "%.2f", statistics.standardDeviation()) + "</span>"));
+        });
     }
 }

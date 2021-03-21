@@ -10,7 +10,7 @@ import java.util.Date;
  * trials inherit.
  * @author Joshua Billson
  */
-public class Trial implements Serializable {
+public abstract class Trial implements Serializable, Comparable<Trial> {
     private Date timestamp;
     private String experiment;
     private String author;
@@ -70,6 +70,7 @@ public class Trial implements Serializable {
     public Date getTimestamp() {
         return timestamp;
     }
+
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
@@ -97,7 +98,5 @@ public class Trial implements Serializable {
     public void setAuthor(String author) {
         this.author = author;
     }
-
-
 
 }
