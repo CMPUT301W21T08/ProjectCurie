@@ -36,7 +36,7 @@ public class ExperimentStatisticsTest {
         }
         statistics = new ExperimentStatistics(trials);
 
-        assertEquals(1.0, statistics.mean(), 0.001);
+        assertEquals(10.0, statistics.mean(), 0.001);
     }
 
     @Test

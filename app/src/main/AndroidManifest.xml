@@ -51,7 +51,8 @@
             android:parentActivityName=".ExperimentOverviewActivity" />
         <activity
             android:name=".ExperimentOverviewActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ExperimentListActivity"
             android:parentActivityName=".MainActivity" />

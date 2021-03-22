@@ -6,80 +6,89 @@
     android:layout_height="match_parent"
     tools:context=".ExperimentDataFragment">
 
-    <TextView
-        android:id="@+id/trialCountTextView"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Total Trials: 0"
-        android:textColor="#000000"
-        android:textSize="26sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/trialMeanTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Mean: 0.00"
-        android:textColor="#000000"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trialCountTextView" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/trialMedianTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Median: 0.00"
-        android:textColor="#000000"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trialMeanTextView" />
+            <TextView
+                android:id="@+id/trialCountTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Total Trials: 0"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="26sp" />
 
-    <TextView
-        android:id="@+id/trialLowerQuartileTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Lower Quartile: 0.00"
-        android:textColor="#000000"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trialMedianTextView" />
+            <TextView
+                android:id="@+id/trialMeanTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Mean: 0.00"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="26sp" />
 
-    <TextView
-        android:id="@+id/trialUpperQuartileTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Upper Quartile: 0.00"
-        android:textColor="#000000"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trialLowerQuartileTextView" />
+            <TextView
+                android:id="@+id/trialMedianTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Median: 0.00"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="26sp" />
 
-    <TextView
-        android:id="@+id/trialStandardDeviationTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Standard Deviation: 0.00"
-        android:textColor="#000000"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trialUpperQuartileTextView" />
+            <TextView
+                android:id="@+id/trialLowerQuartileTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Lower Quartile: 0.00"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/trialUpperQuartileTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Upper Quartile: 0.00"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/trialStandardDeviationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Standard Deviation: 0.00"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:visibility="visible" />
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,17 @@
 package com.example.projectcurie;
 
+import android.util.Log;
+
+import com.github.mikephil.charting.data.BarEntry;
+
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.function.BiFunction;
 
 /**
  * This class stores all trials associated with a given experiment and provides methods for
@@ -12,6 +21,8 @@ import java.util.Collections;
 public class ExperimentStatistics implements Serializable {
 
     private ArrayList<Trial> trials;
+    private ArrayList<Double> values;
+    private boolean extracted = false;
 
     /**
      * Constructor for initializing a new ExperimentStatics object when creating a new Experiment.
@@ -20,6 +31,7 @@ public class ExperimentStatistics implements Serializable {
      */
     public ExperimentStatistics(ArrayList<Trial> trials) {
         this.trials = trials;
+        this.values = new ArrayList<>();
     }
 
     /**
@@ -28,7 +40,26 @@ public class ExperimentStatistics implements Serializable {
      *     The number of trials submitted to this experiment.
      */
     public int totalCount() {
-        return this.trials.size();
+        extractValues();
+        return values.size();
+    }
+
+    public double min() {
+        extractValues();
+        if (trials.size() == 0) {
+            return 0.0;
+        } else {
+            return values.get(0);
+        }
+    }
+
+    public double max() {
+        extractValues();
+        if (trials.size() == 0) {
+            return 0.0;
+        } else {
+            return values.get(values.size() - 1);
+        }
     }
 
     /**
@@ -37,79 +68,98 @@ public class ExperimentStatistics implements Serializable {
      *     The mean value of all trials.
      */
     public double mean() {
-        if (trials.size() == 0) {
+        extractValues();
+        if (values.size() == 0) {
             return 0.0;
         } else {
             double total = 0.0;
-            for (Trial trial : trials) {
-                total += getValue(trial);
+            for (Double value : values) {
+                total += value;
             }
-            return total / ((double) this.totalCount());
+            return total / ((double) values.size());
         }
     }
 
     public double median() {
-        trials.sort(null);
-        if (trials.size() == 0) {
+        extractValues();
+        if (values.size() == 0) {
             return 0.0;
-        } else if ((this.trials.size() % 2) == 0) {
-            int medianIndex = (trials.size() / 2) - 1;
-            return (getValue(trials.get(medianIndex)) + getValue(trials.get(medianIndex + 1))) / 2.0;
+        } else if ((values.size() % 2) == 0) {
+            int medianIndex = (values.size() / 2) - 1;
+            return (values.get(medianIndex) + values.get(medianIndex + 1)) / 2.0;
         } else {
-            int medianIndex = (trials.size() / 2);
-            return getValue(trials.get(medianIndex));
+            int medianIndex = (values.size() / 2);
+            return values.get(medianIndex);
         }
     }
 
     public double lowerQuartile() {
-        trials.sort(null);
-        if (trials.size() == 0) {
+        extractValues();
+        if (values.size() == 0) {
             return 0.0;
-        } else if (trials.size() < 3) {
+        } else if (values.size() < 3) {
             return median();
-        } else if (trials.size() < 5) {
-            return getValue(trials.get(0));
-        } else if ((this.trials.size() % 2) == 0) {
-            int medianIndex = (trials.size() / 2) - 1;
+        } else if (values.size() < 5) {
+            return values.get(0);
+        } else if ((values.size() % 2) == 0) {
+            int medianIndex = (values.size() / 2) - 1;
             int firstQuartileIndex = ((medianIndex) / 2) - 1;
-            return (getValue(trials.get(firstQuartileIndex)) + getValue(trials.get(firstQuartileIndex + 1))) / 2.0;
+            return (values.get(firstQuartileIndex) + values.get(firstQuartileIndex + 1)) / 2.0;
         } else {
-            int medianIndex = (trials.size() / 2);
+            int medianIndex = (values.size() / 2);
             int firstQuartileIndex = ((medianIndex) / 2) - 1;
-            return (getValue(trials.get(firstQuartileIndex)) + getValue(trials.get(firstQuartileIndex + 1))) / 2.0;
+            return (values.get(firstQuartileIndex) + values.get(firstQuartileIndex + 1)) / 2.0;
         }
     }
 
     public double upperQuartile() {
-        trials.sort(null);
-        if (trials.size() == 0) {
+        extractValues();
+        if (values.size() == 0) {
             return 0.0;
-        } else if (trials.size() < 3) {
+        } else if (values.size() < 3) {
             return median();
-        }  else if (trials.size() < 5) {
-            return getValue(trials.get(trials.size() - 1));
-        } else if ((this.trials.size() % 2) == 0) {
-            int medianIndex = (trials.size() / 2) - 1;
+        }  else if (values.size() < 5) {
+            return values.get(trials.size() - 1);
+        } else if ((values.size() % 2) == 0) {
+            int medianIndex = (values.size() / 2) - 1;
             int upperQuartileIndex = ((medianIndex) / 2) + medianIndex + 1;
-            return (getValue(trials.get(upperQuartileIndex)) + getValue(trials.get(upperQuartileIndex + 1))) / 2.0;
+            return (values.get(upperQuartileIndex) + values.get(upperQuartileIndex + 1)) / 2.0;
         } else {
-            int medianIndex = (trials.size() / 2);
+            int medianIndex = (values.size() / 2);
             int upperQuartileIndex = ((medianIndex) / 2) + medianIndex;
-            return (getValue(trials.get(upperQuartileIndex)) + getValue(trials.get(upperQuartileIndex + 1))) / 2.0;
+            return (values.get(upperQuartileIndex) + values.get(upperQuartileIndex + 1)) / 2.0;
         }
     }
 
     public double standardDeviation() {
-        if (trials.size() == 0) {
+        extractValues();
+        if (totalCount() == 0) {
             return 0.0;
         } else {
             double mean = mean();
             double accumulator = 0;
-            for (Trial trial : this.trials) {
-                accumulator += Math.pow(getValue(trial) - mean, 2);
+            for (Double value : values) {
+                accumulator += Math.pow(value - mean, 2);
             }
             return Math.sqrt(accumulator / ((double) totalCount()));
         }
+    }
+
+    public int populateHistogram(ArrayList<BarEntry> entries, ArrayList<String> labels) {
+        extractValues();
+        if (totalCount() == 0) {
+            return 0;
+        } else if (trials.get(0) instanceof BinomialTrial) {
+            return populateHistogramBinomial(entries, labels);
+        } else if (trials.get(0) instanceof MeasurementTrial) {
+            return populateHistogramMeasurement(entries, labels);
+        } else {
+            return populateHistogramIntegerCount(entries, labels);
+        }
+    }
+
+    public void notifyDataChanged() {
+        extracted = false;
     }
 
     public ArrayList<Trial> getTrials() {
@@ -121,7 +171,7 @@ public class ExperimentStatistics implements Serializable {
     }
 
     /* Helper method for extracting a value from different types of trial. */
-    private double getValue(Trial trial) {
+    public static double getValue(Trial trial) {
         if (trial instanceof CountTrial) {
             CountTrial countTrial = (CountTrial) trial;
             return countTrial.getCount();
@@ -135,5 +185,103 @@ public class ExperimentStatistics implements Serializable {
             BinomialTrial binomialTrial = (BinomialTrial) trial;
             return (binomialTrial.isSuccess()) ? 1.0 : 0.0;
         }
+    }
+
+    private HashMap<String, Integer> extractCountByUser() {
+        HashMap<String, Integer> countsByUser = new HashMap<>();
+        for (Trial trial : trials) {
+            if (countsByUser.containsKey(trial.getAuthor())) {
+                Integer currentCount = countsByUser.get(trial.getAuthor());
+                countsByUser.put(trial.getAuthor(), currentCount + 1);
+            } else {
+                countsByUser.put(trial.getAuthor(), 1);
+            }
+        }
+        return countsByUser;
+    }
+
+    private void extractValues() {
+        if (!extracted) {
+            values.clear();
+            if (trials.size() > 0) {
+                if (trials.get(0) instanceof CountTrial) {
+                    HashMap<String, Integer> trialsByUser = extractCountByUser();
+                    for (String user : trialsByUser.keySet()) {
+                        values.add((double) trialsByUser.get(user));
+                    }
+                } else {
+                    for (Trial trial : trials) {
+                        values.add(getValue(trial));
+                    }
+                }
+            }
+            extracted = true;
+            values.sort(null);
+        }
+    }
+
+    private int populateHistogramIntegerCount(ArrayList<BarEntry> entries, ArrayList<String> labels) {
+        int countsSize = (int) max() + 1;
+        int[] counts = new int[countsSize];
+        Arrays.fill(counts, 0);
+
+        for (Double value : values) {
+            counts[(int) value.doubleValue()] += 1;
+        }
+
+        int numberOfBins = 0;
+        int binIndex = 0;
+        for (int i = 0; i < countsSize; i++) {
+            if (counts[i] != 0) {
+                entries.add(new BarEntry(binIndex++, counts[i]));
+                labels.add(String.format(Locale.CANADA, "%d", i));
+                numberOfBins++;
+            }
+        }
+
+        return numberOfBins;
+    }
+
+    private int populateHistogramBinomial(ArrayList<BarEntry> entries, ArrayList<String> labels) {
+        int falseTrials = 0;
+        int trueTrials = 0;
+        for (Double value : values) {
+            if (value == 0.0) {
+                falseTrials++;
+            } else {
+                trueTrials++;
+            }
+        }
+        entries.add(new BarEntry(0, falseTrials));
+        entries.add(new BarEntry(1, trueTrials));
+        labels.add("False");
+        labels.add("True");
+        return 2;
+    }
+
+    private int populateHistogramMeasurement(ArrayList<BarEntry> entries, ArrayList<String> labels) {
+        /* Calculate Bin Width & Number Of Bins */
+        double min = min();
+        double max = max();
+        int numberOfBins = (int) Math.sqrt((double) values.size());
+        double binWidth = (max - min) / ((double) numberOfBins);
+
+        /* Add Bins To Entries */
+        int[] counts = new int[numberOfBins];
+        Arrays.fill(counts, 0);;
+        for (Double value : values) {
+            int bin = 0;
+            while (value > (min + ((bin + 1) * binWidth))) {
+                bin++;
+            }
+            counts[bin] += 1;
+        }
+
+        for (int i = 0; i < numberOfBins; i++) {
+            entries.add(new BarEntry(i, counts[i]));
+            labels.add(String.format(Locale.CANADA, "%.2f - %.2f", (min + (i * binWidth)), (min + ((i + 1) * binWidth))));
+        }
+
+        return numberOfBins;
     }
 }
