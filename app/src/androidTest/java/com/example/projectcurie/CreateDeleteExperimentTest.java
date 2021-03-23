@@ -1,10 +1,12 @@
 package com.example.projectcurie;
 
 
+import android.Manifest;
 import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.robotium.solo.Solo;
 
@@ -22,6 +24,18 @@ public class CreateDeleteExperimentTest {
 
     @Rule
     public ActivityTestRule<WelcomeActivity> mActivityTestRule = new ActivityTestRule<>(WelcomeActivity.class, true, true);
+
+    @Rule
+    public GrantPermissionRule coarseLocationPermission = GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+    @Rule
+    public GrantPermissionRule findLocationPermission = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+
+    @Rule
+    public GrantPermissionRule networkStatePermission = GrantPermissionRule.grant(Manifest.permission.ACCESS_NETWORK_STATE);
+
+    @Rule
+    public GrantPermissionRule internetPermission = GrantPermissionRule.grant(Manifest.permission.INTERNET);
 
     @Before
     public void setup() {

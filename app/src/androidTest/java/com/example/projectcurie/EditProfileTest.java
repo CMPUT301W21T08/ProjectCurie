@@ -1,6 +1,7 @@
 package com.example.projectcurie;
 
 
+import android.Manifest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -8,6 +9,7 @@ import android.view.ViewParent;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import org.hamcrest.Description;
@@ -41,6 +43,18 @@ public class EditProfileTest {
 
     @Rule
     public ActivityTestRule<WelcomeActivity> mActivityTestRule = new ActivityTestRule<>(WelcomeActivity.class);
+
+    @Rule
+    public GrantPermissionRule coarseLocationPermission = GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+    @Rule
+    public GrantPermissionRule findLocationPermission = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
+
+    @Rule
+    public GrantPermissionRule networkStatePermission = GrantPermissionRule.grant(Manifest.permission.ACCESS_NETWORK_STATE);
+
+    @Rule
+    public GrantPermissionRule internetPermission = GrantPermissionRule.grant(Manifest.permission.INTERNET);
 
     @Test
     public void editProfileTest() throws InterruptedException {
