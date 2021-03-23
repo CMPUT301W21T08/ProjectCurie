@@ -47,7 +47,7 @@ public class CreateDeleteExperimentTest {
     public void createExperimentTest() {
         /* Navigate To New Experiment Activity */
         solo.waitForText("Start");
-        solo.clickOnButton("Start");
+        solo.clickOnText("Start");
         solo.waitForActivity(".MainActivity");
         solo.clickOnView(solo.getView(R.id.addExperiment_btn));
         solo.waitForActivity(".NewExperimentActivity");
@@ -58,7 +58,7 @@ public class CreateDeleteExperimentTest {
         solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
         solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
         solo.hideSoftKeyboard();
-        solo.clickOnButton("Create Experiment");
+        solo.clickOnText("Create Experiment");
 
         /* Navigate To Profile */
         solo.waitForActivity(".MainActivity");
@@ -73,7 +73,7 @@ public class CreateDeleteExperimentTest {
     public void deleteExperimentTest(){
         /* Navigate To Profile */
         solo.waitForText("Start");
-        solo.clickOnButton("Start");
+        solo.clickOnText("Start");
         solo.waitForActivity(".MainActivity");
         solo.clickOnView(solo.getView(R.id.view_profile_btn));
         solo.waitForActivity(".UserProfileActivity");
@@ -84,7 +84,7 @@ public class CreateDeleteExperimentTest {
         /* Delete Experiment */
         solo.clickLongOnText("Delete This Experiment");
         solo.waitForDialogToOpen();
-        solo.clickOnButton("Delete");
+        solo.clickOnText("Delete");
 
         /* Test That Experiment No Longer Exists */
         solo.waitForDialogToClose();
