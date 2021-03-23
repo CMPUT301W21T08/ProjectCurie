@@ -3,7 +3,7 @@ jdk: oraclejdk8
 
 env:
   global:
-    - ANDROID_TARGET=android-30
+    - ANDROID_TARGET=android-26
     - ANDROID_ABI=x86
 
 android:
@@ -14,11 +14,11 @@ android:
     - platform-tools
 
     # The BuildTools version used by your project
-    - build-tools-30.0.3
+    - build-tools-26.0.2
 
     # The SDK version used to compile your project
     # TODO: why is this here explicitly in addition to $ANDROID_TARGET below
-    - android-30
+    - android-26
 
     # Additional components
     - extra-google-google_play_services
