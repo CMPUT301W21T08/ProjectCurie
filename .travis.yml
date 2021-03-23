@@ -50,6 +50,7 @@ before_install:
 
   # Build the project
   - gradle -v
+  - touch local.properties
 
   # Start the emulator
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
