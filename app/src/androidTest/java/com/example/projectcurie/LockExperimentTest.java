@@ -48,6 +48,7 @@ public class LockExperimentTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), mActivityTestRule.getActivity());
 
         /* Create Mock Experiment */
+        solo.unlockScreen();
         solo.waitForText("Start");
         solo.clickOnButton("Start");
         solo.waitForActivity(".MainActivity");
@@ -58,6 +59,7 @@ public class LockExperimentTest {
         solo.enterText((EditText) solo.getView(R.id.descriptionEditText), "This is a description");
         solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
         solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
+        solo.hideSoftKeyboard();
         solo.clickOnButton("Create Experiment");
         solo.waitForActivity(".MainActivity");
     }

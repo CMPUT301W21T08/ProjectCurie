@@ -40,10 +40,11 @@ public class CreateDeleteExperimentTest {
     @Before
     public void setup() {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), mActivityTestRule.getActivity());
+        solo.unlockScreen();
     }
 
     @Test
-    public void createExperimentTest() throws InterruptedException {
+    public void createExperimentTest() {
         /* Navigate To New Experiment Activity */
         solo.waitForText("Start");
         solo.clickOnButton("Start");
@@ -57,7 +58,6 @@ public class CreateDeleteExperimentTest {
         solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
         solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
         solo.hideSoftKeyboard();
-        solo.wait(250);
         solo.clickOnButton("Create Experiment");
 
         /* Navigate To Profile */

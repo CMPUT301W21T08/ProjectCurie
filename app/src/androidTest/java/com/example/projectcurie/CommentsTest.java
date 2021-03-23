@@ -48,6 +48,7 @@ public class CommentsTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), mActivityTestRule.getActivity());
 
         /* Create Mock Experiment */
+        solo.unlockScreen();
         solo.waitForText("Start");
         solo.clickOnButton("Start");
         solo.waitForActivity(".MainActivity");
@@ -58,6 +59,7 @@ public class CommentsTest {
         solo.enterText((EditText) solo.getView(R.id.descriptionEditText), "This is a description");
         solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
         solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
+        solo.hideSoftKeyboard();
         solo.clickOnButton("Create Experiment");
         solo.waitForActivity(".MainActivity");
     }
@@ -94,6 +96,7 @@ public class CommentsTest {
         solo.clickOnButton("New Comment");
         solo.waitForDialogToOpen();
         solo.enterText((EditText) solo.getView(R.id.addQuestionEditText), "This is a question");
+        solo.hideSoftKeyboard();
         solo.clickOnText("Submit");
         solo.waitForDialogToClose();
         assertTrue(solo.searchText("This is a question"));
@@ -103,6 +106,7 @@ public class CommentsTest {
         solo.clickOnButton("New Answer");
         solo.waitForDialogToOpen();
         solo.enterText((EditText) solo.getView(R.id.addAnswerEditText), "This is an answer");
+        solo.hideSoftKeyboard();
         solo.clickOnText("Submit");
         solo.waitForDialogToClose();
         assertTrue(solo.searchText("This is an answer"));
