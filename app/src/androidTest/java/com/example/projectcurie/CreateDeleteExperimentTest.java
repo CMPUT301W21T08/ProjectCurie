@@ -58,6 +58,7 @@ public class CreateDeleteExperimentTest {
         solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
         solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
         solo.hideSoftKeyboard();
+        solo.waitForText("Create Experiment");
         solo.clickOnText("Create Experiment");
 
         /* Navigate To Profile */
