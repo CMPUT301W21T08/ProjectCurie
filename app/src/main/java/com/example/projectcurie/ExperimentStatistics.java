@@ -3,12 +3,16 @@ package com.example.projectcurie;
 import android.util.Log;
 
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.function.BiFunction;
@@ -156,6 +160,62 @@ public class ExperimentStatistics implements Serializable {
         } else {
             return populateHistogramIntegerCount(entries, labels);
         }
+    }
+
+    public float populateScatterChart(ArrayList<Entry> entries) {
+        float granularity = 1.0f;
+        trials.sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
+        if (trials.size() > 0) {
+
+            if (trials.get(0) instanceof CountTrial) {
+
+                /* Extract Counts Per Date */
+                HashMap<String, Integer> countsByDate = new HashMap<>();
+                for (Trial trial : trials) {
+                    if (countsByDate.containsKey(trial.formattedDate())) {
+                        Integer currentCount = countsByDate.get(trial.formattedDate());
+                        countsByDate.put(trial.formattedDate(), currentCount + 1);
+                    } else {
+                        countsByDate.put(trial.formattedDate(), 1);
+                    }
+                }
+
+                /* Put Counts Per Date In Line Chart Entries */
+                for (String dateString : countsByDate.keySet()) {
+                    try {
+                        Date date = new SimpleDateFormat("dd-MM-yyyy").parse(dateString);
+                        entries.add(new Entry(Long.valueOf(date.getTime()).floatValue(), (float) countsByDate.get(dateString)));
+                    } catch (ParseException e) {
+                        Log.e("Error", "Error Parsing Date!");
+                    }
+                }
+
+                /* Calculate Axis Granularity */
+                float axisMin = Float.MAX_VALUE;
+                float axisMax = Float.MIN_VALUE;
+                for (Entry entry : entries) {
+                    if (entry.getX() < axisMin) {
+                        axisMin = entry.getX();
+                    }
+                    if (entry.getX() > axisMax) {
+                        axisMax = entry.getX();
+                    }
+                }
+                granularity = ((float) axisMax - (float) axisMin) / 5.5f;
+
+            } else {
+                /* Get Values For Each Trial */
+                for (Trial trial : trials) {
+                    entries.add(new Entry(Long.valueOf(trial.getTimestamp().getTime()).floatValue(), (float) ExperimentStatistics.getValue(trial)));
+                }
+
+                /* Calculate Axis Granularity */
+                long axisMin = trials.get(0).getTimestamp().getTime();
+                long axisMax = trials.get(trials.size() - 1).getTimestamp().getTime();
+                granularity = ((float) axisMax - (float) axisMin) / 5.5f;
+            }
+        }
+        return granularity;
     }
 
     public void notifyDataChanged() {

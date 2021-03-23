@@ -1,4 +1,5 @@
 package com.example.projectcurie;
+import android.annotation.SuppressLint;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -65,6 +66,17 @@ public abstract class Trial implements Serializable, Comparable<Trial> {
         this.timestamp = new Date();
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
+    }
+
+    /**
+     * Return the date the trial was submitted as a formatted string.
+     * @return
+     *     The submission date of the trial formatted as dd-MM-YY.
+     */
+    @SuppressLint("DefaultLocale")
+    public String formattedDate() {
+        return String.format("%02d-%02d-%d", timestamp.getDate(), timestamp.getMonth()+1, timestamp.getYear()+1900);
+
     }
 
     public Date getTimestamp() {

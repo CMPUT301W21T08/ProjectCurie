@@ -3,6 +3,10 @@ package com.example.projectcurie;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static org.junit.Assert.*;
 //public IntegerCountTrial(String experiment, String author, int count) {
 //        super(experiment, author);
@@ -21,12 +25,11 @@ public class CountTrialTest {
         experiment.setOwner("Crypto7843");
     }
     @Test
-    public void getCount() {
+    public void getCount() throws ParseException {
         count = new CountTrial("TestExperiment","TestAuthor");
         // CountTrial sets count to 1, when created
         Assert.assertEquals(1, count.getCount());
         Assert.assertNotEquals(null, count.getCount());
-
     }
 
     @Test
