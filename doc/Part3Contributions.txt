@@ -1,0 +1,35 @@
+Part 3 Contributions
+
+Joshua Billson
+1)  Publish Experiments (US 01.01.01)
+2)  Execute Trials (US 01.05.01)
+3)  Ask Questions (US 02.01.01)
+4)  Browse Questions (US 02.03.01)
+5)  Users Have A Profile (US 04.01.01)
+6)  Users Can Edit Their Profile Information (US 04.02.01)
+7)  Login/Registration (US 04.04.01)
+8)  Experiments Can Be Searched By Keyword (US 05.01.01)
+9)  Experiment Search Results (US 05.02.01)
+10) Owners May Specify If Geolocation Is Required (US 06.01.01)
+
+Bo Cen
+1)  Post Questions (US 02.01.01)
+2)  Post Reply (US 02.02.01)
+
+Paul Cleofas
+1)  End an Experiment (US 01.03.01)
+2)  Search Experiment By Keyword(US 05.01.01)
+3)  Execute Trials (US 01.05.01)
+4)  Subscribe to Experiment (US 01.04.01)
+5)  Login/registration (US 04.04.01)
+
+Mitch Labrecque
+1)  As an experimenter, I want to add Geo-location to experimental trials that need it. (US 06.02.01)
+2)  As an experimenter, I want to be warned about geo-location trials. (US 06.03.01)
+
+Kevin Zhu
+1)  Users can view a map of geo-locations of a geo-location enabled experiment. (US 06.04.01 | Partial Completion)
+
+Klyde Pausang
+1)  Users have a profile with a unique username and their contact information (US 04.01.01)
+2)  Experimenters will be warned about geo-location trials (US 06.03.01)
