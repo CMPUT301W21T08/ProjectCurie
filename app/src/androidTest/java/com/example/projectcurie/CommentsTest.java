@@ -77,7 +77,7 @@ public class CommentsTest {
         solo.clickOnText("Comments");
 
         /* Add Comment */
-        solo.clickOnButton("New Comment");
+        solo.clickOnText("New Comment");
         solo.waitForDialogToOpen();
         solo.enterText((EditText) solo.getView(R.id.addQuestionEditText), "This is a question");
         solo.clickOnText("Submit");
