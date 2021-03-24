@@ -111,7 +111,7 @@ public class CommentsTest {
         solo.waitForActivity(".ExperimentListActivty");
         solo.clickOnText("Delete This Experiment");
         solo.waitForActivity(".ExperimentOverviewActivity");
-        onView(withText("Comments")).perform(click());
+        onView(withText("Data")).perform(click());
 
         /* Add Comment */
         Thread.sleep(1000);

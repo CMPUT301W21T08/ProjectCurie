@@ -48,6 +48,7 @@ public class ExperimentCommentsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        assert getArguments() != null;
         this.experiment = getArguments().getString("experiment");
     }
 
@@ -59,14 +60,14 @@ public class ExperimentCommentsFragment extends Fragment {
         /* Initialize List View */
         listView = view.findViewById(R.id.experimentQuestionsListView);
         questions = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, questions);
+        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, questions);
         listView.setAdapter(arrayAdapter);
 
         commentController = new CommentController(questions, arrayAdapter);
         commentController.fetchAndNotifyQuestions(experiment);
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
-            Comment question = questions.get(position);
+            Comment question = arrayAdapter.getItem(position);
             String qid = question.getId();
             String q_expname = question.getExperiment();
             Log.i("Question ID", question.getId());
