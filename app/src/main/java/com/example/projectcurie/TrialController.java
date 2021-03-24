@@ -142,28 +142,30 @@ public class TrialController {
                     trialUpperQuartileTextView.setText(Html.fromHtml("<b>Upper Quartile: </b><span>" + String.format(Locale.CANADA, "%.2f", upperQuartile) + "</span>"));
                     trialStandardDeviationTextView.setText(Html.fromHtml("<b>Standard Deviation: </b><span>" + String.format(Locale.CANADA, "%.2f", standardDeviation) + "</span>"));
 
-                    /* Hide Charts If No Trials Have Been Submitted */
+                    /* Show Histogram */
                     if (statistics.totalCount() == 0) {
                         barChart.setVisibility(View.GONE);
                     } else {
                         barChart.setVisibility(View.VISIBLE);
+                        barChart.setData(data);
+                        XAxis xAxis = barChart.getXAxis();
+                        xAxis.setLabelCount(numberOfBins);
+                        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                        barChart.invalidate();
                     }
 
-                    /* Show Histogram */
-                    barChart.setData(data);
-                    XAxis xAxis = barChart.getXAxis();
-                    xAxis.setLabelCount(numberOfBins);
-                    xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                    barChart.invalidate();
-
                     /* Show Line Chart */
-                    lineChart.setData(scatterData);
-                    XAxis xAxis1 = lineChart.getXAxis();
-                    xAxis1.setValueFormatter(new DateAxisValueFormatter());
-                    xAxis1.setGranularity(Math.max((float) granularity, 1f));
-                    xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);
-                    lineChart.invalidate();
+                    if (statistics.totalCount() == 0) {
+                        lineChart.setVisibility(View.GONE);
+                    } else {
+                        lineChart.setData(scatterData);
+                        XAxis xAxis1 = lineChart.getXAxis();
+                        xAxis1.setValueFormatter(new DateAxisValueFormatter());
+                        xAxis1.setGranularity(Math.max((float) granularity, 1f));
+                        xAxis1.setPosition(XAxis.XAxisPosition.BOTTOM);
+                        lineChart.invalidate();
+                    }
                 });
             }).start();
         });

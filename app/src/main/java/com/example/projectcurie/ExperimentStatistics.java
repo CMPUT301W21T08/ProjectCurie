@@ -137,7 +137,7 @@ public class ExperimentStatistics implements Serializable {
 
     public double standardDeviation() {
         extractValues();
-        if (totalCount() == 0) {
+        if (trials.size() == 0) {
             return 0.0;
         } else {
             double mean = mean();
@@ -151,7 +151,7 @@ public class ExperimentStatistics implements Serializable {
 
     public int populateHistogram(ArrayList<BarEntry> entries, ArrayList<String> labels) {
         extractValues();
-        if (totalCount() == 0) {
+        if (trials.size() == 0) {
             return 0;
         } else if (trials.get(0) instanceof BinomialTrial) {
             return populateHistogramBinomial(entries, labels);

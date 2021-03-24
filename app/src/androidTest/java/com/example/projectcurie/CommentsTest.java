@@ -4,6 +4,7 @@ package com.example.projectcurie;
 import android.Manifest;
 import android.widget.EditText;
 
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -18,6 +19,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.is;
 
 import static org.junit.Assert.assertTrue;
 
@@ -59,7 +77,7 @@ public class CommentsTest {
         solo.enterText((EditText) solo.getView(R.id.descriptionEditText), "This is a description");
         solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
         solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
-        solo.hideSoftKeyboard();
+        closeSoftKeyboard();
         solo.clickOnView(solo.getView(R.id.createExperimentButton));
         solo.waitForActivity(".MainActivity");
     }
@@ -86,29 +104,33 @@ public class CommentsTest {
     }
 
     @Test
-    public void addAnswerTest() {
+    public void addAnswerTest() throws InterruptedException {
         /* Navigate To Experiment Overview */
         solo.clickOnView(solo.getView(R.id.viewExperiments_btn));
+        onView(withId(R.id.viewExperiments_btn));
+        solo.waitForActivity(".ExperimentListActivty");
         solo.clickOnText("Delete This Experiment");
         solo.waitForActivity(".ExperimentOverviewActivity");
-        solo.clickOnView(solo.getView(R.id.experimentCommentsTab));
+        onView(withText("Comments")).perform(click());
 
         /* Add Comment */
+        Thread.sleep(1000);
         solo.clickOnText("New Comment");
         solo.waitForDialogToOpen();
         solo.enterText((EditText) solo.getView(R.id.addQuestionEditText), "This is a question");
-        solo.hideSoftKeyboard();
-        solo.clickOnButton("Submit");
+        closeSoftKeyboard();
+        onView(withText("Submit")).perform(click());
         solo.waitForDialogToClose();
         assertTrue(solo.searchText("This is a question"));
         solo.clickOnText("This is a question");
 
         /* Add Answer */
-        solo.clickOnText("New Answer");
+        Thread.sleep(1000);
+        onView(withText("New Answer")).perform(click());
         solo.waitForDialogToOpen();
         solo.enterText((EditText) solo.getView(R.id.addAnswerEditText), "This is an answer");
-        solo.hideSoftKeyboard();
-        solo.clickOnButton("Submit");
+        closeSoftKeyboard();
+        onView(withText("Submit")).perform(click());
         solo.waitForDialogToClose();
         assertTrue(solo.searchText("This is an answer"));
     }
