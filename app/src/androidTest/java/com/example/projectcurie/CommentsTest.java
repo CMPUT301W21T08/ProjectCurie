@@ -2,6 +2,7 @@ package com.example.projectcurie;
 
 
 import android.Manifest;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.test.espresso.ViewInteraction;
@@ -65,6 +66,10 @@ public class CommentsTest {
     public void setup() {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), mActivityTestRule.getActivity());
 
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            mActivityTestRule.getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        });
+
         /* Create Mock Experiment */
         solo.unlockScreen();
         solo.waitForText("Start");
@@ -111,7 +116,7 @@ public class CommentsTest {
         solo.waitForActivity(".ExperimentListActivty");
         solo.clickOnText("Delete This Experiment");
         solo.waitForActivity(".ExperimentOverviewActivity");
-        onView(withText("Data")).perform(click());
+        onView(withText("Comments")).perform(click());
 
         /* Add Comment */
         Thread.sleep(1000);
