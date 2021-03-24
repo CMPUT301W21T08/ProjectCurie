@@ -2,6 +2,8 @@ package com.example.projectcurie;
 
 
 import android.Manifest;
+import android.app.Instrumentation;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
