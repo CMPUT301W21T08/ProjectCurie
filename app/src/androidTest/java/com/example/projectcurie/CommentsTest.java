@@ -86,12 +86,12 @@ public class CommentsTest {
     }
 
     @Test
-    public void addAnswerTest() throws InterruptedException {
+    public void addAnswerTest() {
         /* Navigate To Experiment Overview */
         solo.clickOnView(solo.getView(R.id.viewExperiments_btn));
         solo.clickOnText("Delete This Experiment");
         solo.waitForActivity(".ExperimentOverviewActivity");
-        solo.clickOnText("Comments");
+        solo.clickOnView(solo.getView(R.id.experimentCommentsTab));
 
         /* Add Comment */
         solo.clickOnText("New Comment");

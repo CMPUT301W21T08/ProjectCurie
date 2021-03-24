@@ -10,6 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
 
 import org.junit.Before;
@@ -45,6 +46,10 @@ public class CreateDeleteExperimentTest {
     public void setup() {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), mActivityTestRule.getActivity());
         solo.unlockScreen();
+    }
+
+    public void createDeleteExperimentTest() {
+
     }
 
     @Test
@@ -92,15 +97,7 @@ public class CreateDeleteExperimentTest {
 
         /* Test That Experiment No Longer Exists */
         solo.waitForDialogToClose();
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            new Handler(Looper.getMainLooper()).post(() -> {
-                assertFalse(solo.searchText("Delete This Experiment"));
-            });
-        }).start();
+        solo.waitForCondition(() -> !solo.searchText("Delete This Experiment"), 2000);
+        assertFalse(solo.searchText("Delete This Experiment"));
     }
 }
