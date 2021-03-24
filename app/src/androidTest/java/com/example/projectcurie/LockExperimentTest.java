@@ -60,8 +60,7 @@ public class LockExperimentTest {
         solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
         solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
         solo.hideSoftKeyboard();
-        solo.waitForText("Create Experiment");
-        solo.clickOnText("Create Experiment");
+        solo.clickOnView(solo.getView(R.id.createExperimentButton));
         solo.waitForActivity(".MainActivity");
     }
 
@@ -98,13 +97,13 @@ public class LockExperimentTest {
         /* Lock Experiment */
         solo.clickLongOnText("Delete This Experiment");
         solo.waitForDialogToOpen();
-        solo.clickOnText("Lock");
+        solo.clickOnButton("Lock");
         solo.waitForDialogToClose();
 
         /* Unlock Experiment */
         solo.clickLongOnText("Delete This Experiment");
         solo.waitForDialogToOpen();
-        solo.clickOnText("Unlock");
+        solo.clickOnButton("Unlock");
         solo.waitForDialogToClose();
     }
 }

@@ -86,10 +86,11 @@ public class CreateDeleteExperimentTest {
         /* Delete Experiment */
         solo.clickLongOnText("Delete This Experiment");
         solo.waitForDialogToOpen();
-        solo.clickOnText("Delete");
+        solo.clickOnButton("Delete");
 
         /* Test That Experiment No Longer Exists */
         solo.waitForDialogToClose();
+        solo.waitForText("Delete This Experiment");
         assertFalse(solo.searchText("Delete This Experiment"));
     }
 }
