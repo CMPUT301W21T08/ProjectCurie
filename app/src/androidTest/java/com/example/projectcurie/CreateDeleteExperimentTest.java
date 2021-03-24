@@ -1,6 +1,8 @@
 package com.example.projectcurie;
 
 
+import android.os.Looper;
+import android.os.Handler;
 import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -11,6 +13,8 @@ import com.robotium.solo.Solo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+
 import static org.junit.Assert.*;
 
 /**
@@ -72,6 +76,15 @@ public class CreateDeleteExperimentTest {
 
         /* Test That Experiment No Longer Exists */
         solo.waitForDialogToClose();
-        assertFalse(solo.searchText("Delete This Experiment"));
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            new Handler(Looper.getMainLooper()).post(() -> {
+                assertFalse(solo.searchText("Delete This Experiment"));
+            });
+        }).start();
     }
 }
