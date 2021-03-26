@@ -1,6 +1,8 @@
 package com.example.projectcurie;
 
 
+import android.os.Looper;
+import android.os.Handler;
 import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -12,6 +14,8 @@ import com.robotium.solo.Solo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+
 import static org.junit.Assert.*;
 
 /**
