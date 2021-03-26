@@ -24,3 +24,17 @@ jobs:
       - name: Android Test Report
         uses: asadmansr/android-test-report-action@v1.2.0
         if: ${{ always() }} # IMPORTANT: run Android Test Report regardless
+
+integration test:
+  runs-on: ubuntu-latest
+  steps:
+    # Check out the repository
+    - uses: actions/checkout@v2
+
+    # Run the Firebase Test Lab Action
+    - name: Run tests on Firebase Test Lab
+      uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+      with:
+        arg-spec: 'tests.yml:android-pixel-1'
+      env:
+        SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
