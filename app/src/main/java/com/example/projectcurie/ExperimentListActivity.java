@@ -29,11 +29,7 @@ public class ExperimentListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_experiment_list);
 
         /* Grab Experiments From Intent */
-        try {
-            experiments = (ArrayList<Experiment>) ObjectSerializer.deserialize(getIntent().getStringExtra("experiments"));
-        } catch (IOException e) {
-            Log.e("Error", "Error: Could Not Deserialize Experiments!");
-        }
+         experiments = (ArrayList<Experiment>) getIntent().getSerializableExtra("experiments");
 
         /* Initialize list View */
         ListView experimentListView = findViewById(R.id.experimentListView);

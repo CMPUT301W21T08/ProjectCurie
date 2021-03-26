@@ -28,9 +28,8 @@ import java.util.ArrayList;
 public class ExperimentCommentsFragment extends Fragment {
 
     private Button new_comment;
-    private ArrayList<Comment> questions;
     private ArrayAdapter<Comment> arrayAdapter;
-    private CommentController commentController;
+    private CommentViewer commentViewer;
     private String experiment;
     private ListView listView;
 
@@ -46,9 +45,21 @@ public class ExperimentCommentsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        listView.invalidateViews();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.experiment = getArguments().getString("experiment");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        commentViewer.stopWatching();
     }
 
     @Nullable
@@ -57,13 +68,14 @@ public class ExperimentCommentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_experiment_comments, container, false);
 
         /* Initialize List View */
+
+        ArrayList<Comment> questions = new ArrayList<>();
         listView = view.findViewById(R.id.experimentQuestionsListView);
-        questions = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, questions);
+        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, questions);
         listView.setAdapter(arrayAdapter);
 
-        commentController = new CommentController(questions, arrayAdapter);
-        commentController.fetchAndNotifyQuestions(experiment);
+        commentViewer = new CommentViewer(arrayAdapter, questions);
+        commentViewer.fetchAndNotifyQuestions(experiment);
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             Comment question = questions.get(position);

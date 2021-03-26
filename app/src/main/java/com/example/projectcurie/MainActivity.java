@@ -20,12 +20,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * This activity provides the main menu by which the user will interact with the app. From this
@@ -33,8 +32,7 @@ import java.util.Collections;
  * for other users, submit a new experiment, or scan a barcode to submit an experiment trial.
  * @author Mitchell Labrecque
  */
-public class MainActivity extends AppCompatActivity implements SearchExperimentFragment.SearchExperimentFragmentInteractionListener,
-                                                                SearchUserFragment.SearchUserFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements SearchUserFragment.SearchUserFragmentInteractionListener, DatabaseListener {
 
     TextView username;
     Button search_exp_btn;
@@ -44,25 +42,23 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
     Button search_user_btn;
     Button barcode_btn;
     Button view_profile_btn;
-    Button view_loc;
-    GeoLocation geo;
 
-//
+    //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         setContentView(R.layout.activity_main);
         search_exp_btn = findViewById(R.id.searchExperiments_btn);
         view_exp_btn = findViewById(R.id.viewExperiments_btn);
         new_exp_btn = findViewById(R.id.addExperiment_btn);
-        view_map_btn = findViewById(R.id.viewGeoLocations_btn);
+        view_map_btn = findViewById(R.id.viewSubscriptions_btn);
         search_user_btn = findViewById(R.id.searchUsers_btn);
         barcode_btn = findViewById(R.id.scanBarcode_btn);
         view_profile_btn = findViewById(R.id.view_profile_btn);
@@ -72,48 +68,19 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
         username.setText(App.getUser().getUsername());
 
         /* Search Experiments On Click Listener */
-        search_exp_btn.setOnClickListener((View v) ->{
+        search_exp_btn.setOnClickListener((View v) -> {
             new SearchExperimentFragment().show(getSupportFragmentManager(), "SEARCH EXPERIMENT FRAGMENT");
         });
 
-
-
         /* View Experiments On Click Listener */
         view_exp_btn.setOnClickListener((View v) -> {
-
-            /* Grab Experiment From Database. Open Experiment List View On Callback Return */
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            ArrayList<Experiment> experiments = new ArrayList<>();
-            db.collection("experiments")
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-
-                            /* Iterate Over Experiments */
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                experiments.add(document.toObject(Experiment.class));
-                            }
-
-                            /* Start Experiment List Activity */
-                            try {
-                                Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
-                                intent.putExtra("experiments", ObjectSerializer.serialize(experiments));
-                                startActivity(intent);
-                            } catch (IOException e) {
-                                Log.e("Error", "Error Serializing Experiments!");
-                            }
-
-                        } else {
-                            Log.e("Error", "Error Fetching Experiments!");
-                        }
-                    });
+            DatabaseController.getInstance().fetchExperiments(this);
         });
 
         /* Create New Experiment On Click Listener */
         new_exp_btn.setOnClickListener((View v) -> {
             Intent intent = new Intent(getApplicationContext(), NewExperimentActivity.class);
             startActivity(intent);
-
         });
 
         /* View User Profile On Click Listener */
@@ -123,9 +90,9 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
             startActivity(intent);
         });
 
+        /* Browse Subscriptions */
         view_map_btn.setOnClickListener((View v) -> {
-            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-            startActivity(intent);
+            DatabaseController.getInstance().getSubscriptions(this);
         });
 
         /* Search User on Click Listener */
@@ -136,69 +103,9 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
 
         barcode_btn.setOnClickListener((View v) -> {
             Log.i("Info", "Barcode Button Pressed");
-
         });
     }
 
-    public void searchExperiments() {
-        ///setContentView(R.layout...);
-    }
-
-    public void addExperiment() {
-        ///setContentView(R.layout...);
-    }
-    public void viewGeoLocations() {
-        ///setContentView(R.layout...);
-    }
-
-    public void searchUsers() {
-        ///setContentView(R.layout...);
-    }
-
-    public void scanBarcode() {
-        ///setContentView(R.layout...);
-    }
-
-    public void openSearchUserFragment() {
-        ///setContentView(R.layout...);
-    }
-
-
-    @Override
-    public void goSearchExperiment(String keywords) {
-        /* Tokenize Keywords */
-        ArrayList<String> keywordsArrayList = new ArrayList<>();
-        Collections.addAll(keywordsArrayList, keywords.split("\\W+"));
-
-        /* Grab Experiments From Database */
-        ArrayList<Experiment> experiments = new ArrayList<>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("experiments")
-                .whereArrayContainsAny("tokens", keywordsArrayList)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-
-                        /* Iterate Over Experiments  */
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            experiments.add(document.toObject(Experiment.class));
-                        }
-
-                        /* Start Experiment List Activity */
-                        try {
-                            Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
-                            intent.putExtra("experiments", ObjectSerializer.serialize(experiments));
-                            startActivity(intent);
-                        } catch (IOException e) {
-                            Log.e("Error", "Error Serializing Experiments!");
-                        }
-
-                    } else {
-                        Log.i("Info", "Error Fetching Experiments!");
-                    }
-                });
-
-    }
     @Override
     public void goSearchUser(@NotNull String keywords) {
         /* Grab Experiments From Database */
@@ -229,5 +136,18 @@ public class MainActivity extends AppCompatActivity implements SearchExperimentF
             }
         });
 
+    }
+
+    @Override
+    public void notifyDataChanged(QuerySnapshot data, int returnCode) {
+        if (returnCode == 0) {
+            ArrayList<Experiment> experiments = new ArrayList<>();
+            for (QueryDocumentSnapshot document : data) {
+                experiments.add(document.toObject(Experiment.class));
+            }
+            Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
+            intent.putExtra("experiments", experiments);
+            startActivity(intent);
+        }
     }
 }

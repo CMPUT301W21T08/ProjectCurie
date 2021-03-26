@@ -19,24 +19,16 @@ import androidx.fragment.app.DialogFragment;
  */
 public class SearchExperimentFragment extends DialogFragment {
     private EditText search_keyword;
-    private SearchExperimentFragmentInteractionListener listener;
-
-    /**
-     * Implemented by this Fragment's parent Activity to conduct a database search for experiments
-     * whose searchable fields match some given keywords.
-     */
-    public interface SearchExperimentFragmentInteractionListener {
-        void goSearchExperiment(String keywords);
-    }
+    private DatabaseListener listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof SearchExperimentFragmentInteractionListener){
-            listener = (SearchExperimentFragmentInteractionListener) context;
+        if (context instanceof DatabaseListener){
+            listener = (DatabaseListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement DatabaseListener");
         }
     }
 
@@ -53,7 +45,7 @@ public class SearchExperimentFragment extends DialogFragment {
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("OK", (dialogInterface, i) -> {
                     String keyword = search_keyword.getText().toString().toLowerCase();
-                    listener.goSearchExperiment(keyword);
+                    DatabaseController.getInstance().searchExperiments(keyword, listener);
                 }).create();
     }
 }

@@ -8,6 +8,7 @@ import android.widget.EditText;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
 
 import org.junit.Before;
@@ -67,7 +68,7 @@ public class CreateDeleteExperimentTest {
         solo.waitForActivity(".UserProfileActivity");
 
         /* Test That Experiment Exists */
-        assertTrue(solo.waitForText("Delete This Experiment"));
+        solo.waitForText("Delete This Experiment");
 
         /* Delete Experiment */
         solo.clickLongOnText("Delete This Experiment");
@@ -76,15 +77,7 @@ public class CreateDeleteExperimentTest {
 
         /* Test That Experiment No Longer Exists */
         solo.waitForDialogToClose();
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            new Handler(Looper.getMainLooper()).post(() -> {
-                assertFalse(solo.searchText("Delete This Experiment"));
-            });
-        }).start();
+        solo.waitForCondition(() -> !solo.searchText("Delete This Experiment"), 5000);
+        assertFalse(solo.searchText("Delete This Experiment"));
     }
 }

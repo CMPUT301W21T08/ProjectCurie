@@ -33,23 +33,6 @@ public class NameGenerator {
         String adjective = adjectives[rand.nextInt(adjectives.length)];
         String noun = nouns[rand.nextInt(nouns.length)];
         String number = Integer.toString(rand.nextInt(100));
-        String name = adjective + noun + number;
-        if (! isUnique(name)) {
-            return uniqueName();
-        }
-        return name;
-    }
-
-    /* Check That A Username Is Unique */
-    private static boolean isUnique(String name) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        AtomicBoolean exists = new AtomicBoolean(false);
-
-        db.collection("users").document(name)
-                .get()
-                .addOnSuccessListener(document -> exists.set(document.exists()))
-                .addOnFailureListener(e -> Log.i("Info", e.toString()));
-
-        return ! exists.get();
+        return adjective + noun + number;
     }
 }
