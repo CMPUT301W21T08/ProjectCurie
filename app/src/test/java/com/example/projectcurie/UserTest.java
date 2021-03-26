@@ -86,7 +86,7 @@ public class UserTest {
         // asserts True if both the dates are equal
         user = new User("CoolGuy123");
         this.testDateJoined = new Date();
-        Assert.assertEquals(testDateJoined, user.getDateJoined());
+        Assert.assertEquals(testDateJoined.getTime(), user.getDateJoined().getTime(), 1000f);
         Assert.assertNotEquals(null, user.getDateJoined());
 
     }
