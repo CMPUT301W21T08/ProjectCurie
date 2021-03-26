@@ -74,6 +74,7 @@ public class CommentsTest {
         /* Navigate To Experiment Overview */
         solo.clickOnView(solo.getView(R.id.viewExperiments_btn));
         solo.clickOnText("Delete This Experiment");
+        solo.waitForActivity(".ExperimentOverviewActivity");
         solo.clickOnText("Comments");
 
         /* Add Comment */
