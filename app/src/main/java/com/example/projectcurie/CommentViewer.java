@@ -2,6 +2,9 @@ package com.example.projectcurie;
 
 import android.widget.ArrayAdapter;
 
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
 /**
@@ -10,22 +13,19 @@ import java.util.ArrayList;
  * is registered in the underlying database.
  * @author Joshua Billson
  */
-public class CommentController {
-    private CommentFetcher fetcher;
+public class CommentViewer implements DatabaseListener {
+    private ArrayList<Comment> comments;
     private ArrayAdapter<Comment> adapter;
 
     /**
      * Associate this controller with an ArrayAdapter and its underlying ArrayList so that the
      * list view can be re-rendered whenever a change in the database is detected.
-     * @param comments
-     *     An ArrayList for containing the comments associated with the ArrayAdapter referenced
-     *     by adapter.
      * @param adapter
      *     An ArrayAdapter who is responsible for rendering the contents of comments to the List View.
      */
-    public CommentController(ArrayList<Comment> comments, ArrayAdapter<Comment> adapter) {
+    public CommentViewer(ArrayAdapter<Comment> adapter, ArrayList<Comment> comments) {
         this.adapter = adapter;
-        this.fetcher = new CommentFetcher(comments);
+        this.comments = comments;
     }
 
     /**
@@ -36,7 +36,11 @@ public class CommentController {
      *     The title of the experiment whose questions we want to render.
      */
     public void fetchAndNotifyQuestions(String experiment) {
-        fetcher.fetchQuestions(experiment, () -> this.adapter.notifyDataSetChanged());
+        DatabaseController.getInstance().watchQuestions(experiment, this);
+    }
+
+    public void stopWatching() {
+        DatabaseController.getInstance().stopWatchingQuestions();
     }
 
     /**
@@ -49,6 +53,17 @@ public class CommentController {
      *     The ID of the question to which these answers belong.
      */
     public void fetchAndNotifyAnswers(String experiment, String questionID) {
-        fetcher.fetchAnswers(experiment, questionID, () -> this.adapter.notifyDataSetChanged());
+        DatabaseController.getInstance().watchAnswers(experiment, questionID, this);
+    }
+
+    @Override
+    public void notifyDataChanged(QuerySnapshot data, int returnCode) {
+        comments.clear();
+        for (QueryDocumentSnapshot document : data) {
+            Comment comment = document.toObject(Comment.class);
+            comment.setId(document.getId());
+            comments.add(comment);
+        }
+        adapter.notifyDataSetChanged();
     }
 }

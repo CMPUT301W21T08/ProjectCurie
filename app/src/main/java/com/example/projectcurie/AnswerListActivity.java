@@ -8,11 +8,8 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 /**
  * This class implements the activity to see list of answers attached to a question, and button to add answer to question.
@@ -25,6 +22,12 @@ public class AnswerListActivity extends AppCompatActivity implements AddAnswerFr
     String poster;
     String questionID;
     String question_ExperimentName;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DatabaseController.getInstance().stopWatchingAnswers();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +43,8 @@ public class AnswerListActivity extends AppCompatActivity implements AddAnswerFr
         ArrayAdapter<Comment> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, answers);
         listView.setAdapter(arrayAdapter);
 
-        CommentController commentController = new CommentController(answers, arrayAdapter);
-        commentController.fetchAndNotifyAnswers(question_ExperimentName, questionID);
+        CommentViewer commentViewer = new CommentViewer(arrayAdapter, answers);
+        commentViewer.fetchAndNotifyAnswers(question_ExperimentName, questionID);
 
         Button new_answer = findViewById(R.id.add_answer_btn);
         new_answer.setOnClickListener(v -> {
