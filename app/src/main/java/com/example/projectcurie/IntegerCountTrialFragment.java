@@ -1,7 +1,6 @@
 package com.example.projectcurie;
 
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,25 +22,16 @@ import androidx.fragment.app.Fragment;
 public class IntegerCountTrialFragment extends Fragment {
 
     private int counter = 0;
-    private IntegerCountTrialFragmentInteractionListener listener;
-
-    /**
-     * Implemented by this Fragment's parent Activity to enable submitting new trials to the
-     * FireStore database and registering bar codes.
-     */
-    public interface IntegerCountTrialFragmentInteractionListener {
-        void uploadIntegerCountTrial(int value);
-        void addIntCountBarcode(String barcodeString, int value);
-    }
+    private SubmitTrialActivityInterface listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof IntegerCountTrialFragmentInteractionListener){
-            listener = (IntegerCountTrialFragmentInteractionListener) context;
+        if (context instanceof SubmitTrialActivityInterface){
+            listener = (SubmitTrialActivityInterface) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement SubmitTrialActivityInterface");
         }
     }
 
@@ -57,11 +47,11 @@ public class IntegerCountTrialFragment extends Fragment {
         /* Grab Widgets */
         Button incrementButton = view.findViewById(R.id.integerCountIncrementButton);
         Button decrementButton = view.findViewById(R.id.integerCountDecrementButton);
-        Button generateQRButton = view.findViewById(R.id.binomialTrialGenerateQRButton);
-        Button submitButton = view.findViewById(R.id.binomialTrialSubmitButton);
-        Button addBarcodeButton = view.findViewById(R.id.binomialTrialSubmitBarcodeButton);
+        Button generateQRButton = view.findViewById(R.id.integerCountTrialGenerateQRButton);
+        Button submitButton = view.findViewById(R.id.integerCountTrialSubmitButton);
+        Button addBarcodeButton = view.findViewById(R.id.integerCountTrialSubmitBarcodeButton);
         TextView result = view.findViewById(R.id.integerCountTrialCounterTextView);
-        EditText barcodeInput = view.findViewById(R.id.binomialTrialBarcodeEditText);
+        EditText barcodeInput = view.findViewById(R.id.integerCountTrialBarcodeEditText);
 
 
         /* Increment The UI Counter When Pressing The Positive Count Button */
@@ -83,13 +73,14 @@ public class IntegerCountTrialFragment extends Fragment {
         });
 
         /* On Clicking Submit, Upload An Integer Count Trial To The FireStore Database */
-        submitButton.setOnClickListener(v -> listener.uploadIntegerCountTrial(counter));
+        submitButton.setOnClickListener(v -> listener.uploadTrial(counter));
 
         /* Register A Barcode With A Specific Trial Result For This Experiment */
         addBarcodeButton.setOnClickListener(v -> {
-            String barcode = barcodeInput.toString();
-            listener.addIntCountBarcode(barcode, counter);
+            String barcode = barcodeInput.getText().toString();
+            listener.addBarcode(barcode, counter);
         });
 
+        generateQRButton.setOnClickListener(v -> listener.addQR(counter));
     }
 }

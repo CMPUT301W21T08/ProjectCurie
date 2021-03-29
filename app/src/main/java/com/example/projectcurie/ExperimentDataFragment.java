@@ -28,11 +28,13 @@ import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -45,6 +47,7 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
     private Experiment experiment;
     private ArrayList<Trial> trials;
     private ExperimentStatistics statistics;
+    private boolean isVisible = false;
 
     TextView trialCountTextView;
     TextView trialMeanTextView;
@@ -91,13 +94,6 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
         trialStandardDeviationTextView = view.findViewById(R.id.trialStandardDeviationTextView);
         barChart = view.findViewById(R.id.barChart);
         lineChart = view.findViewById(R.id.scatterChart);
-
-        /* Hide Quartiles And Standard Deviation For Binomial Experiments */
-        if (experiment.getType() == ExperimentType.BINOMIAL) {
-            trialLowerQuartileTextView.setVisibility(View.GONE);
-            trialUpperQuartileTextView.setVisibility(View.GONE);
-            trialStandardDeviationTextView.setVisibility(View.GONE);
-        }
 
         /* Hide The Bar Chart Description */
         Description description = new Description();
@@ -154,6 +150,32 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
 
             /* Render Results To UI */
             new Handler(Looper.getMainLooper()).post(() -> {
+                /* Animate Statistics */
+                ArrayList<View> views = new ArrayList<>();
+                Collections.addAll(views, trialCountTextView, trialMeanTextView, trialMedianTextView);
+
+                /* Show Graphs If Number Of Trials Is Greater Than Zero */
+                if (trials.size() > 0) {
+                    Collections.addAll(views, barChart, lineChart);
+                }
+
+                /* Hide Quartiles And Standard Deviation For Binomial Experiments */
+                if (experiment.getType() == ExperimentType.BINOMIAL) {
+                    trialLowerQuartileTextView.setVisibility(View.GONE);
+                    trialUpperQuartileTextView.setVisibility(View.GONE);
+                    trialStandardDeviationTextView.setVisibility(View.GONE);
+                } else {
+                    Collections.addAll(views, trialLowerQuartileTextView, trialUpperQuartileTextView, trialStandardDeviationTextView);
+                }
+
+                for (View view : views) {
+                    view.setVisibility(View.VISIBLE);
+                    view.animate()
+                            .alpha(1f)
+                            .setDuration(1000)
+                            .setListener(null);
+                }
+
                 /* Show Statistics */
                 trialCountTextView.setText(Html.fromHtml("<b>Total Trials: </b><span>" + String.format(Locale.CANADA, "%d", total) + "</span>"));
                 trialMeanTextView.setText(Html.fromHtml(((experiment.getType() == ExperimentType.BINOMIAL)?"<b>Success Rate: </b><span>" : "<b>Mean: </b><span>") + String.format(Locale.CANADA, "%.2f", mean) + "</span>"));
@@ -166,7 +188,6 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
                 if (trials.size() == 0) {
                     barChart.setVisibility(View.GONE);
                 } else {
-                    barChart.setVisibility(View.VISIBLE);
                     barChart.setData(barData);
                     XAxis xAxis = barChart.getXAxis();
                     xAxis.setLabelCount(numberOfBins);

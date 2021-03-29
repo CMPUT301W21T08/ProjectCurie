@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -21,6 +22,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +36,6 @@ import java.util.ArrayList;
  * @author Mitchell Labrecque
  */
 public class MainActivity extends AppCompatActivity implements SearchUserFragment.SearchUserFragmentInteractionListener, DatabaseListener {
-
     TextView username;
     Button search_exp_btn;
     Button view_exp_btn;
@@ -43,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements SearchUserFragmen
     Button barcode_btn;
     Button view_profile_btn;
 
-    //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements SearchUserFragmen
         view_exp_btn = findViewById(R.id.viewExperiments_btn);
         new_exp_btn = findViewById(R.id.addExperiment_btn);
         view_map_btn = findViewById(R.id.viewSubscriptions_btn);
-        search_user_btn = findViewById(R.id.searchUsers_btn);
+        search_user_btn = findViewById(R.id.viewBarcodesButton);
         barcode_btn = findViewById(R.id.scanBarcode_btn);
         view_profile_btn = findViewById(R.id.view_profile_btn);
         username = findViewById(R.id.username_textview);
@@ -97,13 +98,19 @@ public class MainActivity extends AppCompatActivity implements SearchUserFragmen
 
         /* Search User on Click Listener */
         search_user_btn.setOnClickListener((View v) -> {
-            //searchUsers();
-            new SearchUserFragment().show(getSupportFragmentManager(), "SEARCH USER FRAGMENT");
+            Intent intent = new Intent(this, ScannableListActivity.class);
+            startActivity(intent);
         });
 
         barcode_btn.setOnClickListener((View v) -> {
+            IntentIntegrator intent = new IntentIntegrator(this);
+            intent.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+            intent.setBarcodeImageEnabled(true);
+            intent.setOrientationLocked(false);
+            intent.initiateScan();
             Log.i("Info", "Barcode Button Pressed");
         });
+
     }
 
     @Override
@@ -148,6 +155,25 @@ public class MainActivity extends AppCompatActivity implements SearchUserFragmen
             Intent intent = new Intent(getApplicationContext(), ExperimentListActivity.class);
             intent.putExtra("experiments", experiments);
             startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Scannable scannable = App.getScannable(result.getContents());
+                if (scannable != null) {
+                    scannable.submitTrial(this);
+                } else {
+                    Toast.makeText(this, "Could Not Locate Scannable!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
