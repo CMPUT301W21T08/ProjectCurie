@@ -24,7 +24,8 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.welcome_activity);
         start_btn = findViewById(R.id.start_button);
         usernameTextView = findViewById(R.id.username);
-        start_btn.setVisibility(View.INVISIBLE);
+        usernameTextView.setAlpha(0f);
+        start_btn.setAlpha(0f);
         login();
     }
 
@@ -36,11 +37,20 @@ public class WelcomeActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE);
         LoginCommand command = new LoginCommand(sharedPreferences.getString("Username", null));
         command.addCallback(() -> {
+            /* Log User Into The App */
             App.setUser(command.getUser());
             sharedPreferences.edit().putString("Username", command.getUser().getUsername()).apply();
+
+            /* Show Username And Start Button */
             usernameTextView.setText(command.getUser().getUsername());
-            start_btn.setVisibility(View.VISIBLE);
             start_btn.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MainActivity.class)));
+            for (View view : new View[] {start_btn, usernameTextView}) {
+                view.animate()
+                        .alpha(1f)
+                        .setDuration(1000)
+                        .setListener(null);
+            }
+
         }).run();
     }
 

@@ -27,41 +27,37 @@
         android:textAlignment="center"
         android:textColor="#100F0F"
         android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.125" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
         android:id="@+id/view_profile_btn"
         android:layout_width="105dp"
         android:layout_height="31dp"
+        android:layout_marginTop="8dp"
         android:text="View Profile"
         android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.22" />
+        app:layout_constraintTop_toBottomOf="@+id/username_textview" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Welcome Back,"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.058" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/searchExperiments_btn"
         android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#03A9F4"
         android:drawableLeft="@android:drawable/ic_search_category_default"
         android:drawableTint="@color/white"
@@ -73,22 +69,22 @@
     <Button
         android:id="@+id/viewExperiments_btn"
         android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="16dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#9F76E8"
         android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
         android:drawableTint="@color/white"
         android:text="View Experiments"
         android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/viewSubscriptions_btn"
+        app:layout_constraintStart_toEndOf="@+id/searchExperiments_btn"
         app:layout_constraintTop_toBottomOf="@+id/view_profile_btn" />
 
     <Button
         android:id="@+id/scanBarcode_btn"
         android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginEnd="16dp"
+        android:layout_height="90dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#00BCD4"
         android:drawableLeft="@android:drawable/ic_menu_camera"
@@ -101,43 +97,42 @@
     <Button
         android:id="@+id/addExperiment_btn"
         android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#4CAF50"
         android:drawableLeft="@android:drawable/ic_menu_add"
         android:drawableTint="@color/white"
         android:text="New Experiment"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/viewBarcodesButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchExperiments_btn" />
-
-    <Button
-        android:id="@+id/viewBarcodesButton"
-        android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#F44336"
-        android:drawableLeft="@android:drawable/ic_menu_view"
-        android:drawableTint="@color/white"
-        android:text="View Barcodes"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
+        android:id="@+id/viewBarcodesButton"
+        android:layout_width="180dp"
+        android:layout_height="90dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#F44336"
+        android:drawableLeft="@android:drawable/ic_menu_myplaces"
+        android:drawableTint="@color/white"
+        android:text="Search Users"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/scanBarcode_btn"
+        app:layout_constraintStart_toEndOf="@+id/addExperiment_btn" />
+
+    <Button
         android:id="@+id/viewSubscriptions_btn"
         android:layout_width="180dp"
-        android:layout_height="110dp"
-        android:layout_marginEnd="16dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
         android:backgroundTint="#FFB03C"
         android:drawableLeft="@android:drawable/btn_star"
         android:drawableTint="@color/white"
         android:text="View Subscriptions"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/scanBarcode_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewExperiments_btn" />
-
+        app:layout_constraintTop_toBottomOf="@+id/view_profile_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

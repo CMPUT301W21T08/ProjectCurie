@@ -11,7 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This Fragment provides a UI interface for submitting a measurement trial to an experiment which
@@ -21,32 +22,19 @@ import android.widget.EditText;
  */
 public class MeasurementTrialFragment extends Fragment {
 
-    private MeasurementTrialFragmentInteractionListener listener;
-    private EditText measurementEditText;
-    private EditText barcodeEditText;
-    private Button submitTrialButton;
-    private Button addBarcodeButton;
-
-    /**
-     * Implemented by this Fragment's parent Activity to enable submitting new trials to the
-     * FireStore database and registering bar codes.
-     */
-    public interface MeasurementTrialFragmentInteractionListener {
-        void uploadMeasurementTrial(double value);
-        void addMeasurementBarcode(String barcodeString, double value);
-    }
+    private SubmitTrialActivityInterface listener;
 
     /** Obligatory Empty Constructor */
     public MeasurementTrialFragment() {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
-        if (context instanceof MeasurementTrialFragmentInteractionListener){
-            listener = (MeasurementTrialFragmentInteractionListener) context;
+        if (context instanceof SubmitTrialActivityInterface){
+            listener = (SubmitTrialActivityInterface) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement MeasurementTrialFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement SubmitTrialActivityInterface");
         }
     }
 
@@ -58,21 +46,24 @@ public class MeasurementTrialFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         /* Grab Widgets */
-        measurementEditText = view.findViewById(R.id.measurementTrialEditText);
-        barcodeEditText = view.findViewById(R.id.measurementTrialBarcodeEditText);
-        submitTrialButton = view.findViewById(R.id.measurementTrialSubmitButton);
-        addBarcodeButton = view.findViewById(R.id.measurementTrialSubmitBarcodeButton);
+        Button measurementEditText = view.findViewById(R.id.measurementTrialEditText);
+        Button barcodeEditText = view.findViewById(R.id.measurementTrialBarcodeEditText);
+        Button submitTrialButton = view.findViewById(R.id.measurementTrialSubmitButton);
+        Button addBarcodeButton = view.findViewById(R.id.measurementTrialSubmitBarcodeButton);
+        Button generateQRButton = view.findViewById(R.id.measurementTrialGenerateQRButton);
 
         /* On Clicking Submit, Upload A Measurement Trial To The FireStore Database */
         submitTrialButton.setOnClickListener(v -> {
             double value = Double.parseDouble(measurementEditText.getText().toString());
-            listener.uploadMeasurementTrial(value);
+            listener.uploadTrial(value);
         });
 
         /* Register A Barcode With A Specific Trial Result For This Experiment */
         addBarcodeButton.setOnClickListener(v -> {
             double value = Double.parseDouble(measurementEditText.getText().toString());
-            listener.addMeasurementBarcode(barcodeEditText.getText().toString(), value);
+            listener.addBarcode(barcodeEditText.getText().toString(), value);
         });
+
+        generateQRButton.setOnClickListener(v -> listener.addQR(Double.parseDouble(measurementEditText.getText().toString())));
     }
 }

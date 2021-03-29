@@ -22,6 +22,8 @@
 
             <TextView
                 android:id="@+id/trialCountTextView"
+                android:visibility="invisible"
+                android:alpha="0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -32,6 +34,8 @@
 
             <TextView
                 android:id="@+id/trialMeanTextView"
+                android:visibility="invisible"
+                android:alpha="0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -42,6 +46,8 @@
 
             <TextView
                 android:id="@+id/trialMedianTextView"
+                android:visibility="invisible"
+                android:alpha="0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -52,6 +58,8 @@
 
             <TextView
                 android:id="@+id/trialLowerQuartileTextView"
+                android:visibility="invisible"
+                android:alpha="0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -62,6 +70,8 @@
 
             <TextView
                 android:id="@+id/trialUpperQuartileTextView"
+                android:visibility="invisible"
+                android:alpha="0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -72,6 +82,8 @@
 
             <TextView
                 android:id="@+id/trialStandardDeviationTextView"
+                android:alpha="0"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -82,20 +94,22 @@
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChart"
+                android:alpha="0"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <com.github.mikephil.charting.charts.ScatterChart
                 android:id="@+id/scatterChart"
                 android:layout_width="match_parent"
+                android:alpha="0"
                 android:layout_height="400dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="32dp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
         </LinearLayout>
 
     </ScrollView>

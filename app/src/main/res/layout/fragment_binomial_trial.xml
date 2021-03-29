@@ -34,7 +34,7 @@
         android:switchMinWidth="55dp"
         android:textColor="#000000"
         android:theme="@style/SwitchThemeOverlay"
-        app:layout_constraintBottom_toTopOf="@+id/binomialTrialBarcodeEditText"
+        app:layout_constraintBottom_toTopOf="@+id/integerCountTrialBarcodeEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/binomialTrialSwitch" />
 
     <EditText
-        android:id="@+id/binomialTrialBarcodeEditText"
+        android:id="@+id/integerCountTrialBarcodeEditText"
         android:layout_width="240dp"
         android:layout_height="42dp"
         android:layout_marginStart="16dp"
@@ -62,11 +62,11 @@
         android:ems="10"
         android:hint="Custom Barcode (Optional)"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/binomialTrialGenerateQRButton"
+        app:layout_constraintBottom_toTopOf="@+id/integerCountTrialGenerateQRButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/binomialTrialGenerateQRButton"
+        android:id="@+id/integerCountTrialGenerateQRButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -75,13 +75,13 @@
         android:backgroundTint="#03A9F4"
         android:text="Generate QR"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/binomialTrialSubmitButton"
+        app:layout_constraintBottom_toTopOf="@+id/integerCountTrialSubmitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/binomialTrialSubmitButton"
+        android:id="@+id/integerCountTrialSubmitButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -96,7 +96,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/binomialTrialSubmitBarcodeButton"
+        android:id="@+id/integerCountTrialSubmitBarcodeButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
         android:layout_marginBottom="6dp"
         android:text="Add Barcode"
         android:textColor="#03A9F4"
-        app:layout_constraintBottom_toTopOf="@+id/binomialTrialGenerateQRButton"
+        app:layout_constraintBottom_toTopOf="@+id/integerCountTrialGenerateQRButton"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Add Barcode" />
 
