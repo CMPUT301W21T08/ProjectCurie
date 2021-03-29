@@ -1,34 +1,26 @@
 package com.example.projectcurie;
 
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.widget.EditText;
 
-import androidx.test.espresso.DataInteraction;
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.robotium.solo.Solo;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Executes test for subscribing and unsubscribing to an experiment with geolocation
@@ -37,121 +29,65 @@ import static org.hamcrest.Matchers.is;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class SubscribeExperimentWithGeoLocation {
+    private Solo solo;
 
     @Rule
-    public ActivityTestRule<WelcomeActivity> mActivityTestRule = new ActivityTestRule<>(WelcomeActivity.class);
+    public ActivityTestRule<WelcomeActivity> mActivityTestRule = new ActivityTestRule<>(WelcomeActivity.class, true, true);
 
-    @Test
-    public void subscribeExperimentWithGeoLocation() throws InterruptedException {
-        Thread.sleep(3000);
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.start_button), withText("Start"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatButton.perform(click());
+    @Before
+    public void setup() {
+        solo = new Solo(InstrumentationRegistry.getInstrumentation(), mActivityTestRule.getActivity());
 
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.viewExperiments_btn), withText("View Experiments"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                6),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
+        /* Create Mock Experiment */
+        solo.waitForText("Start");
+        solo.clickOnButton("Start");
+        solo.waitForActivity(".MainActivity");
+        solo.clickOnView(solo.getView(R.id.addExperiment_btn));
+        solo.waitForActivity(".NewExperimentActivity");
 
-        Thread.sleep(3000);
-
-        DataInteraction linearLayout = onData(anything())
-                .inAdapterView(allOf(withId(R.id.experimentListView),
-                        childAtPosition(
-                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                0)))
-                .atPosition(0);
-        linearLayout.perform(click());
-
-        Thread.sleep(3000);
-
-        try {
-
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.submitTrialButton), withText("Submit Trial"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        0),
-                                7),
-                        isDisplayed()));
-        appCompatButton3.perform(click());
-
-        Thread.sleep(3000);
-            ViewInteraction appCompatButton4 = onView(
-                    allOf(withId(R.id.experimentSubscriptionButton), withText("Subscribe"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withClassName(is("android.widget.FrameLayout")),
-                                            0),
-                                    5),
-                            isDisplayed()));
-            appCompatButton4.perform(click());
-
-            Thread.sleep(3000);
-
-            ViewInteraction appCompatButton5 = onView(
-                    allOf(withId(R.id.submitTrialButton), withText("Submit Trial"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withClassName(is("android.widget.FrameLayout")),
-                                            0),
-                                    7),
-                            isDisplayed()));
-            appCompatButton5.perform(click());
-
-            ViewInteraction appCompatButton6 = onView(
-                    allOf(withId(android.R.id.button1), withText("Ok"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withClassName(is("android.widget.ScrollView")),
-                                            0),
-                                    3)));
-            appCompatButton6.perform(scrollTo(), click());
-
-        } catch(Exception e) {
-
-            ViewInteraction appCompatButton6 = onView(
-                    allOf(withId(android.R.id.button1), withText("Ok"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withClassName(is("android.widget.ScrollView")),
-                                            0),
-                                    3)));
-            appCompatButton6.perform(scrollTo(), click());
-
-        }
-
+        solo.enterText((EditText) solo.getView(R.id.titleEditText), "Delete This Experiment");
+        solo.enterText((EditText) solo.getView(R.id.descriptionEditText), "This is a description");
+        solo.enterText((EditText) solo.getView(R.id.minTrialsEditText), "1");
+        solo.enterText((EditText) solo.getView(R.id.regionEditText), "Edmonton");
+        solo.clickOnView(solo.getView(R.id.geolocationSwitch));
+        solo.clickOnButton("Create Experiment");
+        solo.waitForActivity(".MainActivity");
     }
 
+    @After
+    public void tearDown() {
+        /* Clean Up Database */
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference experimentRef = db.collection("experiments").document("Delete This Experiment");
+        CollectionReference questionsRef = experimentRef.collection("questions");
+        questionsRef.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        doc.getReference().collection("answers").get()
+                                .addOnSuccessListener(snapshots -> {
+                                    for (DocumentSnapshot document : snapshots) {
+                                        document.getReference().delete();
+                                    }
+                                });
+                        doc.getReference().delete();
+                    }
+                });
+        experimentRef.delete();
+    }
 
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
+    @Test
+    public void subscribeWithGeolocation() {
+        /* Navigate To Experiment Overview */
+        solo.clickOnView(solo.getView(R.id.viewExperiments_btn));
+        solo.waitForActivity(".ExperimentListActivity");
+        solo.clickOnText("Delete This Experiment");
+        solo.waitForActivity(".ExperimentOverviewActivity");
 
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
+        /* Confirm That Geolocation Warning Appears */
+        solo.clickOnText("Subscribe");
+        assertTrue(solo.waitForText("Unsubscribe"));
+        solo.clickOnText("Submit Trial");
+        solo.waitForDialogToOpen();
+        assertTrue(solo.waitForText("This Experiment Requires Geolocation!"));
     }
 }
