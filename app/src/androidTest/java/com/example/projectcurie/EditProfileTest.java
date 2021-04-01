@@ -80,16 +80,6 @@ public class EditProfileTest {
 
         Thread.sleep(3000);
 
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.editTextPersonName),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.custom),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText.perform(replaceText("Ironman3000"), closeSoftKeyboard());
-
         Thread.sleep(3000);
         ViewInteraction appCompatEditText1 = onView(
                 allOf(withId(R.id.editTextEmailAddress),
@@ -97,7 +87,7 @@ public class EditProfileTest {
                                 childAtPosition(
                                         withId(android.R.id.custom),
                                         0),
-                                1),
+                                0),
                         isDisplayed()));
         appCompatEditText1.perform(replaceText("ironman3000@marvel.com"), closeSoftKeyboard());
         Thread.sleep(3000);
@@ -107,7 +97,7 @@ public class EditProfileTest {
                                 childAtPosition(
                                         withId(android.R.id.custom),
                                         0),
-                                2
+                                1
                                 ),
                         isDisplayed()));
         appCompatEditText2.perform(replaceText("I Am Ironman"), closeSoftKeyboard());

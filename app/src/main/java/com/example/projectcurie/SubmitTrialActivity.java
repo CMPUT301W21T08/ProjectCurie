@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.Locale;
 
 /**
@@ -16,14 +17,13 @@ import java.util.Locale;
  */
 public class SubmitTrialActivity extends AppCompatActivity implements SubmitTrialActivityInterface {
 
-    private FrameLayout fragmentLayout;
     private Experiment experiment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit_trial);
-        fragmentLayout = findViewById(R.id.trialFragmentLayout);
+        FrameLayout fragmentLayout = findViewById(R.id.trialFragmentLayout);
 
         /* Grab Data From Intent */
         this.experiment = (Experiment) getIntent().getSerializableExtra("experiment");
@@ -71,11 +71,13 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
     public void addBarcode(String barcodeString) {
         try {
             BarCode barCode = new BarCode(barcodeString, experiment);
-            if (App.addBarcode(barCode)) {
+            if (App.addScannable(barCode)) {
                 Toast.makeText(this, String.format(Locale.CANADA, "Added Barcode To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Barcode Is Already In Use!", Toast.LENGTH_SHORT).show();
             }
+        } catch (InvalidParameterException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,11 +87,13 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
     public void addBarcode(String barcodeString, int value) {
         try {
             BarCode barCode = new BarCode(barcodeString, experiment, value);
-            if (App.addBarcode(barCode)) {
+            if (App.addScannable(barCode)) {
                 Toast.makeText(this, String.format(Locale.CANADA, "Added Barcode To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Barcode Is Already In Use!", Toast.LENGTH_SHORT).show();
             }
+        } catch (InvalidParameterException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,11 +103,13 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
     public void addBarcode(String barcodeString, boolean value) {
         try {
             BarCode barCode = new BarCode(barcodeString, experiment, value);
-            if (App.addBarcode(barCode)) {
+            if (App.addScannable(barCode)) {
                 Toast.makeText(this, String.format(Locale.CANADA, "Added Barcode To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Barcode Is Already In Use!", Toast.LENGTH_SHORT).show();
             }
+        } catch (InvalidParameterException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,11 +119,13 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
     public void addBarcode(String barcodeString, double value) {
         try {
             BarCode barCode = new BarCode(barcodeString, experiment, value);
-            if (App.addBarcode(barCode)) {
+            if (App.addScannable(barCode)) {
                 Toast.makeText(this, String.format(Locale.CANADA, "Added Barcode To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Barcode Is Already In Use!", Toast.LENGTH_SHORT).show();
             }
+        } catch (InvalidParameterException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,7 +135,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
     public void addQR() {
         try {
             QRCode qrCode = new QRCode(experiment);
-            if (App.addQR(qrCode)) {
+            if (App.addScannable(qrCode)) {
                 Toast.makeText(this, String.format(Locale.CANADA, "Added QR To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 addQR();
@@ -141,7 +149,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
     public void addQR(int value) {
         try {
             QRCode qrCode = new QRCode(experiment, value);
-            if (App.addQR(qrCode)) {
+            if (App.addScannable(qrCode)) {
                 Toast.makeText(this, String.format(Locale.CANADA, "Added QR To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 addQR();
@@ -155,7 +163,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
     public void addQR(boolean value) {
         try {
             QRCode qrCode = new QRCode(experiment, value);
-            if (App.addQR(qrCode)) {
+            if (App.addScannable(qrCode)) {
                 Toast.makeText(this, String.format(Locale.CANADA, "Added QR To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 addQR();
@@ -169,7 +177,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
     public void addQR(double value) {
         try {
             QRCode qrCode = new QRCode(experiment, value);
-            if (App.addQR(qrCode)) {
+            if (App.addScannable(qrCode)) {
                 Toast.makeText(this, String.format(Locale.CANADA, "Added QR To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 addQR();

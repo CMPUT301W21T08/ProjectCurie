@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,8 +47,8 @@ public class MeasurementTrialFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         /* Grab Widgets */
-        Button measurementEditText = view.findViewById(R.id.measurementTrialEditText);
-        Button barcodeEditText = view.findViewById(R.id.measurementTrialBarcodeEditText);
+        EditText measurementEditText = view.findViewById(R.id.measurementTrialEditText);
+        EditText barcodeEditText = view.findViewById(R.id.measurementTrialBarcodeEditText);
         Button submitTrialButton = view.findViewById(R.id.measurementTrialSubmitButton);
         Button addBarcodeButton = view.findViewById(R.id.measurementTrialSubmitBarcodeButton);
         Button generateQRButton = view.findViewById(R.id.measurementTrialGenerateQRButton);

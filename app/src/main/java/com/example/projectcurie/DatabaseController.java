@@ -2,7 +2,6 @@ package com.example.projectcurie;
 
 import android.util.Log;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -94,6 +93,14 @@ public class DatabaseController {
                 .whereArrayContains("subscriptions", App.getUser().getUsername())
                 .get()
                 .addOnSuccessListener((value) -> listener.notifyDataChanged(value, 0));
+    }
+
+    public void getOwnedExperiment(String owner, DatabaseListener listener) {
+        db.collection("experiments")
+                .whereEqualTo("owner", owner)
+                .get()
+                .addOnFailureListener(e -> Log.e("Error", "Could Not Fetch Experiments!"))
+                .addOnSuccessListener(value -> listener.notifyDataChanged(value, 0));
     }
 
     public void executeCommand(DatabaseCommand command) {

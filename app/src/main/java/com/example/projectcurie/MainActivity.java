@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * for other users, submit a new experiment, or scan a barcode to submit an experiment trial.
  * @author Mitchell Labrecque
  */
-public class MainActivity extends AppCompatActivity implements SearchUserFragment.SearchUserFragmentInteractionListener, DatabaseListener {
+public class MainActivity extends AppCompatActivity implements DatabaseListener {
     TextView username;
     Button search_exp_btn;
     Button view_exp_btn;
@@ -109,38 +109,6 @@ public class MainActivity extends AppCompatActivity implements SearchUserFragmen
             intent.setOrientationLocked(false);
             intent.initiateScan();
             Log.i("Info", "Barcode Button Pressed");
-        });
-
-    }
-
-    @Override
-    public void goSearchUser(@NotNull String keywords) {
-        /* Grab Experiments From Database */
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference reference = db.collection("users").document(keywords);
-
-        reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("TAG", "DocumentSnapshotData: " + document.getData());
-                        User tempUser = new User(document.getString("username"));
-                        tempUser.setAbout(document.getString("about"));
-                        tempUser.setEmail(document.getString("email"));
-                        tempUser.setDateJoined(document.getDate("dateJoined"));
-                        Intent intent = new Intent(getApplicationContext(), UserSearchProfileActivity.class);
-                        intent.putExtra("user", tempUser);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "User not found", Toast.LENGTH_LONG).show();
-                        Log.d("Info", "No document", task.getException());
-                    }
-                } else {
-                    Log.d("Failed", "Get failed with");
-                }
-            }
         });
 
     }

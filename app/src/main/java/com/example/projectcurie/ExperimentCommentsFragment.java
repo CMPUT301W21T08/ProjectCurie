@@ -1,10 +1,14 @@
 package com.example.projectcurie;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -13,8 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-
 
 import java.util.ArrayList;
 
@@ -27,8 +31,6 @@ import java.util.ArrayList;
  */
 public class ExperimentCommentsFragment extends Fragment {
 
-    private Button new_comment;
-    private ArrayAdapter<Comment> arrayAdapter;
     private CommentViewer commentViewer;
     private String experiment;
     private ListView listView;
@@ -66,18 +68,19 @@ public class ExperimentCommentsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_experiment_comments, container, false);
+        listView = view.findViewById(R.id.experimentQuestionsListView);
 
         /* Initialize List View */
-
         ArrayList<Comment> questions = new ArrayList<>();
-        listView = view.findViewById(R.id.experimentQuestionsListView);
-        arrayAdapter = new CommentList(getActivity(), questions);
+        CommentList arrayAdapter = new CommentList(getActivity(), questions);
         listView.setAdapter(arrayAdapter);
 
+        /* Fetch And Watch Questions For Changes */
         commentViewer = new CommentViewer(arrayAdapter, questions);
         commentViewer.fetchAndNotifyQuestions(experiment);
 
-        listView.setOnItemClickListener((parent, comment, position, id) -> {
+        /* Set List Item On Click Listener */
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
             Comment question = questions.get(position);
             String qid = question.getId();
             String q_expname = question.getExperiment();
@@ -89,11 +92,59 @@ public class ExperimentCommentsFragment extends Fragment {
         });
 
         /* Set On Click Listener For Adding A New Question */
-        new_comment = view.findViewById(R.id.add_comment_btn);
+        Button new_comment = view.findViewById(R.id.add_comment_btn);
         new_comment.setOnClickListener(v -> {
-            AddCommentFragment fragment = new AddCommentFragment();
-            fragment.show(getActivity().getSupportFragmentManager(), "ADD COMMENT FRAGMENT");
+            new AddCommentDialogFragment().show(getActivity().getSupportFragmentManager(), "ADD COMMENT FRAGMENT");
         });
         return view;
     }
+
+
+
+    /**
+     * This class implements the Dialog Fragment for adding a new question to the FireStore database.
+     *
+     * @author Bo Cen
+     */
+    public static class AddCommentDialogFragment extends DialogFragment {
+
+        private AddCommentDialogFragmentListener listener;
+
+        /** Obligatory Empty Constructor */
+        public AddCommentDialogFragment() { }
+
+        public interface AddCommentDialogFragmentListener {
+            void addComment(String body);
+        }
+
+        @Override
+        public void onAttach(@NonNull Context context) {
+            super.onAttach(context);
+            if (context instanceof AddCommentDialogFragmentListener){
+                listener = (AddCommentDialogFragmentListener) context;
+            } else {
+                throw new RuntimeException(context.toString()
+                        + " must implement AddCommentDialogFragmentListener");
+            }
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_comment, null);
+            EditText comment_body = view.findViewById(R.id.addQuestionEditText);
+
+            return new AlertDialog.Builder(getContext())
+                    .setView(view)
+                    .setTitle("Add Question")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Submit", (dialogInterface, i) -> listener.addComment(comment_body.getText().toString())).create();
+        }
+    }
+
 }

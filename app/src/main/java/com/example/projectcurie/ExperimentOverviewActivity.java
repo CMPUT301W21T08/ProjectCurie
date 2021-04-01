@@ -1,6 +1,7 @@
 package com.example.projectcurie;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -9,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -19,15 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * This class implements a tabbed activity for viewing and commenting on an experiment.
  * @author Joshua Billson
  */
-public class ExperimentOverviewActivity extends AppCompatActivity implements AddCommentFragment.AddCommentDialogFragmentListener {
+public class ExperimentOverviewActivity extends AppCompatActivity implements ExperimentCommentsFragment.AddCommentDialogFragment.AddCommentDialogFragmentListener {
 
-    /* Widgets */
-    private TabLayout tabs;
-    private ViewPager2 viewPager;
-    private StateAdapter stateAdapter;
-
-    /* Data */
-    private User user = App.getUser();
     private Experiment experiment;
 
     @Override
@@ -40,18 +35,29 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
         this.experiment = (Experiment) intent.getSerializableExtra("experiment");
 
         /* Grab Widgets */
-        tabs = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.experimentOverviewViewPager);
+        TabLayout tabs = findViewById(R.id.tabLayout);
+        ViewPager2 viewPager = findViewById(R.id.experimentOverviewViewPager);
 
         /* Initialize Fragment State Adapter */
-        stateAdapter = new StateAdapter(this);
+        StateAdapter stateAdapter = new StateAdapter(this);
         viewPager.setAdapter(stateAdapter);
 
         /* Attach Tabs To Fragment State Adapter */
         String[] tabLabels = {"Overview", "Data", "Comments"};
-        new TabLayoutMediator(tabs, viewPager, (tab, position) -> {
-            tab.setText(tabLabels[position]);
-        }).attach();
+        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(tabLabels[position])).attach();
+
+        /* Setup Back Button */
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
     }
 
     /**
@@ -59,14 +65,13 @@ public class ExperimentOverviewActivity extends AppCompatActivity implements Add
      * @param body
      *     The body of the question we want to post.
      */
-    @Override
     public void addComment(String body) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("experiments")
                 .document(experiment.getTitle())
                 .collection("questions")
                 .document()
-                .set(new Comment(body, user.getUsername(), experiment.getTitle()));
+                .set(new Comment(body, App.getUser().getUsername(), experiment.getTitle()));
     }
 
     /**

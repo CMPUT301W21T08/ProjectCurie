@@ -4,17 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".EditUserDialogFragment">
-
-    <EditText
-        android:id="@+id/editTextPersonName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Username"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginVertical="12dp"
-        android:inputType="textPersonName" />
+    tools:context=".UserProfileActivity">
 
     <EditText
         android:id="@+id/editTextEmailAddress"
@@ -22,8 +12,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Email"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginVertical="12dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="24dp"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -33,7 +24,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:hint="Description"
-        android:layout_marginHorizontal="12dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="12dp"
         android:inputType="textMultiLine"
         android:lines="4" />
