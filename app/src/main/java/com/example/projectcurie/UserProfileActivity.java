@@ -93,7 +93,7 @@ public class UserProfileActivity extends AppCompatActivity implements DatabaseLi
                         .setPositiveButton("Delete", (dialog, which) -> deleteExperiment(position))
                         .create()
                         .show();
-                return false;
+                return true;
             });
         }
 
