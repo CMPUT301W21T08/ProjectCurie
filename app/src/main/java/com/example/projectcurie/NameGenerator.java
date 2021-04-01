@@ -1,11 +1,6 @@
 package com.example.projectcurie;
 
-import android.util.Log;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class for generating unique random user names.

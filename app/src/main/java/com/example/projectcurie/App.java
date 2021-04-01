@@ -4,13 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.TextView;
-
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.zxing.client.android.Intents;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,15 +16,26 @@ import java.util.ArrayList;
 public class App extends Application {
     private static User user;
     private static App instance;
-    private static ArrayList<Scannable> scannables = new ArrayList<>();
+    private static SharedPreferences.Editor editor;
+    private static ArrayList<QRCode> qrCodes = new ArrayList<>();
+    private static ArrayList<BarCode> barCodes = new ArrayList<>();
+    private static final ArrayList<Scannable> scannables = new ArrayList<>();
 
+
+    /**
+     * Called upon app startup. Implements a singleton design pattern by binding the constructed
+     * instance to the static instance attribute.
+     */
     @Override
     public void onCreate() {
         super.onCreate();
         try {
             instance = this;
-            scannables.addAll(getBarcodes());
-            scannables.addAll(getQRCodes());
+            editor = this.getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE).edit();
+            qrCodes = getQRCodes();
+            barCodes = getBarcodes();
+            scannables.addAll(barCodes);
+            scannables.addAll(qrCodes);
         } catch (IOException e) {
             Log.e("Error", "Could Not Deserialize Scannables!");
             e.printStackTrace();
@@ -54,6 +58,13 @@ public class App extends Application {
         App.user = user;
     }
 
+    /**
+     * Given a code, retrieve a matching scannable if it exists. If a match is not found, returns null.
+     * @param code
+     *     The unique identifying code associated with the barcode or QR.
+     * @return
+     *     The matching scannable if found, null otherwise.
+     */
     public static Scannable getScannable(String code) {
         for (Scannable scannable : scannables) {
             Log.i("Bar Code Number", scannable.getCode());
@@ -65,19 +76,24 @@ public class App extends Application {
     }
 
     /**
-     * Add a barcode for submitting a count trial to a given experiment. The barcode must be unique;
-     * if the given code is already associated with a given trial it will be rejected.
-     * @param barcode
+     * Add a barcode or QR code for submitting a trial to this app. The code must be unique;
+     * if the given code is already associated with a given trial it will be rejected. If
+     * successful, the scannable will be saved to shared preference for persistence.
+     * @param scannable
      *     The barcode we want to register.
      * @return
      *     Returns true if the barcode is not already registered, false otherwise.
      * @throws IOException
      *     Thrown if there is an error serializing the barcodes when saving to shared preferences.
      */
-    public static boolean addBarcode(BarCode barcode) throws IOException {
-        if (getScannable(barcode.getCode()) == null) {
-            scannables.add(barcode);
-            instance.saveBarcode(barcode);
+    public static boolean addScannable(Scannable scannable) throws IOException {
+        if (getScannable(scannable.getCode()) == null) {
+            scannables.add(scannable);
+            if (scannable instanceof BarCode) {
+                instance.saveBarcode((BarCode) scannable);
+            } else {
+                instance.saveQR((QRCode) scannable);
+            }
             return true;
         } else {
             return false;
@@ -85,51 +101,73 @@ public class App extends Application {
     }
 
     /**
-     * Add a barcode for submitting a count trial to a given experiment. The barcode must be unique;
-     * if the given code is already associated with a given trial it will be rejected.
-     * @param qrCode
-     *     The QR Code we want to register.
-     * @return
-     *     Returns true if the barcode is not already registered, false otherwise.
+     * Remove a scannable from the app.
+     * @param code
+     *     The unique identifying code associated with the scannable.
      * @throws IOException
-     *     Thrown if there is an error serializing the barcodes when saving to shared preferences.
+     *     Thrown if there is an error serializing the barcodes when updating shared preferences.
      */
-    public static boolean addQR(QRCode qrCode) throws IOException {
-        if (getScannable(qrCode.getCode()) == null) {
-            scannables.add(qrCode);
-            instance.saveQR(qrCode);
-            return true;
+    public static void removeScannable(String code) throws IOException {
+        Scannable scannable = getScannable(code);
+        assert scannable != null;
+        scannables.remove(scannable);
+        if (scannable instanceof BarCode) {
+            instance.deleteBarcode((BarCode) scannable);
         } else {
-            return false;
+            instance.deleteQR((QRCode) scannable);
         }
+
     }
 
+    /**
+     * Get a list of all scannables registered in this app.
+     * @return
+     *     The list of registered scannables.
+     */
     public static ArrayList<Scannable> getScannables() {
         return scannables;
     }
 
+    /* Helper Method For Retrieving Barcodes From Shared Preferences */
     private ArrayList<BarCode> getBarcodes() throws IOException {
         SharedPreferences sharedPreferences = this.getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE);
         String serialString = sharedPreferences.getString("BarCodes", ObjectSerializer.serialize(new ArrayList<BarCode>()));
         return (ArrayList<BarCode>) ObjectSerializer.deserialize(serialString);
     }
 
+    /* Helper Method For Retrieving QR Codes From Shared Preferences */
     private ArrayList<QRCode> getQRCodes() throws IOException {
         SharedPreferences sharedPreferences = this.getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE);
         String serialString = sharedPreferences.getString("QRCodes", ObjectSerializer.serialize(new ArrayList<QRCode>()));
         return (ArrayList<QRCode>) ObjectSerializer.deserialize(serialString);
     }
 
+    /* Helper Method For Saving A Barcode To Shared Preferences */
     private void saveBarcode(BarCode barCode) throws IOException {
-        ArrayList<BarCode> barCodes = this.getBarcodes();
         barCodes.add(barCode);
-        instance.getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE).edit().putString("BarCodes", ObjectSerializer.serialize(barCodes)).apply();
+        editor.remove("BarCodes").apply();
+        editor.putString("BarCodes", ObjectSerializer.serialize(barCodes)).apply();
     }
 
+    /* Helper Method For Saving A QR Code To Shared Preferences */
     private void saveQR(QRCode qrCode) throws IOException {
-        ArrayList<QRCode> qrCodes = this.getQRCodes();
         qrCodes.add(qrCode);
-        instance.getSharedPreferences("ProjectCurie", Context.MODE_PRIVATE).edit().putString("QRCodes", ObjectSerializer.serialize(qrCodes)).apply();
+        editor.remove("QRCodes").apply();
+        editor.putString("QRCodes", ObjectSerializer.serialize(qrCodes)).apply();
+    }
+
+    /* Helper Method For Deleting A Barcode From Shared Preferences */
+    private void deleteBarcode(BarCode barcode) throws IOException {
+        barCodes.remove(barcode);
+        editor.remove("BarCodes").apply();
+        editor.putString("BarCodes", ObjectSerializer.serialize(barCodes)).apply();
+    }
+
+    /* Helper Method For Deleting A QR Code From Shared Preferences */
+    private void deleteQR(QRCode qrCode) throws IOException {
+        qrCodes.remove(qrCode);
+        editor.remove("QRCodes").apply();
+        editor.putString("QRCodes", ObjectSerializer.serialize(qrCodes)).apply();
     }
 
 }

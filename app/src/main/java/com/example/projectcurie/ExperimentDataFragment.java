@@ -28,7 +28,6 @@ import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -47,16 +46,15 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
     private Experiment experiment;
     private ArrayList<Trial> trials;
     private ExperimentStatistics statistics;
-    private boolean isVisible = false;
 
-    TextView trialCountTextView;
-    TextView trialMeanTextView;
-    TextView trialMedianTextView;
-    TextView trialLowerQuartileTextView;
-    TextView trialUpperQuartileTextView;
-    TextView trialStandardDeviationTextView;
-    BarChart barChart;
-    ScatterChart lineChart;
+    private TextView trialCountTextView;
+    private TextView trialMeanTextView;
+    private TextView trialMedianTextView;
+    private TextView trialLowerQuartileTextView;
+    private TextView trialUpperQuartileTextView;
+    private TextView trialStandardDeviationTextView;
+    private BarChart barChart;
+    private ScatterChart lineChart;
 
     public ExperimentDataFragment() {
     }
@@ -189,6 +187,12 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
                     barChart.setVisibility(View.GONE);
                 } else {
                     barChart.setData(barData);
+                    barChart.getAxisLeft().setAxisMinimum(0f);
+                    barChart.getAxisRight().setAxisMinimum(0f);
+                    if (experiment.getType() == ExperimentType.BINOMIAL) {
+                        barChart.getAxisLeft().setAxisMaximum(statistics.totalCount());
+                        barChart.getAxisRight().setAxisMaximum(statistics.totalCount());
+                    }
                     XAxis xAxis = barChart.getXAxis();
                     xAxis.setLabelCount(numberOfBins);
                     xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
@@ -201,6 +205,8 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
                     lineChart.setVisibility(View.GONE);
                 } else {
                     lineChart.setData(scatterData);
+                    lineChart.getAxisLeft().setAxisMinimum(0f);
+                    lineChart.getAxisRight().setAxisMinimum(0f);
                     XAxis xAxis1 = lineChart.getXAxis();
                     xAxis1.setValueFormatter(new DateAxisValueFormatter());
                     xAxis1.setGranularity(Math.max((float) granularity, 1f));

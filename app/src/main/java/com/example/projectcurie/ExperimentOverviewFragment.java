@@ -76,14 +76,26 @@ public class ExperimentOverviewFragment extends Fragment {
         experimentDescription.setText(Html.fromHtml("<b>Description: </b><span>" + this.experiment.getDescription() + "</span>"));
         experimentRegion.setText(Html.fromHtml("<b>Region: </b><span>" + experiment.getRegion() + "</span>"));
         experimentGeolocation.setText(Html.fromHtml("<b>Geolocation Required: </b><span>" + (this.experiment.isGeolocationRequired() ? "True" : "False") + "</span>"));
-        experimentOwner.setText(Html.fromHtml("<b>Owner: </b><span>" + this.experiment.getOwner() + "</span>"));
+        experimentOwner.setText(this.experiment.getOwner());
 
         /* Setup On Click Listener For Subscribing To Experiment */
         subscribeButton = view.findViewById(R.id.experimentSubscriptionButton);
         subscribeButton.setText(experiment.isSubscribed(App.getUser().getUsername()) ? "Unsubscribe" : "Subscribe");
-        subscribeButton.setOnClickListener(v -> {
-            toggleSubscription();
-            subscribeButton.setText(experiment.isSubscribed(App.getUser().getUsername()) ? "Unsubscribe" : "Subscribe");
+        subscribeButton.setOnClickListener(v -> toggleSubscription());
+
+        /* On Clicking On Experiment Owner, Take User To Their Profile */
+        experimentOwner.setOnClickListener(v -> {
+            FetchUserCommand fetchUserCommand = new FetchUserCommand(experiment.getOwner());
+            fetchUserCommand.addCallback(() -> {
+                User user = fetchUserCommand.fetchData();
+                if (user != null) {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), UserProfileActivity.class);
+                    intent.putExtra("user", user);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "User Profile Does Not Exist!", Toast.LENGTH_SHORT).show();
+                }
+            }).run();
         });
 
         /* Setup On Click Listener For Submitting Trials */
@@ -94,27 +106,13 @@ public class ExperimentOverviewFragment extends Fragment {
     }
 
     private void toggleSubscription() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference ref = db.collection("experiments").document(experiment.getTitle());
-
-        /* Run Database Transaction To Toggle Subscription */
-        db.runTransaction(transaction -> {
-            Experiment experiment = transaction.get(ref).toObject(Experiment.class);
-            if (experiment.isSubscribed(App.getUser().getUsername())) {
-                experiment.unsubscribe(App.getUser().getUsername());
-            } else {
-                experiment.subscribe(App.getUser().getUsername());
-            }
-            transaction.set(ref, experiment);
-            return experiment;
-
-            /* On Transaction Success, Update Local Copy Of Experiment & Post Results To UI */
-        }).addOnSuccessListener(experiment -> {
-            this.experiment = experiment;
+        SubscribeCommand subscribeCommand = new SubscribeCommand(experiment.getTitle());
+        subscribeCommand.addCallback(() -> {
+            this.experiment = subscribeCommand.getData();
             subscribeButton.setText(experiment.isSubscribed(App.getUser().getUsername()) ? "Unsubscribe" : "Subscribe");
             String message = experiment.isSubscribed(App.getUser().getUsername()) ? "You Have Subscribed To This Experiment!" : "You Have Unsubscribed From This Experiment!";
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-        });
+        }).run();
     }
 
     /*
@@ -155,13 +153,50 @@ public class ExperimentOverviewFragment extends Fragment {
                 .setTitle("Warning")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setMessage("This Experiment Requires Geolocation!")
-                .setPositiveButton("Ok", (dialog, which) -> {
-                    goToSubmitTrialActivity();
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    Toast.makeText(getContext(), "Nothing Happened", Toast.LENGTH_SHORT).show();
-                })
+                .setPositiveButton("Ok", (dialog, which) -> goToSubmitTrialActivity())
+                .setNegativeButton("Cancel", (dialog, which) -> Toast.makeText(getContext(), "Nothing Happened", Toast.LENGTH_SHORT).show())
                 .create()
                 .show();
+    }
+
+    private static class SubscribeCommand extends DatabaseCommand {
+        private final String experiment;
+        private Experiment experimentObject;
+
+        public SubscribeCommand(String experiment) {
+            this.experiment = experiment;
+        }
+
+        private void putData(Experiment experiment) {
+            this.experimentObject = experiment;
+        }
+
+        public Experiment getData() {
+            return this.experimentObject;
+        }
+
+        @Override
+        public void execute(FirebaseFirestore db) {
+            DocumentReference ref = db.collection("experiments").document(experiment);
+
+            /* Run Database Transaction To Toggle Subscription */
+            db.runTransaction(transaction -> {
+                Experiment experiment = transaction.get(ref).toObject(Experiment.class);
+                if (experiment.isSubscribed(App.getUser().getUsername())) {
+                    experiment.unsubscribe(App.getUser().getUsername());
+                } else {
+                    experiment.subscribe(App.getUser().getUsername());
+                }
+                transaction.set(ref, experiment);
+                return experiment;
+
+            }).addOnSuccessListener(experiment -> {
+                putData(experiment);
+                if (getCallback() != null) {
+                    getCallback().run();
+                }
+            });
+
+        }
     }
 }
