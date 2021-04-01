@@ -71,13 +71,13 @@ public class ExperimentCommentsFragment extends Fragment {
 
         ArrayList<Comment> questions = new ArrayList<>();
         listView = view.findViewById(R.id.experimentQuestionsListView);
-        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, questions);
+        arrayAdapter = new CommentList(getActivity(), questions);
         listView.setAdapter(arrayAdapter);
 
         commentViewer = new CommentViewer(arrayAdapter, questions);
         commentViewer.fetchAndNotifyQuestions(experiment);
 
-        listView.setOnItemClickListener((parent, view1, position, id) -> {
+        listView.setOnItemClickListener((parent, comment, position, id) -> {
             Comment question = questions.get(position);
             String qid = question.getId();
             String q_expname = question.getExperiment();
