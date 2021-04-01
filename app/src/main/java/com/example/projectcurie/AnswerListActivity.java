@@ -51,7 +51,7 @@ public class AnswerListActivity extends AppCompatActivity {
 
         ListView listView = findViewById(R.id.answersListView);
         ArrayList<Comment> answers = new ArrayList<>();
-        ArrayAdapter<Comment> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, answers);
+        ArrayAdapter<Comment> arrayAdapter = new CommentList(this, answers);
         listView.setAdapter(arrayAdapter);
 
         CommentViewer commentViewer = new CommentViewer(arrayAdapter, answers);

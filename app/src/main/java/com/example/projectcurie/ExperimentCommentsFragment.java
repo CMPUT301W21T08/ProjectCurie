@@ -72,7 +72,7 @@ public class ExperimentCommentsFragment extends Fragment {
 
         /* Initialize List View */
         ArrayList<Comment> questions = new ArrayList<>();
-        ArrayAdapter<Comment> arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, questions);
+        CommentList arrayAdapter = new CommentList(getActivity(), questions);
         listView.setAdapter(arrayAdapter);
 
         /* Fetch And Watch Questions For Changes */
