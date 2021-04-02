@@ -98,6 +98,14 @@ public class ExperimentOverviewFragment extends Fragment {
             }).run();
         });
 
+        /* On Click Listener For Showing Trial Geolocation */
+        Button showGeolocationsButton = view.findViewById(R.id.viewGeolocationsButton);
+        showGeolocationsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
+            intent.putExtra("experiment", experiment);
+            startActivity(intent);
+        });
+
         /* Setup On Click Listener For Submitting Trials */
         Button submitButton = view.findViewById(R.id.submitTrialButton);
         submitButton.setOnClickListener(v -> submitTrial());

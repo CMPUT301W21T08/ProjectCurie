@@ -3,6 +3,7 @@ package com.example.projectcurie;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,6 +11,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * This class implements an activity for implementing Google Maps for Geolocation purposes.
@@ -20,9 +26,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * @author Kevin Zhu
  */
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DatabaseListener{
 
     private GoogleMap mMap;
+    private final ArrayList<Trial> trials = new ArrayList<>();
+    private TrialFactory trialFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +40,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        /* Grab Experiment From Intent */
+        Experiment experiment = (Experiment) getIntent().getSerializableExtra("experiment");
+        trialFactory = new TrialFactory(experiment);
+
+        /* Grab Trials For This Experiment */
+        DatabaseController.getInstance().fetchTrials(experiment, this, 0);
     }
 
     /**
@@ -55,4 +70,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jasperAve, 14));
     }
 
+    @Override
+    public void notifyDataChanged(QuerySnapshot data, int returnCode) {
+        /* Get Trials */
+        for (DocumentSnapshot document : data) {
+            trials.add(trialFactory.getTrial(document));
+        }
+
+        /* Confirm That Trials Are Successfully Fetched */
+        for (Trial trial : trials) {
+            Log.i("Trial Coordinates", String.format(Locale.CANADA, "Lat: %f   Long: %f", trial.getLatitude(), trial.getLongitude()));
+        }
+
+    }
 }

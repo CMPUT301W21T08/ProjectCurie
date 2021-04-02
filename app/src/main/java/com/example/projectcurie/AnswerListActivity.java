@@ -33,11 +33,12 @@ public class AnswerListActivity extends AppCompatActivity {
     String poster;
     String questionID;
     String question_ExperimentName;
+    CommentViewer viewer;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        DatabaseController.getInstance().stopWatchingAnswers();
+        viewer.stopWatchingAnswers();
     }
 
     @Override
@@ -50,12 +51,8 @@ public class AnswerListActivity extends AppCompatActivity {
         question_ExperimentName = getIntent().getStringExtra("q_expname");
 
         ListView listView = findViewById(R.id.answersListView);
-        ArrayList<Comment> answers = new ArrayList<>();
-        ArrayAdapter<Comment> arrayAdapter = new CommentList(this, answers);
-        listView.setAdapter(arrayAdapter);
-
-        CommentViewer commentViewer = new CommentViewer(arrayAdapter, answers);
-        commentViewer.fetchAndNotifyAnswers(question_ExperimentName, questionID);
+        viewer = new CommentViewer(listView, this);
+        viewer.viewAnswers(question_ExperimentName, questionID);
 
         Button new_answer = findViewById(R.id.add_answer_btn);
         new_answer.setOnClickListener(v -> new AddAnswerDialogFragment().show(getSupportFragmentManager(), "ADD_ANSWER"));

@@ -46,6 +46,7 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
     private Experiment experiment;
     private ArrayList<Trial> trials;
     private ExperimentStatistics statistics;
+    private TrialFactory trialFactory;
 
     private TextView trialCountTextView;
     private TextView trialMeanTextView;
@@ -77,6 +78,7 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.experiment = (Experiment) getArguments().getSerializable("experiment");
+        this.trialFactory = new TrialFactory(this.experiment);
     }
 
     @Nullable
@@ -108,7 +110,7 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
         /* When New Data Is Available, Compute Statistics And Render To The UI */
         this.trials = new ArrayList<>();
         this.statistics = new ExperimentStatistics(this.trials);
-        DatabaseController.getInstance().watchTrials(experiment, this);
+        DatabaseController.getInstance().watchTrials(experiment, this, 0);
 
         return view;
     }
@@ -221,20 +223,7 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
         trials.clear();
         if (data != null) {
             for (DocumentSnapshot document : data) {
-                switch (experiment.getType().ordinal()) {
-                    case (0):
-                        trials.add(document.toObject(CountTrial.class));
-                        break;
-                    case (1):
-                        trials.add(document.toObject(IntegerCountTrial.class));
-                        break;
-                    case (2):
-                        trials.add(document.toObject(MeasurementTrial.class));
-                        break;
-                    case (3):
-                        trials.add(document.toObject(BinomialTrial.class));
-                        break;
-                }
+                trials.add(trialFactory.getTrial(document));
             }
         }
     }
