@@ -1,23 +1,17 @@
 package com.example.projectcurie;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,27 +94,19 @@ public class UserProfileActivity extends AppCompatActivity implements DatabaseLi
         /* Toggle Edit-Profile / Blacklist-User Button Functionality */
         Button editProfileButton = findViewById(R.id.edit_profile_button);
         if (user.getUsername().equals(App.getUser().getUsername())) {
-            editProfileButton.setOnClickListener(v -> EditUserDialogFragment.newInstance(user).show(getSupportFragmentManager(), "EDIT PROFILE FRAGMENT"));
+            editProfileButton.setOnClickListener(v -> EditProfileDialogFragment.newInstance(user).show(getSupportFragmentManager(), "EDIT PROFILE FRAGMENT"));
         } else {
             User myProfile = App.getUser();
             editProfileButton.setText(myProfile.isBlacklisted(user.getUsername()) ? "Un-Blacklist User" : "Blacklist User");
             editProfileButton.setOnClickListener(v -> {
-                if (myProfile.isBlacklisted(user.getUsername())) {
-                    myProfile.removeBlacklisted(user.getUsername());
-                } else {
-                    myProfile.addBlacklist(user.getUsername());
-                }
-                FirebaseFirestore.getInstance().collection("users").document(myProfile.getUsername()).set(myProfile)
-                        .addOnSuccessListener(aVoid -> {
-                            editProfileButton.setText(myProfile.isBlacklisted(user.getUsername()) ? "Un-Blacklist User" : "Blacklist User");
-                            Toast.makeText(this, String.format(Locale.CANADA, "%s %s!", myProfile.isBlacklisted(user.getUsername()) ? "Blacklisted" : "Un-Blacklisted", user.getUsername()), Toast.LENGTH_SHORT).show();
-                        })
-                        .addOnFailureListener(e -> Log.e("Error", "Couldn't Update User Blacklist Status!"));
+                new BlacklistUserCommand(this, myProfile, user)
+                        .addCallback(() -> editProfileButton.setText(App.getUser().isBlacklisted(user.getUsername()) ? "Un-Blacklist User" : "Blacklist User"))
+                        .run();
             });
         }
 
         /* Showing experiments by user */
-        DatabaseController.getInstance().getOwnedExperiment(user.getUsername(), this);
+        DatabaseController.getInstance().getOwnedExperiment(user.getUsername(), this, 0);
     }
 
     @Override
@@ -130,6 +116,11 @@ public class UserProfileActivity extends AppCompatActivity implements DatabaseLi
             finish();
         }
         return true;
+    }
+
+    public void refreshProfile() {
+        showUserInfo();
+        Toast.makeText(getApplicationContext(), "Profile Updated!", Toast.LENGTH_SHORT).show();
     }
 
     private void deleteExperiment(int position) {
@@ -145,11 +136,6 @@ public class UserProfileActivity extends AppCompatActivity implements DatabaseLi
         new LockExperimentCommand(experiments.get(position), this).run();
     }
 
-    public void refreshProfile() {
-        showUserInfo();
-        Toast.makeText(getApplicationContext(), "Profile Updated!", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void notifyDataChanged(QuerySnapshot data, int returnCode) {
         if (data != null) {
@@ -161,104 +147,16 @@ public class UserProfileActivity extends AppCompatActivity implements DatabaseLi
     }
 
     private void showUserInfo() {
-        /* Showing the username */
         usernameTextView.setText(user.getUsername());
-
-        /* Showing the user email */
         emailTextView.setText(user.getEmail());
-
-        /* Showing the Contact information */
         informationTextView.setText(user.getAbout());
-
-        /* Showing the User join date */
         Date joinDate = user.getDateJoined();
         userDateJoin.setText(String.format("%02d-%02d-%d", joinDate.getDate(), joinDate.getMonth() + 1, joinDate.getYear() + 1900));
     }
 
 
-    /**
-     * This DialogFragment allows a user to enter new values for the editable fields of their profile.
-     * @author Joshua Billson
-     */
-    public static class EditUserDialogFragment extends DialogFragment {
-
-        private UserProfileActivity listener;
-        private EditText emailEditText;
-        private EditText aboutEditText;
-        private User user;
-
-        /** Obligatory Empty Constructor */
-        public EditUserDialogFragment() {
-        }
-
-        /**
-         * Use this for making new instances of EditUserDialogFragment. It binds the user whose profile
-         * we want to edit to this fragment.
-         * @param user
-         *     The user whose details we want to edit.
-         * @return
-         *     A initialized EditUserDialogFragment.
-         */
-        public static EditUserDialogFragment newInstance(User user) {
-            EditUserDialogFragment fragment = new EditUserDialogFragment();
-            Bundle args = new Bundle();
-            args.putSerializable("user", user);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        /** Check that the activity who owns this fragment implements the EditUserCallbackListener interface. */
-        @Override
-        public void onAttach(@NonNull Context context) {
-            super.onAttach(context);
-            if (context instanceof UserProfileActivity){
-                listener = (UserProfileActivity) context;
-            } else {
-                throw new RuntimeException("Must Be Attached To The UserProfileActivity Activity!");
-            }
-        }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            this.user = (User) getArguments().getSerializable("user");
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_edit_user_dialog, null);
-
-            /* Grab Widgets */
-            emailEditText = view.findViewById(R.id.editTextEmailAddress);
-            aboutEditText = view.findViewById(R.id.editTextDescription);
-
-            /* Set UI Fields */
-            emailEditText.setText(user.getEmail());
-            aboutEditText.setText(user.getAbout());
-
-            /* Create The Alert Dialog & Set On Click Listeners */
-            return new AlertDialog.Builder(getContext())
-                    .setView(view)
-                    .setTitle("Edit Profile")
-                    .setNegativeButton("BACK", null)
-                    .setPositiveButton("SUBMIT", (dialog, which) -> {
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        user.setAbout(aboutEditText.getText().toString());
-                        user.setEmail(emailEditText.getText().toString());
-                        db.collection("users").document(user.getUsername())
-                                .set(user)
-                                .addOnSuccessListener(aVoid -> {
-                                    App.setUser(user);
-                                    listener.refreshProfile();
-                                });
-
-                    })
-                    .create();
-        }
-    }
-
-    public static class LockExperimentCommand extends DatabaseCommand {
+    /* Database command for toggling the locked state of an experiment */
+    private static class LockExperimentCommand extends DatabaseCommand {
 
         private final Experiment experiment;
         private final Context context;
@@ -283,4 +181,60 @@ public class UserProfileActivity extends AppCompatActivity implements DatabaseLi
 
         }
     }
+
+
+    /* Database command for toggling the blacklisted status of a given user */
+    private static class BlacklistUserCommand extends DatabaseCommand {
+        private final Context context;
+        private final User user;
+        private final User owner;
+
+        public BlacklistUserCommand(Context context, User owner, User user) {
+            this.context = context;
+            this.owner = owner;
+            this.user = user;
+        }
+
+        @Override
+        public void execute(FirebaseFirestore db) {
+            if (owner.isBlacklisted(user.getUsername())) {
+
+                /* Un-Blacklist User */
+                owner.removeBlacklisted(user.getUsername());
+                App.setUser(owner);
+                db.collection("users").document(owner.getUsername()).set(owner)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(context, String.format(Locale.CANADA, "Un-Blacklisted %s!", user.getUsername()), Toast.LENGTH_SHORT).show();
+                            getCallback().run();
+                        });
+
+            } else {
+
+                /* Add User To Blacklisted */
+                owner.addBlacklist(user.getUsername());
+                App.setUser(owner);
+                db.collection("users").document(owner.getUsername()).set(owner)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(context, String.format(Locale.CANADA, "Blacklisted %s!", user.getUsername()), Toast.LENGTH_SHORT).show();
+                            getCallback().run();
+                        });
+
+                /* Delete All Trials Submitted By The Blacklisted User On Experiments Owner By This User */
+                db.collection("experiments")
+                        .whereEqualTo("owner", owner.getUsername())
+                        .get()
+                        .addOnSuccessListener(experimentQuerySnapshots -> {
+                            for (DocumentSnapshot experimentSnapshot : experimentQuerySnapshots) {
+                                experimentSnapshot.getReference().collection("trials")
+                                        .whereEqualTo("author", user.getUsername())
+                                        .get()
+                                        .addOnSuccessListener(trialQuerySnapshots -> {
+                                            for (DocumentSnapshot trialSnapshot : trialQuerySnapshots) {
+                                                trialSnapshot.getReference().delete();
+                                            }
+                                        });
+                            }
+                        });
+        }
+    }}
 }

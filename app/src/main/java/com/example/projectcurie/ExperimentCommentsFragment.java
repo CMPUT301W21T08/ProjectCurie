@@ -15,18 +15,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 
 /**
  * This class represents the comments associated with an experiment in a tab.
  * This class is a ListView which has a list of questions associated with a class. It bundles information
  * regarding the experiment name and experiment ID to be passed onto the answers ListView. First onclick
- * listener opens listview item selected, second onclick listen opens fragment to add new question.
+ * listener opens ListView item selected, second onclick listen opens fragment to add new question.
  * @author Bo Cen
  */
 public class ExperimentCommentsFragment extends Fragment {
@@ -35,9 +33,16 @@ public class ExperimentCommentsFragment extends Fragment {
     private String experiment;
     private ListView listView;
 
-    public ExperimentCommentsFragment() {
-    }
+    public ExperimentCommentsFragment() { }
 
+    /**
+     * Create a new instance of this fragment while passing in the name of the experiment whose
+     * comments we want to view.
+     * @param experiment
+     *     The experiment whose comments we are interested in.
+     * @return
+     *     A new ExperimentCommentsFragment instance.
+     */
     static ExperimentCommentsFragment newInstance(String experiment){
         ExperimentCommentsFragment fragment = new ExperimentCommentsFragment();
         Bundle args = new Bundle();
@@ -61,27 +66,22 @@ public class ExperimentCommentsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        commentViewer.stopWatching();
+        commentViewer.stopWatchingQuestions();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_experiment_comments, container, false);
-        listView = view.findViewById(R.id.experimentQuestionsListView);
-
-        /* Initialize List View */
-        ArrayList<Comment> questions = new ArrayList<>();
-        CommentList arrayAdapter = new CommentList(getActivity(), questions);
-        listView.setAdapter(arrayAdapter);
 
         /* Fetch And Watch Questions For Changes */
-        commentViewer = new CommentViewer(arrayAdapter, questions);
-        commentViewer.fetchAndNotifyQuestions(experiment);
+        listView = view.findViewById(R.id.experimentQuestionsListView);
+        commentViewer = new CommentViewer(listView, getActivity());
+        commentViewer.viewQuestions(experiment);
 
         /* Set List Item On Click Listener */
         listView.setOnItemClickListener((parent, view1, position, id) -> {
-            Comment question = questions.get(position);
+            Comment question = commentViewer.getComment(position);
             String qid = question.getId();
             String q_expname = question.getExperiment();
             Log.i("Question ID", question.getId());
@@ -93,9 +93,7 @@ public class ExperimentCommentsFragment extends Fragment {
 
         /* Set On Click Listener For Adding A New Question */
         Button new_comment = view.findViewById(R.id.add_comment_btn);
-        new_comment.setOnClickListener(v -> {
-            new AddCommentDialogFragment().show(getActivity().getSupportFragmentManager(), "ADD COMMENT FRAGMENT");
-        });
+        new_comment.setOnClickListener(v -> new AddCommentDialogFragment().show(getActivity().getSupportFragmentManager(), "ADD COMMENT FRAGMENT"));
         return view;
     }
 

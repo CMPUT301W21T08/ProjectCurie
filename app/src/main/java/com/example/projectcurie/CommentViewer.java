@@ -1,6 +1,7 @@
 package com.example.projectcurie;
 
-import android.widget.ArrayAdapter;
+import android.content.Context;
+import android.widget.ListView;
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -14,18 +15,22 @@ import java.util.ArrayList;
  * @author Joshua Billson
  */
 public class CommentViewer implements DatabaseListener {
-    private ArrayList<Comment> comments;
-    private ArrayAdapter<Comment> adapter;
+    private final ArrayList<Comment> comments;
+    private final CommentList adapter;
+    private boolean watching = false;
 
     /**
      * Associate this controller with an ArrayAdapter and its underlying ArrayList so that the
      * list view can be re-rendered whenever a change in the database is detected.
-     * @param adapter
-     *     An ArrayAdapter who is responsible for rendering the contents of comments to the List View.
+     * @param listView
+     *     A list view in which the comments are to be displayed.
+     * @param context
+     *     The context to which the results should be rendered.
      */
-    public CommentViewer(ArrayAdapter<Comment> adapter, ArrayList<Comment> comments) {
-        this.adapter = adapter;
-        this.comments = comments;
+    public CommentViewer(ListView listView, Context context) {
+        comments = new ArrayList<>();
+        adapter = new CommentList(context, comments);
+        listView.setAdapter(adapter);
     }
 
     /**
@@ -35,11 +40,20 @@ public class CommentViewer implements DatabaseListener {
      * @param experiment
      *     The title of the experiment whose questions we want to render.
      */
-    public void fetchAndNotifyQuestions(String experiment) {
-        DatabaseController.getInstance().watchQuestions(experiment, this);
+    public void viewQuestions(String experiment) {
+        if (watching) {
+            throw new IllegalStateException("Error: Attempt To View Questions/Answers Multiple Times!");
+        } else {
+            watching = true;
+            DatabaseController.getInstance().watchQuestions(experiment, this, 0);
+        }
     }
 
-    public void stopWatching() {
+    /**
+     * Removes the watcher placed on questions.
+     */
+    public void stopWatchingQuestions() {
+        watching = false;
         DatabaseController.getInstance().stopWatchingQuestions();
     }
 
@@ -52,8 +66,32 @@ public class CommentViewer implements DatabaseListener {
      * @param questionID
      *     The ID of the question to which these answers belong.
      */
-    public void fetchAndNotifyAnswers(String experiment, String questionID) {
-        DatabaseController.getInstance().watchAnswers(experiment, questionID, this);
+    public void viewAnswers(String experiment, String questionID) {
+        if (watching) {
+            throw new IllegalStateException("Error: Attempt To View Questions/Answers Multiple Times!");
+        } else {
+            watching = true;
+            DatabaseController.getInstance().watchAnswers(experiment, questionID, this, 0);
+        }
+    }
+
+    /**
+     * Removes the watcher placed on answers.
+     */
+    public void stopWatchingAnswers() {
+        watching = false;
+        DatabaseController.getInstance().stopWatchingAnswers();
+    }
+
+    /**
+     * Return a comment in the ListView at a given index.
+     * @param position
+     *     The index of the comment we want to retrieve.
+     * @return
+     *     The comment at ListView[position].
+     */
+    public Comment getComment(int position) {
+        return comments.get(position);
     }
 
     @Override
