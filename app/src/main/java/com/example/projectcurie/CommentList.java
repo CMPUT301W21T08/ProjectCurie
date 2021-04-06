@@ -24,6 +24,7 @@ public class CommentList extends ArrayAdapter<Comment> {
         this.comments = comments;
         this.context = context;
     }
+
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
         if (view == null){

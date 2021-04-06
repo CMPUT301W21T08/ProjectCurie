@@ -1,7 +1,6 @@
 package com.example.projectcurie;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -26,6 +25,7 @@ public class SubmitTrialCommand extends DatabaseCommand  {
     private final Experiment experiment;
     private final String author;
     private final Context context;
+    private final GeoLocation geoLocation;
 
     private boolean success;
     private int count;
@@ -48,6 +48,7 @@ public class SubmitTrialCommand extends DatabaseCommand  {
             this.experiment = experiment;
             this.author = author;
             this.context = context;
+            this.geoLocation = new GeoLocation(context);
         }
     }
 
@@ -71,6 +72,7 @@ public class SubmitTrialCommand extends DatabaseCommand  {
             this.author = author;
             this.success = success;
             this.context = context;
+            this.geoLocation = new GeoLocation(context);
         }
     }
 
@@ -94,6 +96,7 @@ public class SubmitTrialCommand extends DatabaseCommand  {
             this.author = author;
             this.count = count;
             this.context = context;
+            this.geoLocation = new GeoLocation(context);
         }
     }
 
@@ -117,6 +120,7 @@ public class SubmitTrialCommand extends DatabaseCommand  {
             this.author = author;
             this.measurement = measurement;
             this.context = context;
+            this.geoLocation = new GeoLocation(context);
         }
     }
 
@@ -167,13 +171,13 @@ public class SubmitTrialCommand extends DatabaseCommand  {
     /* Helper Factory Method For Constructing A Trial Of The Appropriate Type */
     private Trial trialFactory(ExperimentType type) {
         if (type == ExperimentType.COUNT) {
-            return (experiment.isGeolocationRequired()) ? new CountTrial(experiment.getTitle(), author, new GeoLocation(context).getLocation()) : new CountTrial(experiment.getTitle(), author);
+            return (experiment.isGeolocationRequired()) ? new CountTrial(experiment.getTitle(), author, geoLocation.getLocation()) : new CountTrial(experiment.getTitle(), author);
         } else if (type == ExperimentType.INTEGER_COUNT) {
-            return (experiment.isGeolocationRequired()) ? new IntegerCountTrial(experiment.getTitle(), author, new GeoLocation(context).getLocation(), count) : new IntegerCountTrial(experiment.getTitle(), author, count);
+            return (experiment.isGeolocationRequired()) ? new IntegerCountTrial(experiment.getTitle(), author, geoLocation.getLocation(), count) : new IntegerCountTrial(experiment.getTitle(), author, count);
         } else if (type == ExperimentType.BINOMIAL) {
-            return (experiment.isGeolocationRequired()) ? new BinomialTrial(experiment.getTitle(), author, new GeoLocation(context).getLocation(), success) : new BinomialTrial(experiment.getTitle(), author, success);
+            return (experiment.isGeolocationRequired()) ? new BinomialTrial(experiment.getTitle(), author, geoLocation.getLocation(), success) : new BinomialTrial(experiment.getTitle(), author, success);
         } else {
-            return (experiment.isGeolocationRequired()) ? new MeasurementTrial(experiment.getTitle(), author, new GeoLocation(context).getLocation(), measurement) : new MeasurementTrial(experiment.getTitle(), author, measurement);
+            return (experiment.isGeolocationRequired()) ? new MeasurementTrial(experiment.getTitle(), author, geoLocation.getLocation(), measurement) : new MeasurementTrial(experiment.getTitle(), author, measurement);
         }
     }
 }

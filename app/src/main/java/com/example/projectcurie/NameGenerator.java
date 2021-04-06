@@ -9,11 +9,11 @@ import java.util.Random;
 public class NameGenerator {
 
     private static final String[] nouns = {"Wizard", "Rice", "Aubergine", "Tortilla", "Sundae",
-            "Potato", "Cheese", "Badger", "Omelette", "Umbrella", "Licorice", "Ruby", "Cantaloupe",
+            "Potato", "Cheese", "Badger", "Omelette", "Umbrella", "Licorice", "Milkshake", "Cantaloupe",
             "Soup", "Crayon", "Tomato", "Banana", "Giraffe", "Snake", "Wasabi", "Oatmeal", "Yam",
-            "Pancake", "Sushi", "Wren", "Bear", "Fox"};
+            "Pancake", "Sushi", "Oatmeal", "Baguette", "Fox"};
 
-    private static final String[] adjectives = {"Runny", "Soggy", "Iced", "Cold", "Ingenious",
+    private static final String[] adjectives = {"Runny", "Scintillating", "Iced", "Ingenious",
             "Clever", "Observant", "Confused", "Excited", "Melodic", "Diligent", "Curious",
             "Lucky", "Dramatic", "Sassy", "Tangy", "Tasty", "Clumsy", "Inquisitive", "Quixotic",
             "Magical", "Exuberant", "Witty", "Vivacious", "Dazzling", "Prickly", "Slippery",
