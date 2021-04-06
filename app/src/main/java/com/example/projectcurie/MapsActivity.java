@@ -11,6 +11,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.shape.MarkerEdgeTreatment;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -61,13 +62,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        // Add a marker in Sydney and move the camera
-        LatLng jasperAve = new LatLng(53.540967, -113.524325);
-        LatLng victoriaPark = new LatLng(53.533516, -113.522431);
-        mMap.addMarker(new MarkerOptions().position(jasperAve).title("Count Electric Cars"));
-        mMap.addMarker(new MarkerOptions().position(victoriaPark).title("Count Monarch Butterflies"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jasperAve, 14));
     }
 
     @Override
@@ -82,5 +76,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.i("Trial Coordinates", String.format(Locale.CANADA, "Lat: %f   Long: %f", trial.getLatitude(), trial.getLongitude()));
         }
 
+        // Iterate over Trials to create markers
+        for(Trial trial: trials){
+            double latitude = trial.getLatitude();
+            double longitude = trial.getLongitude();
+            LatLng latLng = new LatLng(latitude, longitude);
+            mMap.addMarker(new MarkerOptions().position(latLng).title(trial.getExperiment()));
+        }
     }
 }
