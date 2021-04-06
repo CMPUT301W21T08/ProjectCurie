@@ -41,6 +41,11 @@ public class AnswerListActivity extends AppCompatActivity {
         viewer.stopWatchingAnswers();
     }
 
+    /**
+     * Gets the username of poster saved in App, fetches question ID and experiment name to add to view.
+     * Listview is presented here to show list of answers.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +111,9 @@ public class AnswerListActivity extends AppCompatActivity {
 
         @NonNull
         @Override
+        /**
+         * Creates dialog fragment which takes in the body of an answer from a user.
+         */
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_answer, null);
             EditText answer_body = view.findViewById(R.id.addAnswerEditText);

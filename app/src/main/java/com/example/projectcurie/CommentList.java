@@ -14,7 +14,12 @@ import androidx.annotation.Nullable;
 
 
 import java.util.ArrayList;
-
+/**
+ * This class is an ArrayAdapter meant to contain both the comment body and author of a comment.
+ * An onclicklistener is set to listen to when a user clicks on the author name which uses the
+ * FetchUserCommand to pull up the author profile.
+ * Base code taken from Abdul Ali Bangash, "Lab 3", 2021-02-04, Public Domain, https://eclass.srv.ualberta.ca/mod/resource/view.php?id=4829655
+ */
 public class CommentList extends ArrayAdapter<Comment> {
     public ArrayList<Comment> comments;
     private final Context context;
@@ -31,12 +36,17 @@ public class CommentList extends ArrayAdapter<Comment> {
             view = LayoutInflater.from(context).inflate(R.layout.commentlist,parent,false);
         }
 
+        /*Body and author are assigned text.*/
         Comment comment = comments.get(position);
         TextView comment_item = view.findViewById(R.id.comment);
         TextView btn = view.findViewById(R.id.profile_btn);
         comment_item.setText(comment.getBody());
         btn.setText(comment.getPoster());
 
+        /**
+         * Listener to check if an author name is pressed. Activates UserProfileActivity on click.
+         * Toast sent to the user if profile does not exist.
+         */
         btn.setOnClickListener(v -> {
             FetchUserCommand fetchUserCommand = new FetchUserCommand(comment.getPoster());
             fetchUserCommand.addCallback(() -> {
