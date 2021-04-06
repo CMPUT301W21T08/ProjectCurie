@@ -6,16 +6,13 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.function.BiFunction;
 
 /**
  * This class stores all trials associated with a given experiment and provides methods for
@@ -48,6 +45,11 @@ public class ExperimentStatistics implements Serializable {
         return values.size();
     }
 
+    /**
+     * Get the minimum value submitted to the experiment.
+     * @return
+     *     The minimum trial result submitted to the experiment.
+     */
     public double min() {
         extractValues();
         if (trials.size() == 0) {
@@ -57,6 +59,11 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /**
+     * Get the maximum value submitted to the experiment.
+     * @return
+     *     The maximum trial result submitted to the experiment.
+     */
     public double max() {
         extractValues();
         if (trials.size() == 0) {
@@ -84,6 +91,11 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /**
+     * The median value of all trials submitted to this experiment.
+     * @return
+     *     The median trial result for this experiment.
+     */
     public double median() {
         extractValues();
         if (values.size() == 0) {
@@ -97,6 +109,11 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /**
+     * The first quartile for all trials submitted to the experiment.
+     * @return
+     *     The value of the first quartile for all trial results on this experiment.
+     */
     public double lowerQuartile() {
         extractValues();
         if (values.size() == 0) {
@@ -116,6 +133,11 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /**
+     * The third quartile for all trials submitted to the experiment.
+     * @return
+     *     The value of the third quartile for all trial results on this experiment.
+     */
     public double upperQuartile() {
         extractValues();
         if (values.size() == 0) {
@@ -135,6 +157,11 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /**
+     * The standard deviation of all trial results posted to an experiment.
+     * @return
+     *     The standard deviation of the results of an experiment.
+     */
     public double standardDeviation() {
         extractValues();
         if (totalCount() == 0) {
@@ -149,6 +176,15 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /**
+     * Populates an array of histogram entries with values for the results of an experiment.
+     * @param entries
+     *     The histogram entries we want to fill in.
+     * @param labels
+     *     An array of labels associated with each histogram entry.
+     * @return
+     *     The total number of entries inserted.
+     */
     public int populateHistogram(ArrayList<BarEntry> entries, ArrayList<String> labels) {
         extractValues();
         if (totalCount() == 0) {
@@ -162,6 +198,13 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /**
+     * Populates an array of scatter chart entries with values for the results of an experiment.
+     * @param entries
+     *     The scatter chart entries we want to fill in.
+     * @return
+     *     The granularity (distance between ticks on the X-Axis) of the populated scatter plot.
+     */
     public float populateScatterChart(ArrayList<Entry> entries) {
         float granularity = 1.0f;
         trials.sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
@@ -218,19 +261,39 @@ public class ExperimentStatistics implements Serializable {
         return granularity;
     }
 
+    /**
+     * Notify this object that the underlying data has changed since the last time statistics
+     * were computed.
+     */
     public void notifyDataChanged() {
         extracted = false;
     }
 
+    /**
+     * Return all trials currently associated with the experiment with which this object is concerned.
+     * @return
+     *     The trials for the experiment we are interested in.
+     */
     public ArrayList<Trial> getTrials() {
         return trials;
     }
 
+    /**
+     * Set the trials for this object on which we want to compute statistics.
+     * @param trials
+     *     The trials we are interested in.
+     */
     public void setTrials(ArrayList<Trial> trials) {
         this.trials = trials;
     }
 
-    /* Helper method for extracting a value from different types of trial. */
+    /**
+     *  Helper method for extracting a value from different types of trial.
+     * @param trial
+     *     The trial whose value we want to extract.
+     * @return
+     *     The trial value represented as a double.
+     */
     public static double getValue(Trial trial) {
         if (trial instanceof CountTrial) {
             CountTrial countTrial = (CountTrial) trial;
@@ -247,6 +310,7 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /* Get the number of trials submitted by user. */
     private HashMap<String, Integer> extractCountByUser() {
         HashMap<String, Integer> countsByUser = new HashMap<>();
         for (Trial trial : trials) {
@@ -260,6 +324,7 @@ public class ExperimentStatistics implements Serializable {
         return countsByUser;
     }
 
+    /* Extract the values of all trials. */
     private void extractValues() {
         if (!extracted) {
             values.clear();
@@ -280,6 +345,7 @@ public class ExperimentStatistics implements Serializable {
         }
     }
 
+    /* Helper method for populating a histogram with integer count trials */
     private int populateHistogramIntegerCount(ArrayList<BarEntry> entries, ArrayList<String> labels) {
         int countsSize = (int) max() + 1;
         int[] counts = new int[countsSize];
@@ -302,6 +368,7 @@ public class ExperimentStatistics implements Serializable {
         return numberOfBins;
     }
 
+    /* Helper method for populating a histogram with binomial trials */
     private int populateHistogramBinomial(ArrayList<BarEntry> entries, ArrayList<String> labels) {
         int falseTrials = 0;
         int trueTrials = 0;
@@ -319,6 +386,7 @@ public class ExperimentStatistics implements Serializable {
         return 2;
     }
 
+    /* Helper method for populating a histogram with measurement trials */
     private int populateHistogramMeasurement(ArrayList<BarEntry> entries, ArrayList<String> labels) {
         /* Calculate Bin Width & Number Of Bins */
         double min = min();

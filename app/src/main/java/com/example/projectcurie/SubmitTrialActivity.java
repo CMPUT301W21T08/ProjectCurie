@@ -72,6 +72,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
         try {
             BarCode barCode = new BarCode(barcodeString, experiment);
             if (App.addScannable(barCode)) {
+                showScannable(barCode);
                 Toast.makeText(this, String.format(Locale.CANADA, "Added Barcode To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Barcode Is Already In Use!", Toast.LENGTH_SHORT).show();
@@ -88,6 +89,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
         try {
             BarCode barCode = new BarCode(barcodeString, experiment, value);
             if (App.addScannable(barCode)) {
+                showScannable(barCode);
                 Toast.makeText(this, String.format(Locale.CANADA, "Added Barcode To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Barcode Is Already In Use!", Toast.LENGTH_SHORT).show();
@@ -104,6 +106,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
         try {
             BarCode barCode = new BarCode(barcodeString, experiment, value);
             if (App.addScannable(barCode)) {
+                showScannable(barCode);
                 Toast.makeText(this, String.format(Locale.CANADA, "Added Barcode To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Barcode Is Already In Use!", Toast.LENGTH_SHORT).show();
@@ -120,6 +123,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
         try {
             BarCode barCode = new BarCode(barcodeString, experiment, value);
             if (App.addScannable(barCode)) {
+                showScannable(barCode);
                 Toast.makeText(this, String.format(Locale.CANADA, "Added Barcode To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Barcode Is Already In Use!", Toast.LENGTH_SHORT).show();
@@ -136,6 +140,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
         try {
             QRCode qrCode = new QRCode(experiment);
             if (App.addScannable(qrCode)) {
+                showScannable(qrCode);
                 Toast.makeText(this, String.format(Locale.CANADA, "Added QR To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 addQR();
@@ -150,6 +155,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
         try {
             QRCode qrCode = new QRCode(experiment, value);
             if (App.addScannable(qrCode)) {
+                showScannable(qrCode);
                 Toast.makeText(this, String.format(Locale.CANADA, "Added QR To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 addQR();
@@ -164,6 +170,7 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
         try {
             QRCode qrCode = new QRCode(experiment, value);
             if (App.addScannable(qrCode)) {
+                showScannable(qrCode);
                 Toast.makeText(this, String.format(Locale.CANADA, "Added QR To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 addQR();
@@ -178,12 +185,21 @@ public class SubmitTrialActivity extends AppCompatActivity implements SubmitTria
         try {
             QRCode qrCode = new QRCode(experiment, value);
             if (App.addScannable(qrCode)) {
+                showScannable(qrCode);
                 Toast.makeText(this, String.format(Locale.CANADA, "Added QR To %s!", experiment.getTitle()), Toast.LENGTH_SHORT).show();
             } else {
                 addQR();
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void showScannable(Scannable scannable) {
+        if (scannable instanceof BarCode) {
+            ScannableDialogFragment.newInstance((BarCode) scannable).show(getSupportFragmentManager(), "SHOW BARCODE DIALOG FRAGMENT");
+        } else {
+            ScannableDialogFragment.newInstance((QRCode) scannable).show(getSupportFragmentManager(), "SHOW BARCODE DIALOG FRAGMENT");
         }
     }
 }

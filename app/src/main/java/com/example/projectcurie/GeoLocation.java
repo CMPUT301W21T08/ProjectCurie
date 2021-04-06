@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,6 +17,13 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+
+/**
+ * This class is used to acquire geolocation of the user.
+ * Attribution: Velmurugan Murugesan, https://howtodoandroid.medium.com
+ * Source: https://howtodoandroid.medium.com/how-to-get-current-latitude-and-longitude-in-android-example-35437a51052a
+ * @author Velmurugan Murugesan
+ */
 class GeoLocation extends Service implements LocationListener {
     private final Context mContext;
 
@@ -38,16 +44,20 @@ class GeoLocation extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
     public GeoLocation(Context context) {
         this.mContext = context;
-        getLocation();
     }
 
+    /**
+     * Get the current location of the user.
+     * @return
+     *    The current location.
+     */
     public Location getLocation() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
@@ -59,8 +69,8 @@ class GeoLocation extends Service implements LocationListener {
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            if (!isGPSEnabled && !isNetworkEnabled) {
-                // no network provider is enabled
+            if (!isGPSEnabled && !isNetworkEnabled) { // no network provider is enabled
+                Log.e("Error", "GPS & Network Are Disabled!");
             } else {
                 this.canGetLocation = true;
                 // First get location from Network Provider
@@ -123,7 +133,6 @@ class GeoLocation extends Service implements LocationListener {
      * Stop using GPS listener
      * Calling this function will stop using GPS in your app
      * */
-
     public void stopUsingGPS(){
         if(locationManager != null){
             locationManager.removeUpdates(GeoLocation.this);
@@ -133,7 +142,6 @@ class GeoLocation extends Service implements LocationListener {
     /**
      * Function to get latitude
      * */
-
     public double getLatitude(){
         if(location != null){
             latitude = location.getLatitude();
@@ -146,7 +154,6 @@ class GeoLocation extends Service implements LocationListener {
     /**
      * Function to get longitude
      * */
-
     public double getLongitude(){
         if(location != null){
             longitude = location.getLongitude();
@@ -160,7 +167,6 @@ class GeoLocation extends Service implements LocationListener {
      * Function to check GPS/wifi enabled
      * @return boolean
      * */
-
     public boolean canGetLocation() {
         return this.canGetLocation;
     }
@@ -169,7 +175,6 @@ class GeoLocation extends Service implements LocationListener {
      * Function to show settings alert dialog
      * On pressing Settings button will lauch Settings Options
      * */
-
     public void showSettingsAlert(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
@@ -180,19 +185,13 @@ class GeoLocation extends Service implements LocationListener {
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
-            }
+        alertDialog.setPositiveButton("Settings", (dialog, which) -> {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            mContext.startActivity(intent);
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         alertDialog.show();
     }
 
@@ -217,4 +216,3 @@ class GeoLocation extends Service implements LocationListener {
         return null;
     }
 }
-///Author https://howtodoandroid.medium.com/how-to-get-current-latitude-and-longitude-in-android-example-35437a51052a
