@@ -1,6 +1,6 @@
 # ProjectCurie
 
-## About
+## Overview
 CMPUT 301 - Winter 2021 project. ProjectCurie is a crowdsourcing app for Android that allows users to create, view, and submit results to experiments. Users can also subscribe, view statistics, and comment on experiments. Some experiments may have geolocation enabled, in which case users may view a map of geolocations for all trials submitted to an experiment. Users have the option to register a QR code or barcode with the app to serve as a specific trial result for a given experiment. Barcodes can then be scanned from within the app by accessing the user's camera to submit a trial.
 
 ## Demo Video
