@@ -10,10 +10,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.shape.MarkerEdgeTreatment;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.LatLngOrBuilder;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -77,11 +79,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         // Iterate over Trials to create markers
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
         for(Trial trial: trials){
             double latitude = trial.getLatitude();
             double longitude = trial.getLongitude();
             LatLng latLng = new LatLng(latitude, longitude);
-            mMap.addMarker(new MarkerOptions().position(latLng).title(trial.getExperiment()));
+            boundsBuilder.include(latLng);
+            mMap.addMarker(new MarkerOptions().position(latLng).title(trial.getAuthor()));
         }
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));
     }
 }
