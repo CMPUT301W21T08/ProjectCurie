@@ -18,3 +18,7 @@ CMPUT 301 - Winter 2021 project. ProjectCurie is a crowdsourcing app for Android
 **Attribution:** William Seemann  
 **Source:** https://www.javatips.net/api/web2-android-master/Tilos/src/pontezit/android/tilos/com/utils/ObjectSerializer.java  
 
+**Comment ArrayAdapter**  
+**Attribution:** Abdul Ali Bangash  
+**Source:** https://eclass.srv.ualberta.ca/mod/resource/view.php?id=4829655
+
