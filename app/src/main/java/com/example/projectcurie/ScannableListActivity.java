@@ -1,25 +1,21 @@
 package com.example.projectcurie;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.print.PrintHelper;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * Implements an activity for viewing, deleting, and printing all QR codes and barcodes that the
+ * user has registered with the app.
+ * @author Joshua Billson
+ */
 public class ScannableListActivity extends AppCompatActivity {
 
     ArrayList<Scannable> scannables;
@@ -30,11 +26,13 @@ public class ScannableListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scannable_list);
 
 
+        /* Initialize The Scannable List View */
         scannables = App.getScannables();
         ListView listView = findViewById(R.id.scannableListView);
         ScannableArrayAdapter arrayAdapter = new ScannableArrayAdapter(this, scannables);
         listView.setAdapter(arrayAdapter);
 
+        /* Set An On Click Listener For Viewing/Printing A Barcode Or QR Code When It Is Tapped */
         listView.setOnItemClickListener((parent, view, position, id) -> {
             if (scannables.get(position) instanceof BarCode) {
                 ScannableDialogFragment.newInstance((BarCode) scannables.get(position)).show(getSupportFragmentManager(), "SHOW BARCODE DIALOG FRAGMENT");
@@ -43,6 +41,7 @@ public class ScannableListActivity extends AppCompatActivity {
             }
         });
 
+        /* Set An On Click Listener For Deleting A Barcode Or QR Code When It Is Long-Pressed */
         listView.setOnItemLongClickListener((parent, view, position, id) -> {
             Scannable scannable = scannables.get(position);
             new AlertDialog.Builder(this)

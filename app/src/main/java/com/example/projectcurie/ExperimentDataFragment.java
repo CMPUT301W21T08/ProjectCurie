@@ -38,8 +38,9 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * This class currently doesn't do anything interesting.
- * This class will implement experiment data and statistics in phase 4.
+ * Fragment which implements the experiment data tab in the Experiment Overview Activity. Displays
+ * common statistics as well as a histogram and scatter chart of results.
+ * @author Joshua Billson
  */
 public class ExperimentDataFragment extends Fragment implements DatabaseListener {
 
@@ -60,6 +61,13 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
     public ExperimentDataFragment() {
     }
 
+    /**
+     * Initialize a new fragment.
+     * @param experiment
+     *     The experiment whose data we are interested in.
+     * @return
+     *     The fragment instance.
+     */
     public static ExperimentDataFragment newInstance(Experiment experiment) {
         ExperimentDataFragment fragment = new ExperimentDataFragment();
         Bundle bundle = new Bundle();
@@ -219,6 +227,7 @@ public class ExperimentDataFragment extends Fragment implements DatabaseListener
         }).start();
     }
 
+    /* Given a FireStore QuerySnapshot, extract the Trial objects. */
     private void extractTrials(QuerySnapshot data) {
         trials.clear();
         if (data != null) {
