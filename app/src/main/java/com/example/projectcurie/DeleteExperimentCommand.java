@@ -4,9 +4,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This command deletes an experiment and all associated questions, answers, and trials from the
+ * FireStore database.
+ * @author Joshua Billson
+ */
 public class DeleteExperimentCommand extends DatabaseCommand {
     final private String experiment;
 
+    /**
+     * Construct a command to delete a specific experiment and all associated questions, answers,
+     * and trials from the database.
+     * @param experiment
+     *     The title of the experiment we want to remove.
+     */
     public DeleteExperimentCommand(String experiment) {
         this.experiment = experiment;
     }

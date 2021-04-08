@@ -13,11 +13,22 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * This class implements an array adapter for displaying a list view of Scannable objects.
+ * @author Joshua Billson
+ */
 public class ScannableArrayAdapter extends ArrayAdapter<Scannable> {
 
     private final Context context;
     private final ArrayList<Scannable> scannables;
 
+    /**
+     * Create a new scannable array adapter.
+     * @param context
+     *     The context (activity or fragment) in which this adapter should render its results.
+     * @param scannables
+     *     The list of scannables we want to display.
+     */
     public ScannableArrayAdapter(@NonNull Context context, @NonNull ArrayList<Scannable> scannables) {
         super(context, 0, scannables);
         this.context = context;

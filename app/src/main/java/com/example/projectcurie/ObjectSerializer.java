@@ -26,6 +26,7 @@ import java.io.Serializable;
 
 /**
  * Serializes an object into a string. Useful for storing objects to shared preferences.
+ * @author William Seemann
  */
 public class ObjectSerializer {
 

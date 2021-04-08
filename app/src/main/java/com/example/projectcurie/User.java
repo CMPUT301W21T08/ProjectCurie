@@ -15,8 +15,16 @@ public class User implements Serializable {
     private Date dateJoined;
     private ArrayList<String> blacklisted;
 
+    /**
+     * Empty constructor needed by FireStore to deserialize object.
+     */
     public User(){}
 
+    /**
+     * Create a new user.
+     * @param username
+     *     The username for the new user.
+     */
     public User(String username) {
         this.username = username;
         this.email = "";
@@ -25,16 +33,31 @@ public class User implements Serializable {
         this.blacklisted = new ArrayList<>();
     }
 
+    /**
+     * Remove a given username from this user's list of blacklisted users.
+     * @param username
+     *     The username of the user we want to un-blacklist.
+     */
     public void removeBlacklisted(String username) {
         this.blacklisted.remove(username);
     }
 
+    /**
+     * Add a given user to this user's list of blacklisted users.
+     * @param username
+     *     The username of the user we want to blacklist.
+     */
     public void addBlacklist(String username) {
         if (! this.blacklisted.contains(username)) {
             this.blacklisted.add(username);
         }
     }
 
+    /**
+     * Check whether a given user is blacklisted by this user.
+     * @param username
+     *     The username of the user we want to check.
+     */
     public boolean isBlacklisted(String username) {
         return this.blacklisted.contains(username);
     }
