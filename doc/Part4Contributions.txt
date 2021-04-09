@@ -2,22 +2,30 @@ Part 4 Contributions
 
 Joshua Billson
 1)  Publish Experiments (US 01.01.01)
-2)  Execute Trials (US 01.05.01)
-3)  Show Statistics (US 01.05.01)
-4)  Show Histogram Of Experiment Results (US 01.06.01)
-5)  Show Scatter Plot Of Experiment Results (US 01.07.01)
-6)  Ask Questions (US 02.01.01)
-7)  Browse Questions (US 02.03.01)
-8)  Users Have A Profile (US 04.01.01)
-9)  Users Can Edit Their Profile Information (US 04.02.01)
-10) Login/Registration (US 04.04.01)
-11) Experiments Can Be Searched By Keyword (US 05.01.01)
-12) Experiment Search Results (US 05.02.01)
-13) Owners May Specify If Geolocation Is Required (US 06.01.01)
+2)  Delete Experiments (US 01.02.01)
+3)  Lock Experiments (US 01.03.01)
+4)  Execute Trials (US 01.05.01)
+5)  Show Histogram Of Experiment Results (US 01.06.01)
+6)  Show Scatter Plot Of Experiment Results (US 01.07.01)
+7)  Blacklist Users (US 01.08.01)
+8)  Show Statistics (US 01.09.01)
+9)  Ask Questions (US 02.01.01)
+10) Browse Questions/Answers (US 02.03.01)
+11) Generate Printable QR Codes (US 03.01.01)
+12) Scan QR Codes To Submit Trial (US 03.02.01)
+13) Register Barcodes To Submit Trial (US 03.03.01)
+14) Users Have A Profile (US 04.01.01)
+15) Users Can Edit Their Profile Information (US 04.02.01)
+16) Users Can View The Profile Of A User By Touching Their Username (US 04.03.01)
+17) Login/Registration (US 04.04.01)
+18) Experiments Can Be Searched By Keyword (US 05.01.01)
+19) Show Experiment Search Results (US 05.02.01)
+20) Owners May Specify If Geolocation Is Required (US 06.01.01)
 
 Bo Cen
-1)  Post Questions (US 02.01.01)
+1)  Ask Questions (US 02.01.01)
 2)  Post Reply (US 02.02.01)
+3)  Browse Questions/Answers (US 02.03.01)
 
 Paul Cleofas
 1)  End an Experiment (US 01.03.01)
@@ -31,7 +39,7 @@ Mitch Labrecque
 2)  As an experimenter, I want to be warned about geo-location trials. (US 06.03.01)
 
 Kevin Zhu
-1)  Users can view a map of geo-locations of a geo-location enabled experiment. (US 06.04.01 | Partial Completion)
+1)  Users can view a map of geo-locations of a geo-location enabled experiment. (US 06.04.01)
 
 Klyde Pausang
 1)  Users have a profile with a unique username and their contact information (US 04.01.01)
