@@ -32,8 +32,10 @@ public class IntegerCountTrial extends Trial implements Comparable<Trial> {
      *     The title of the experiment to which this trial belongs.
      * @param author
      *     The username of the user who submits this trial.
+     * @throws IllegalArgumentException
+     *     If the location is null, the constructor throws an error.
      */
-    public IntegerCountTrial(String experiment, String author, Location location, int count) {
+    public IntegerCountTrial(String experiment, String author, Location location, int count) throws IllegalArgumentException {
         super(experiment, author, location);
         this.count = count;
     }

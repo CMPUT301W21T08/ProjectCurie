@@ -59,8 +59,13 @@ public abstract class Trial implements Serializable, Comparable<Trial> {
      *     The title of the experiment to which this trial belongs.
      * @param author
      *     The username of the user who submits this trial.
+     * @throws IllegalArgumentException
+     *     If the location is null, the constructor throws an error.
      */
-    public Trial(String experiment, String author, Location location) {
+    public Trial(String experiment, String author, Location location) throws IllegalArgumentException {
+        if (location == null) {
+            throw new IllegalArgumentException("Cannot Get Location!");
+        }
         this.experiment = experiment;
         this.author = author;
         this.timestamp = new Date();
