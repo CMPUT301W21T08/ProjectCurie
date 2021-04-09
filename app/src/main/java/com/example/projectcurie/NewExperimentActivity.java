@@ -15,7 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
+
+import java.util.Locale;
 
 /**
  * This class implements the activity for creating a new experiment. If successful, the experiment
@@ -93,13 +99,21 @@ public class NewExperimentActivity extends AppCompatActivity {
 
                 /* Save Experiment To Database */
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("experiments")
-                        .document(title)
-                        .set(experiment)
+                DocumentReference reference = db.collection("experiments").document(title);
+                db.runTransaction((Transaction.Function<Void>) transaction -> {
+                    DocumentSnapshot experimentSnapshot = transaction.get(reference);
+                    if (experimentSnapshot.exists()) {
+                        throw new FirebaseFirestoreException(String.format(Locale.CANADA, "Experiment With Title \"%s\" Already Exists!", title), FirebaseFirestoreException.Code.ALREADY_EXISTS);
+                    } else {
+                        transaction.set(reference, experiment);
+                    }
+                    return null;
+                })
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(this, "Experiment Created!", Toast.LENGTH_SHORT).show();
                             finish();
-                        });
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
 
                 /* Print Error Message If Any Fields Are Left Empty */
             } catch (IllegalArgumentException e) {
