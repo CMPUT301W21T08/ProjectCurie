@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,8 +56,13 @@ public class MeasurementTrialFragment extends Fragment {
 
         /* On Clicking Submit, Upload A Measurement Trial To The FireStore Database */
         submitTrialButton.setOnClickListener(v -> {
-            double value = Double.parseDouble(measurementEditText.getText().toString());
-            listener.uploadTrial(value);
+            String measurement = measurementEditText.getText().toString();
+            if (measurement.length() > 0) {
+                double value = Double.parseDouble(measurement);
+                listener.uploadTrial(value);
+            } else {
+                Toast.makeText(getContext(), "Must Enter A Measurement!", Toast.LENGTH_SHORT).show();
+            }
         });
 
         /* Register A Barcode With A Specific Trial Result For This Experiment */
