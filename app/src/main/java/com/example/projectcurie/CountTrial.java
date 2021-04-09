@@ -34,7 +34,7 @@ public class CountTrial extends Trial implements Comparable<Trial> {
      * @param author
      *     The username of the user who submits this trial.
      */
-    public CountTrial(String experiment, String author, Location location) {
+    public CountTrial(String experiment, String author, Location location) throws IllegalArgumentException {
         super(experiment, author, location);
         this.count = 1;
     }

@@ -33,7 +33,7 @@ public class BinomialTrial extends Trial implements Comparable<Trial> {
      * @param author
      *     The username of the user who submits this trial.
      */
-    public BinomialTrial(String experiment, String author, Location location, boolean success) {
+    public BinomialTrial(String experiment, String author, Location location, boolean success) throws IllegalArgumentException {
         super(experiment, author, location);
         this.success = success;
     }

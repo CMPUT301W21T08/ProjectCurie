@@ -1,6 +1,7 @@
 package com.example.projectcurie;
 
 import android.content.Context;
+import android.location.Location;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -131,7 +132,6 @@ public class SubmitTrialCommand extends DatabaseCommand  {
      */
     @Override
     public void execute(FirebaseFirestore db) {
-        Trial trial = trialFactory(experiment.getType());
         DocumentReference reference = db.collection("experiments").document(experiment.getTitle());
         db.runTransaction((Transaction.Function<Void>) transaction -> {
             DocumentSnapshot documentSnapshot = transaction.get(reference);
@@ -157,6 +157,7 @@ public class SubmitTrialCommand extends DatabaseCommand  {
                 } else if (experimentOwner.isBlacklisted(author)) {
                     throw new FirebaseFirestoreException(String.format(Locale.CANADA, "You Are Blacklisted By User %s!", experimentOwner.getUsername()), FirebaseFirestoreException.Code.NOT_FOUND);
                 } else {
+                    Trial trial = trialFactory(experiment.getType());
                     transaction.set(documentSnapshot.getReference().collection("trials").document(), trial);
                 }
             } else {
@@ -169,15 +170,27 @@ public class SubmitTrialCommand extends DatabaseCommand  {
     }
 
     /* Helper Factory Method For Constructing A Trial Of The Appropriate Type */
-    private Trial trialFactory(ExperimentType type) {
-        if (type == ExperimentType.COUNT) {
-            return (experiment.isGeolocationRequired()) ? new CountTrial(experiment.getTitle(), author, geoLocation.getLocation()) : new CountTrial(experiment.getTitle(), author);
-        } else if (type == ExperimentType.INTEGER_COUNT) {
-            return (experiment.isGeolocationRequired()) ? new IntegerCountTrial(experiment.getTitle(), author, geoLocation.getLocation(), count) : new IntegerCountTrial(experiment.getTitle(), author, count);
-        } else if (type == ExperimentType.BINOMIAL) {
-            return (experiment.isGeolocationRequired()) ? new BinomialTrial(experiment.getTitle(), author, geoLocation.getLocation(), success) : new BinomialTrial(experiment.getTitle(), author, success);
+    private Trial trialFactory(ExperimentType type) throws IllegalArgumentException {
+        if (experiment.isGeolocationRequired()) {
+            if (type == ExperimentType.COUNT) {
+                return new CountTrial(experiment.getTitle(), author, geoLocation.getLocation());
+            } else if (type == ExperimentType.INTEGER_COUNT) {
+                return new IntegerCountTrial(experiment.getTitle(), author, geoLocation.getLocation(), count);
+            } else if (type == ExperimentType.BINOMIAL) {
+                return new BinomialTrial(experiment.getTitle(), author, geoLocation.getLocation(), success);
+            } else {
+                return new MeasurementTrial(experiment.getTitle(), author, geoLocation.getLocation(), measurement);
+            }
         } else {
-            return (experiment.isGeolocationRequired()) ? new MeasurementTrial(experiment.getTitle(), author, geoLocation.getLocation(), measurement) : new MeasurementTrial(experiment.getTitle(), author, measurement);
+            if (type == ExperimentType.COUNT) {
+                return new CountTrial(experiment.getTitle(), author);
+            } else if (type == ExperimentType.INTEGER_COUNT) {
+                return new IntegerCountTrial(experiment.getTitle(), author, count);
+            } else if (type == ExperimentType.BINOMIAL) {
+                return new BinomialTrial(experiment.getTitle(), author, success);
+            } else {
+                return new MeasurementTrial(experiment.getTitle(), author, measurement);
+            }
         }
     }
 }

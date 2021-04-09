@@ -36,8 +36,10 @@ public class MeasurementTrial extends Trial implements Comparable<Trial> {
      *     The username of the user who submits this trial.
      * @param measurement
      *     The measurement associated with the trial.
+     * @throws IllegalArgumentException
+     *     If the location is null, the constructor throws an error.
      */
-    public MeasurementTrial(String experiment, String author, Location location, double measurement) {
+    public MeasurementTrial(String experiment, String author, Location location, double measurement) throws IllegalArgumentException {
         super(experiment, author, location);
         this.measurement = measurement;
     }
