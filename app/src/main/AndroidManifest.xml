@@ -24,7 +24,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".ScannableListActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -41,26 +40,40 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="sensorPortrait"
             tools:replace="screenOrientation" />
+
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:parentActivityName=".MainActivity" />
+            android:label="@string/title_activity_maps" />
+
         <activity
             android:name=".UserProfileActivity" />
+
         <activity
             android:name=".AnswerListActivity"
             android:parentActivityName=".ExperimentOverviewActivity" />
+
         <activity
             android:name=".ExperimentOverviewActivity"
             android:launchMode="singleTop" />
+
         <activity
             android:name=".ExperimentListActivity"
             android:parentActivityName=".MainActivity" />
+
         <activity
             android:name=".NewExperimentActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".SubmitTrialActivity" />
+
+        <activity
+            android:name=".SubmitTrialActivity"
+            android:parentActivityName=".ExperimentOverviewActivity" />
+
         <activity android:name=".MainActivity" />
+
+        <activity
+            android:name=".ScannableListActivity"
+            android:parentActivityName=".MainActivity"/>
+
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
