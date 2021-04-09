@@ -101,9 +101,13 @@ public class ExperimentOverviewFragment extends Fragment {
         /* On Click Listener For Showing Trial Geolocation */
         Button showGeolocationsButton = view.findViewById(R.id.viewGeolocationsButton);
         showGeolocationsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
-            intent.putExtra("experiment", experiment);
-            startActivity(intent);
+            if (experiment.isGeolocationRequired()) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
+                intent.putExtra("experiment", experiment);
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "Geolocation Is Not Enabled For This Experiment!", Toast.LENGTH_SHORT).show();
+            }
         });
 
         /* Setup On Click Listener For Submitting Trials */

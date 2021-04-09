@@ -73,20 +73,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             trials.add(trialFactory.getTrial(document));
         }
 
-        /* Confirm That Trials Are Successfully Fetched */
-        for (Trial trial : trials) {
-            Log.i("Trial Coordinates", String.format(Locale.CANADA, "Lat: %f   Long: %f", trial.getLatitude(), trial.getLongitude()));
+        /* Iterate over Trials to create markers */
+        if (trials.size() > 0) {
+            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+            for(Trial trial: trials){
+                double latitude = trial.getLatitude();
+                double longitude = trial.getLongitude();
+                LatLng latLng = new LatLng(latitude, longitude);
+                boundsBuilder.include(latLng);
+                mMap.addMarker(new MarkerOptions().position(latLng).title(trial.getAuthor()));
+            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));
         }
-
-        // Iterate over Trials to create markers
-        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-        for(Trial trial: trials){
-            double latitude = trial.getLatitude();
-            double longitude = trial.getLongitude();
-            LatLng latLng = new LatLng(latitude, longitude);
-            boundsBuilder.include(latLng);
-            mMap.addMarker(new MarkerOptions().position(latLng).title(trial.getAuthor()));
-        }
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));
     }
 }
