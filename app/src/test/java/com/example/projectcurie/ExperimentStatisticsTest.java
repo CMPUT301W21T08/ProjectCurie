@@ -2,27 +2,114 @@ package com.example.projectcurie;
 
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
 public class ExperimentStatisticsTest {
-    private ExperimentStatistics statistics;
 
     @Test
     public void testBinomial() {
         String experiment = "Mock Experiment";
         String author = "MockUser87";
-        boolean[] values = {true, true, false, true, true, false, false, true, false, true};
+        boolean[] valuesSingle = {true};
+        boolean[] valuesPair = {true, true};
+        boolean[] valuesSmallOdd = {true, true, false};
+        boolean[] valuesSmallEven = {true, true, false, true};
+        boolean[] valuesEven = {true, true, false, true, true, false, false, true, false, true};
+        boolean[] valuesOdd = {true, true, false, true, true, false, false, true, false};
 
-        ArrayList<Trial> trials = new ArrayList<>();
-        for (boolean value : values) {
-            trials.add(new BinomialTrial(experiment, author, value));
+        /* Initialize Statistics For Empty Number Of Trials */
+        ArrayList<Trial> trialsEmpty = new ArrayList<>();
+        ExperimentStatistics statisticsEmpty = new ExperimentStatistics(trialsEmpty);
+
+        /* Initialize Statistics For Single Trial */
+        ArrayList<Trial> trialsSingle = new ArrayList<>();
+        trialsSingle.add(new BinomialTrial(experiment, author, valuesSingle[0]));
+        ExperimentStatistics statisticsSingle = new ExperimentStatistics(trialsSingle);
+
+        /* Initialize Statistics For Pair Of Trials */
+        ArrayList<Trial> trialsPair = new ArrayList<>();
+        trialsPair.add(new BinomialTrial(experiment, author, valuesPair[0]));
+        trialsPair.add(new BinomialTrial(experiment, author, valuesPair[1]));
+        ExperimentStatistics statisticsPair = new ExperimentStatistics(trialsPair);
+
+        /* Initialize Statistics For Small Number Of Odd Trials */
+        ArrayList<Trial> trialsSmallOdd = new ArrayList<>();
+        for (boolean value : valuesSmallOdd) {
+            trialsSmallOdd.add(new BinomialTrial(experiment, author, value));
         }
-        statistics = new ExperimentStatistics(trials);
+        ExperimentStatistics statisticsSmallOdd = new ExperimentStatistics(trialsSmallOdd);
 
-        assertEquals(0.6, statistics.mean(), 0.001);
+        /* Initialize Statistics For Small Number Of Even Trials */
+        ArrayList<Trial> trialsSmallEven = new ArrayList<>();
+        for (boolean value : valuesSmallEven) {
+            trialsSmallEven.add(new BinomialTrial(experiment, author, value));
+        }
+        ExperimentStatistics statisticsSmallEven = new ExperimentStatistics(trialsSmallEven);
+
+        /* Initialize Statistics For Even Number Of Trials */
+        ArrayList<Trial> trialsEven = new ArrayList<>();
+        for (boolean value : valuesEven) {
+            trialsEven.add(new BinomialTrial(experiment, author, value));
+        }
+        ExperimentStatistics statisticsEven = new ExperimentStatistics(trialsEven);
+
+        /* Initialize Statistics For Odd Number Of Trials */
+        ArrayList<Trial> trialsOdd = new ArrayList<>();
+        for (boolean value : valuesOdd) {
+            trialsOdd.add(new BinomialTrial(experiment, author, value));
+        }
+        ExperimentStatistics statisticsOdd = new ExperimentStatistics(trialsOdd);
+
+        /* Test For Empty Number Of Trials */
+        assertEquals(0.0, statisticsEmpty.mean(), 0.0);
+        assertEquals(0.0, statisticsEmpty.median(), 0.0);
+        assertEquals(0.0, statisticsEmpty.lowerQuartile(), 0.0);
+        assertEquals(0.0, statisticsEmpty.upperQuartile(), 0.0);
+        assertEquals(0.0, statisticsEmpty.standardDeviation(), 0.0);
+
+        /* Test For Single Trial */
+        assertEquals(1.0, statisticsSingle.mean(), 0.0);
+        assertEquals(1.0, statisticsSingle.median(), 0.0);
+        assertEquals(1.0, statisticsSingle.lowerQuartile(), 0.0);
+        assertEquals(1.0, statisticsSingle.upperQuartile(), 0.0);
+        assertEquals(0.0, statisticsSingle.standardDeviation(), 0.0);
+
+        /* Test For Pair Of Trials */
+        assertEquals(1.0, statisticsPair.mean(), 0.0);
+        assertEquals(1.0, statisticsPair.median(), 0.0);
+        assertEquals(1.0, statisticsPair.lowerQuartile(), 0.0);
+        assertEquals(1.0, statisticsPair.upperQuartile(), 0.0);
+        assertEquals(0.0, statisticsPair.standardDeviation(), 0.0);
+
+        /* Test For Small Number Of Odd Trials */
+        assertEquals(0.67, statisticsSmallOdd.mean(), 0.01);
+        assertEquals(1.0, statisticsSmallOdd.median(), 0.0);
+        assertEquals(0.0, statisticsSmallOdd.lowerQuartile(), 0.0);
+        assertEquals(1.0, statisticsSmallOdd.upperQuartile(), 0.0);
+        assertEquals(0.47, statisticsSmallOdd.standardDeviation(), 0.01);
+
+        /* Test For Small Number Of Even Trials */
+        assertEquals(0.75, statisticsSmallEven.mean(), 0.01);
+        assertEquals(1.0, statisticsSmallEven.median(), 0.0);
+        assertEquals(0.0, statisticsSmallEven.lowerQuartile(), 0.0);
+        assertEquals(1.0, statisticsSmallEven.upperQuartile(), 0.0);
+        assertEquals(0.43, statisticsSmallEven.standardDeviation(), 0.01);
+
+        /* Test For Even Number Of Trials */
+        assertEquals(0.6, statisticsEven.mean(), 0.01);
+        assertEquals(1.0, statisticsEven.median(), 0.01);
+        assertEquals(0.0, statisticsEven.lowerQuartile(), 0.01);
+        assertEquals(1.0, statisticsEven.upperQuartile(), 0.01);
+        assertEquals(0.49, statisticsEven.standardDeviation(), 0.01);
+
+        /* Test For Odd Number Of Trials */
+        assertEquals(0.56, statisticsOdd.mean(), 0.1);
+        assertEquals(1.0, statisticsOdd.median(), 0.01);
+        assertEquals(0.0, statisticsOdd.lowerQuartile(), 0.01);
+        assertEquals(1.0, statisticsOdd.upperQuartile(), 0.01);
+        assertEquals(0.50, statisticsOdd.standardDeviation(), 0.01);
     }
 
     @Test
@@ -30,13 +117,97 @@ public class ExperimentStatisticsTest {
         String experiment = "Mock Experiment";
         String author = "MockUser87";
 
-        ArrayList<Trial> trials = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            trials.add(new CountTrial(experiment, author));
-        }
-        statistics = new ExperimentStatistics(trials);
+        /* Initialize Statistics For Empty Number Of Trials */
+        ArrayList<Trial> trialsEmpty = new ArrayList<>();
+        ExperimentStatistics statisticsEmpty = new ExperimentStatistics(trialsEmpty);
 
-        assertEquals(10.0, statistics.mean(), 0.001);
+        /* Initialize Statistics For Single Trial */
+        ArrayList<Trial> trialsSingle = new ArrayList<>();
+        trialsSingle.add(new CountTrial(experiment, author));
+        ExperimentStatistics statisticsSingle = new ExperimentStatistics(trialsSingle);
+
+        /* Initialize Statistics For Pair Of Trials */
+        ArrayList<Trial> trialsPair = new ArrayList<>();
+        trialsPair.add(new CountTrial(experiment, author));
+        trialsPair.add(new CountTrial(experiment, author));
+        ExperimentStatistics statisticsPair = new ExperimentStatistics(trialsPair);
+
+        /* Initialize Statistics For Small Number Of Odd Trials */
+        ArrayList<Trial> trialsSmallOdd = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            trialsSmallOdd.add(new CountTrial(experiment, author));
+        }
+        ExperimentStatistics statisticsSmallOdd = new ExperimentStatistics(trialsSmallOdd);
+
+        /* Initialize Statistics For Small Number Of Even Trials */
+        ArrayList<Trial> trialsSmallEven = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            trialsSmallEven.add(new CountTrial(experiment, author));
+        }
+        ExperimentStatistics statisticsSmallEven = new ExperimentStatistics(trialsSmallEven);
+
+        /* Initialize Statistics For Even Number Of Trials */
+        ArrayList<Trial> trialsEven = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            trialsEven.add(new CountTrial(experiment, author));
+        }
+        ExperimentStatistics statisticsEven = new ExperimentStatistics(trialsEven);
+
+        /* Initialize Statistics For Odd Number Of Trials */
+        ArrayList<Trial> trialsOdd = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            trialsOdd.add(new CountTrial(experiment, author));
+        }
+        ExperimentStatistics statisticsOdd = new ExperimentStatistics(trialsOdd);
+
+        /* Test For Empty Number Of Trials */
+        assertEquals(0.0, statisticsEmpty.mean(), 0.0);
+        assertEquals(0.0, statisticsEmpty.median(), 0.0);
+        assertEquals(0.0, statisticsEmpty.lowerQuartile(), 0.0);
+        assertEquals(0.0, statisticsEmpty.upperQuartile(), 0.0);
+        assertEquals(0.0, statisticsEmpty.standardDeviation(), 0.0);
+
+        /* Test For Single Trial */
+        assertEquals(1.0, statisticsSingle.mean(), 0.0);
+        assertEquals(1.0, statisticsSingle.median(), 0.0);
+        assertEquals(1.0, statisticsSingle.lowerQuartile(), 0.0);
+        assertEquals(1.0, statisticsSingle.upperQuartile(), 0.0);
+        assertEquals(0.0, statisticsSingle.standardDeviation(), 0.0);
+
+        /* Test For Pair Of Trials */
+        assertEquals(2.0, statisticsPair.mean(), 0.0);
+        assertEquals(2.0, statisticsPair.median(), 0.0);
+        assertEquals(2.0, statisticsPair.lowerQuartile(), 0.0);
+        assertEquals(2.0, statisticsPair.upperQuartile(), 0.0);
+        assertEquals(0.0, statisticsPair.standardDeviation(), 0.0);
+
+        /* Test For Small Number Of Odd Trials */
+        assertEquals(3.0, statisticsSmallOdd.mean(), 0.01);
+        assertEquals(3.0, statisticsSmallOdd.median(), 0.0);
+        assertEquals(3.0, statisticsSmallOdd.lowerQuartile(), 0.0);
+        assertEquals(3.0, statisticsSmallOdd.upperQuartile(), 0.0);
+        assertEquals(0.0, statisticsSmallOdd.standardDeviation(), 0.01);
+
+        /* Test For Small Number Of Even Trials */
+        assertEquals(4.0, statisticsSmallEven.mean(), 0.01);
+        assertEquals(4.0, statisticsSmallEven.median(), 0.0);
+        assertEquals(4.0, statisticsSmallEven.lowerQuartile(), 0.0);
+        assertEquals(4.0, statisticsSmallEven.upperQuartile(), 0.0);
+        assertEquals(0.0, statisticsSmallEven.standardDeviation(), 0.01);
+
+        /* Test For Even Number Of Trials */
+        assertEquals(10.0, statisticsEven.mean(), 0.01);
+        assertEquals(10.0, statisticsEven.median(), 0.01);
+        assertEquals(10.0, statisticsEven.lowerQuartile(), 0.01);
+        assertEquals(10.0, statisticsEven.upperQuartile(), 0.01);
+        assertEquals(0.0, statisticsEven.standardDeviation(), 0.01);
+
+        /* Test For Odd Number Of Trials */
+        assertEquals(9.0, statisticsOdd.mean(), 0.1);
+        assertEquals(9.0, statisticsOdd.median(), 0.01);
+        assertEquals(9.0, statisticsOdd.lowerQuartile(), 0.01);
+        assertEquals(9.0, statisticsOdd.upperQuartile(), 0.01);
+        assertEquals(0.0, statisticsOdd.standardDeviation(), 0.01);
     }
 
     @Test
